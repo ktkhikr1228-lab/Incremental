@@ -1,0 +1,2683 @@
+{
+  "source": "output/card_value_take_eligible_pilot_10_branches.jsonl",
+  "filter": {
+    "take_mode": "pe",
+    "action": "take",
+    "keys": "eligible_keys only"
+  },
+  "take_hands": 1477,
+  "pe_applied": 180,
+  "pe_rate": 0.12186865267433988,
+  "fallback_hands": 1297,
+  "unsupported_per_hand": {
+    "0": 180,
+    "1": 433,
+    "2": 615,
+    "3": 249
+  },
+  "keys_by_frequency": [
+    {
+      "key": "steady_force",
+      "hands_with_key": 269,
+      "sole_blocker_hands": 95,
+      "single_key_cumulative_hands": 275,
+      "single_key_cumulative_rate": 0.18618821936357483
+    },
+    {
+      "key": "precise_strike",
+      "hands_with_key": 236,
+      "sole_blocker_hands": 37,
+      "single_key_cumulative_hands": 217,
+      "single_key_cumulative_rate": 0.14691943127962084
+    },
+    {
+      "key": "critical_eye",
+      "hands_with_key": 233,
+      "sole_blocker_hands": 46,
+      "single_key_cumulative_hands": 226,
+      "single_key_cumulative_rate": 0.15301286391333785
+    },
+    {
+      "key": "glass_cannon",
+      "hands_with_key": 223,
+      "sole_blocker_hands": 37,
+      "single_key_cumulative_hands": 217,
+      "single_key_cumulative_rate": 0.14691943127962084
+    },
+    {
+      "key": "heavy_blow",
+      "hands_with_key": 221,
+      "sole_blocker_hands": 49,
+      "single_key_cumulative_hands": 229,
+      "single_key_cumulative_rate": 0.15504400812457683
+    },
+    {
+      "key": "sharpened_edge",
+      "hands_with_key": 220,
+      "sole_blocker_hands": 31,
+      "single_key_cumulative_hands": 211,
+      "single_key_cumulative_rate": 0.14285714285714285
+    },
+    {
+      "key": "heavy_critical",
+      "hands_with_key": 218,
+      "sole_blocker_hands": 33,
+      "single_key_cumulative_hands": 213,
+      "single_key_cumulative_rate": 0.14421123899796887
+    },
+    {
+      "key": "light_attack",
+      "hands_with_key": 214,
+      "sole_blocker_hands": 27,
+      "single_key_cumulative_hands": 207,
+      "single_key_cumulative_rate": 0.14014895057549087
+    },
+    {
+      "key": "critical_power",
+      "hands_with_key": 208,
+      "sole_blocker_hands": 32,
+      "single_key_cumulative_hands": 212,
+      "single_key_cumulative_rate": 0.14353419092755584
+    },
+    {
+      "key": "critical_momentum",
+      "hands_with_key": 56,
+      "sole_blocker_hands": 8,
+      "single_key_cumulative_hands": 188,
+      "single_key_cumulative_rate": 0.12728503723764387
+    },
+    {
+      "key": "first_strike",
+      "hands_with_key": 54,
+      "sole_blocker_hands": 8,
+      "single_key_cumulative_hands": 188,
+      "single_key_cumulative_rate": 0.12728503723764387
+    },
+    {
+      "key": "critical_training",
+      "hands_with_key": 41,
+      "sole_blocker_hands": 3,
+      "single_key_cumulative_hands": 183,
+      "single_key_cumulative_rate": 0.12389979688557888
+    },
+    {
+      "key": "brutal_force",
+      "hands_with_key": 40,
+      "sole_blocker_hands": 4,
+      "single_key_cumulative_hands": 184,
+      "single_key_cumulative_rate": 0.12457684495599188
+    },
+    {
+      "key": "overclock",
+      "hands_with_key": 34,
+      "sole_blocker_hands": 7,
+      "single_key_cumulative_hands": 187,
+      "single_key_cumulative_rate": 0.12660798916723087
+    },
+    {
+      "key": "last_stand",
+      "hands_with_key": 33,
+      "sole_blocker_hands": 2,
+      "single_key_cumulative_hands": 182,
+      "single_key_cumulative_rate": 0.12322274881516587
+    },
+    {
+      "key": "escalation",
+      "hands_with_key": 32,
+      "sole_blocker_hands": 3,
+      "single_key_cumulative_hands": 183,
+      "single_key_cumulative_rate": 0.12389979688557888
+    },
+    {
+      "key": "battle_focus",
+      "hands_with_key": 30,
+      "sole_blocker_hands": 3,
+      "single_key_cumulative_hands": 183,
+      "single_key_cumulative_rate": 0.12389979688557888
+    },
+    {
+      "key": "critical_engine",
+      "hands_with_key": 10,
+      "sole_blocker_hands": 2,
+      "single_key_cumulative_hands": 182,
+      "single_key_cumulative_rate": 0.12322274881516587
+    },
+    {
+      "key": "critical_conversion",
+      "hands_with_key": 9,
+      "sole_blocker_hands": 1,
+      "single_key_cumulative_hands": 181,
+      "single_key_cumulative_rate": 0.12254570074475288
+    },
+    {
+      "key": "momentum",
+      "hands_with_key": 7,
+      "sole_blocker_hands": 0,
+      "single_key_cumulative_hands": 180,
+      "single_key_cumulative_rate": 0.12186865267433988
+    },
+    {
+      "key": "brutal_critical",
+      "hands_with_key": 6,
+      "sole_blocker_hands": 1,
+      "single_key_cumulative_hands": 181,
+      "single_key_cumulative_rate": 0.12254570074475288
+    },
+    {
+      "key": "growth_engine",
+      "hands_with_key": 5,
+      "sole_blocker_hands": 1,
+      "single_key_cumulative_hands": 181,
+      "single_key_cumulative_rate": 0.12254570074475288
+    },
+    {
+      "key": "double_strike",
+      "hands_with_key": 4,
+      "sole_blocker_hands": 2,
+      "single_key_cumulative_hands": 182,
+      "single_key_cumulative_rate": 0.12322274881516587
+    },
+    {
+      "key": "boss_devourer",
+      "hands_with_key": 3,
+      "sole_blocker_hands": 1,
+      "single_key_cumulative_hands": 181,
+      "single_key_cumulative_rate": 0.12254570074475288
+    },
+    {
+      "key": "follow_up_strike",
+      "hands_with_key": 2,
+      "sole_blocker_hands": 0,
+      "single_key_cumulative_hands": 180,
+      "single_key_cumulative_rate": 0.12186865267433988
+    },
+    {
+      "key": "overflow",
+      "hands_with_key": 2,
+      "sole_blocker_hands": 0,
+      "single_key_cumulative_hands": 180,
+      "single_key_cumulative_rate": 0.12186865267433988
+    }
+  ],
+  "combinations_2_or_more": [
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "glass_cannon",
+        "light_attack"
+      ],
+      "hands": 21
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "glass_cannon",
+        "heavy_critical"
+      ],
+      "hands": 20
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "glass_cannon",
+        "precise_strike"
+      ],
+      "hands": 20
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_power",
+        "sharpened_edge"
+      ],
+      "hands": 19
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_eye",
+        "precise_strike"
+      ],
+      "hands": 18
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "light_attack",
+        "precise_strike"
+      ],
+      "hands": 18
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "precise_strike",
+        "steady_force"
+      ],
+      "hands": 18
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_eye",
+        "steady_force"
+      ],
+      "hands": 17
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_eye",
+        "light_attack"
+      ],
+      "hands": 15
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_power",
+        "heavy_critical"
+      ],
+      "hands": 15
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_power",
+        "light_attack"
+      ],
+      "hands": 15
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "heavy_blow",
+        "steady_force"
+      ],
+      "hands": 15
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_power",
+        "precise_strike"
+      ],
+      "hands": 14
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "heavy_blow",
+        "light_attack"
+      ],
+      "hands": 14
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "heavy_blow",
+        "precise_strike"
+      ],
+      "hands": 14
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_eye",
+        "glass_cannon"
+      ],
+      "hands": 13
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "heavy_critical",
+        "sharpened_edge"
+      ],
+      "hands": 13
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "light_attack",
+        "sharpened_edge"
+      ],
+      "hands": 13
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "precise_strike",
+        "sharpened_edge"
+      ],
+      "hands": 13
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_power",
+        "heavy_blow"
+      ],
+      "hands": 12
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "glass_cannon",
+        "sharpened_edge"
+      ],
+      "hands": 12
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_eye",
+        "heavy_blow"
+      ],
+      "hands": 11
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_eye",
+        "heavy_critical"
+      ],
+      "hands": 11
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_eye",
+        "sharpened_edge"
+      ],
+      "hands": 11
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_power",
+        "glass_cannon"
+      ],
+      "hands": 11
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "heavy_critical",
+        "light_attack"
+      ],
+      "hands": 11
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "heavy_critical",
+        "precise_strike"
+      ],
+      "hands": 11
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "heavy_critical",
+        "steady_force"
+      ],
+      "hands": 11
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_power",
+        "steady_force"
+      ],
+      "hands": 10
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "glass_cannon",
+        "steady_force"
+      ],
+      "hands": 10
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "heavy_blow",
+        "heavy_critical"
+      ],
+      "hands": 10
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "sharpened_edge",
+        "steady_force"
+      ],
+      "hands": 10
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_eye",
+        "critical_power"
+      ],
+      "hands": 9
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "heavy_blow",
+        "sharpened_edge"
+      ],
+      "hands": 9
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "glass_cannon",
+        "heavy_blow"
+      ],
+      "hands": 8
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "light_attack",
+        "steady_force"
+      ],
+      "hands": 7
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "brutal_force",
+        "critical_momentum"
+      ],
+      "hands": 5
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "brutal_force",
+        "critical_training"
+      ],
+      "hands": 4
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_momentum",
+        "first_strike"
+      ],
+      "hands": 4
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "battle_focus",
+        "critical_momentum"
+      ],
+      "hands": 3
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "brutal_force",
+        "escalation"
+      ],
+      "hands": 3
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_momentum",
+        "critical_training"
+      ],
+      "hands": 3
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_momentum",
+        "sharpened_edge"
+      ],
+      "hands": 3
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_momentum",
+        "steady_force"
+      ],
+      "hands": 3
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_training",
+        "overclock"
+      ],
+      "hands": 3
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "first_strike",
+        "last_stand"
+      ],
+      "hands": 3
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "first_strike",
+        "overclock"
+      ],
+      "hands": 3
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "battle_focus",
+        "escalation"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "battle_focus",
+        "first_strike"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "battle_focus",
+        "heavy_blow"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "brutal_force",
+        "critical_eye"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "brutal_force",
+        "heavy_critical"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_conversion",
+        "glass_cannon"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_engine",
+        "steady_force"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_momentum",
+        "escalation"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_momentum",
+        "heavy_blow"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_momentum",
+        "heavy_critical"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_momentum",
+        "light_attack"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_momentum",
+        "overclock"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_power",
+        "last_stand"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_training",
+        "first_strike"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_training",
+        "last_stand"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_training",
+        "light_attack"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "escalation",
+        "first_strike"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "escalation",
+        "heavy_critical"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "escalation",
+        "last_stand"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "escalation",
+        "precise_strike"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "first_strike",
+        "glass_cannon"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "first_strike",
+        "heavy_critical"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "first_strike",
+        "light_attack"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "last_stand",
+        "precise_strike"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "battle_focus",
+        "brutal_force"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "battle_focus",
+        "critical_training"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "battle_focus",
+        "overclock"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "battle_focus",
+        "precise_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "battle_focus",
+        "steady_force"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "brutal_force",
+        "critical_power"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "brutal_force",
+        "heavy_blow"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "brutal_force",
+        "last_stand"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "brutal_force",
+        "precise_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "brutal_force",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "brutal_force",
+        "steady_force"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_conversion",
+        "critical_power"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_conversion",
+        "double_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_conversion",
+        "heavy_blow"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_conversion",
+        "heavy_critical"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_conversion",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_engine",
+        "critical_eye"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_engine",
+        "precise_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_engine",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_eye",
+        "first_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_eye",
+        "last_stand"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_momentum",
+        "glass_cannon"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_momentum",
+        "last_stand"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_momentum",
+        "precise_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_power",
+        "critical_training"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_power",
+        "escalation"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_power",
+        "first_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_power",
+        "momentum"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_power",
+        "overclock"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_training",
+        "escalation"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_training",
+        "heavy_critical"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "critical_training",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "double_strike",
+        "precise_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "escalation",
+        "glass_cannon"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "first_strike",
+        "heavy_blow"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "first_strike",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "first_strike",
+        "steady_force"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "follow_up_strike",
+        "light_attack"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "glass_cannon",
+        "momentum"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "glass_cannon",
+        "overclock"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "growth_engine",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "heavy_blow",
+        "last_stand"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "heavy_blow",
+        "overclock"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "heavy_critical",
+        "momentum"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "last_stand",
+        "overclock"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "last_stand",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "last_stand",
+        "steady_force"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "light_attack",
+        "overclock"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "momentum",
+        "precise_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "overclock",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 2,
+      "keys": [
+        "overclock",
+        "steady_force"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "glass_cannon",
+        "sharpened_edge"
+      ],
+      "hands": 7
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "critical_power",
+        "light_attack"
+      ],
+      "hands": 6
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "critical_power",
+        "sharpened_edge"
+      ],
+      "hands": 5
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "heavy_critical",
+        "steady_force"
+      ],
+      "hands": 5
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_power",
+        "precise_strike",
+        "steady_force"
+      ],
+      "hands": 5
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "glass_cannon",
+        "heavy_blow",
+        "precise_strike"
+      ],
+      "hands": 5
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "heavy_critical",
+        "sharpened_edge",
+        "steady_force"
+      ],
+      "hands": 5
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "critical_power",
+        "heavy_critical"
+      ],
+      "hands": 4
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "glass_cannon",
+        "heavy_critical"
+      ],
+      "hands": 4
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "heavy_blow",
+        "steady_force"
+      ],
+      "hands": 4
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_power",
+        "heavy_blow",
+        "light_attack"
+      ],
+      "hands": 4
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "glass_cannon",
+        "precise_strike",
+        "sharpened_edge"
+      ],
+      "hands": 4
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "heavy_blow",
+        "precise_strike",
+        "steady_force"
+      ],
+      "hands": 4
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "heavy_critical",
+        "light_attack",
+        "precise_strike"
+      ],
+      "hands": 4
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "heavy_critical",
+        "light_attack",
+        "sharpened_edge"
+      ],
+      "hands": 4
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "heavy_blow",
+        "heavy_critical"
+      ],
+      "hands": 3
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "light_attack",
+        "sharpened_edge"
+      ],
+      "hands": 3
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "light_attack",
+        "steady_force"
+      ],
+      "hands": 3
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "sharpened_edge",
+        "steady_force"
+      ],
+      "hands": 3
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_power",
+        "heavy_blow",
+        "steady_force"
+      ],
+      "hands": 3
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_power",
+        "heavy_critical",
+        "steady_force"
+      ],
+      "hands": 3
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "glass_cannon",
+        "sharpened_edge",
+        "steady_force"
+      ],
+      "hands": 3
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "heavy_blow",
+        "heavy_critical",
+        "light_attack"
+      ],
+      "hands": 3
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "heavy_blow",
+        "light_attack",
+        "steady_force"
+      ],
+      "hands": 3
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "light_attack",
+        "precise_strike",
+        "sharpened_edge"
+      ],
+      "hands": 3
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "light_attack",
+        "sharpened_edge",
+        "steady_force"
+      ],
+      "hands": 3
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "brutal_force",
+        "critical_training",
+        "first_strike"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "brutal_force",
+        "escalation",
+        "last_stand"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "critical_power",
+        "glass_cannon"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "critical_power",
+        "precise_strike"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "glass_cannon",
+        "heavy_blow"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "glass_cannon",
+        "light_attack"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "heavy_blow",
+        "sharpened_edge"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "heavy_critical",
+        "light_attack"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "heavy_critical",
+        "precise_strike"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "heavy_critical",
+        "sharpened_edge"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "precise_strike",
+        "sharpened_edge"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_momentum",
+        "first_strike",
+        "last_stand"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_power",
+        "glass_cannon",
+        "sharpened_edge"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_power",
+        "heavy_blow",
+        "heavy_critical"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_power",
+        "heavy_critical",
+        "precise_strike"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_power",
+        "heavy_critical",
+        "sharpened_edge"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_power",
+        "light_attack",
+        "precise_strike"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_power",
+        "precise_strike",
+        "sharpened_edge"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "glass_cannon",
+        "heavy_blow",
+        "heavy_critical"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "glass_cannon",
+        "heavy_blow",
+        "sharpened_edge"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "glass_cannon",
+        "heavy_blow",
+        "steady_force"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "glass_cannon",
+        "heavy_critical",
+        "light_attack"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "glass_cannon",
+        "heavy_critical",
+        "sharpened_edge"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "glass_cannon",
+        "light_attack",
+        "sharpened_edge"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "glass_cannon",
+        "precise_strike",
+        "steady_force"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "heavy_blow",
+        "heavy_critical",
+        "precise_strike"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "heavy_blow",
+        "heavy_critical",
+        "sharpened_edge"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "heavy_blow",
+        "heavy_critical",
+        "steady_force"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "heavy_blow",
+        "light_attack",
+        "precise_strike"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "heavy_blow",
+        "light_attack",
+        "sharpened_edge"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "heavy_blow",
+        "precise_strike",
+        "sharpened_edge"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "heavy_critical",
+        "precise_strike",
+        "steady_force"
+      ],
+      "hands": 2
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "battle_focus",
+        "brutal_force",
+        "critical_training"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "battle_focus",
+        "brutal_force",
+        "last_stand"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "battle_focus",
+        "critical_eye",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "battle_focus",
+        "critical_momentum",
+        "last_stand"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "battle_focus",
+        "critical_power",
+        "glass_cannon"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "battle_focus",
+        "critical_training",
+        "escalation"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "battle_focus",
+        "critical_training",
+        "first_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "battle_focus",
+        "critical_training",
+        "last_stand"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "battle_focus",
+        "escalation",
+        "first_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "battle_focus",
+        "escalation",
+        "overclock"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "battle_focus",
+        "first_strike",
+        "overclock"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "battle_focus",
+        "glass_cannon",
+        "precise_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "battle_focus",
+        "heavy_blow",
+        "heavy_critical"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "boss_devourer",
+        "critical_eye",
+        "heavy_critical"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "boss_devourer",
+        "glass_cannon",
+        "precise_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "brutal_critical",
+        "brutal_force",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "brutal_critical",
+        "critical_conversion",
+        "momentum"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "brutal_critical",
+        "heavy_blow",
+        "precise_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "brutal_critical",
+        "heavy_blow",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "brutal_critical",
+        "momentum",
+        "overflow"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "brutal_force",
+        "critical_momentum",
+        "first_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "brutal_force",
+        "critical_training",
+        "escalation"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "brutal_force",
+        "escalation",
+        "first_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "brutal_force",
+        "escalation",
+        "overclock"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "brutal_force",
+        "heavy_blow",
+        "steady_force"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "brutal_force",
+        "overclock",
+        "steady_force"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_engine",
+        "critical_eye",
+        "critical_power"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_engine",
+        "glass_cannon",
+        "precise_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_engine",
+        "light_attack",
+        "steady_force"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "critical_momentum",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "critical_power",
+        "first_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "critical_power",
+        "heavy_blow"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "critical_training",
+        "precise_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "first_strike",
+        "heavy_critical"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "glass_cannon",
+        "precise_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "growth_engine",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "heavy_blow",
+        "precise_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_eye",
+        "light_attack",
+        "overclock"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_momentum",
+        "critical_power",
+        "light_attack"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_momentum",
+        "critical_power",
+        "precise_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_momentum",
+        "critical_training",
+        "first_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_momentum",
+        "critical_training",
+        "overclock"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_momentum",
+        "escalation",
+        "first_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_momentum",
+        "heavy_blow",
+        "last_stand"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_momentum",
+        "heavy_blow",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_momentum",
+        "heavy_critical",
+        "precise_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_momentum",
+        "precise_strike",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_power",
+        "critical_training",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_power",
+        "first_strike",
+        "glass_cannon"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_power",
+        "glass_cannon",
+        "heavy_critical"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_power",
+        "glass_cannon",
+        "light_attack"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_power",
+        "glass_cannon",
+        "precise_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_power",
+        "glass_cannon",
+        "steady_force"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_power",
+        "heavy_blow",
+        "momentum"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_power",
+        "heavy_blow",
+        "precise_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_power",
+        "heavy_blow",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_power",
+        "light_attack",
+        "steady_force"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_training",
+        "escalation",
+        "last_stand"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_training",
+        "escalation",
+        "overclock"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_training",
+        "first_strike",
+        "last_stand"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_training",
+        "first_strike",
+        "steady_force"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_training",
+        "glass_cannon",
+        "light_attack"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "critical_training",
+        "heavy_critical",
+        "light_attack"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "first_strike",
+        "heavy_blow",
+        "steady_force"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "first_strike",
+        "heavy_critical",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "first_strike",
+        "last_stand",
+        "overclock"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "follow_up_strike",
+        "heavy_blow",
+        "light_attack"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "glass_cannon",
+        "growth_engine",
+        "heavy_blow"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "glass_cannon",
+        "heavy_blow",
+        "overclock"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "glass_cannon",
+        "heavy_critical",
+        "precise_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "glass_cannon",
+        "heavy_critical",
+        "steady_force"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "glass_cannon",
+        "light_attack",
+        "overclock"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "glass_cannon",
+        "light_attack",
+        "precise_strike"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "glass_cannon",
+        "light_attack",
+        "steady_force"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "growth_engine",
+        "heavy_blow",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "heavy_blow",
+        "last_stand",
+        "steady_force"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "heavy_critical",
+        "light_attack",
+        "steady_force"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "heavy_critical",
+        "overflow",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "last_stand",
+        "light_attack",
+        "sharpened_edge"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "light_attack",
+        "overclock",
+        "steady_force"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "light_attack",
+        "precise_strike",
+        "steady_force"
+      ],
+      "hands": 1
+    },
+    {
+      "unsupported_key_count": 3,
+      "keys": [
+        "precise_strike",
+        "sharpened_edge",
+        "steady_force"
+      ],
+      "hands": 1
+    }
+  ],
+  "greedy": [
+    {
+      "step": 1,
+      "key": "steady_force",
+      "marginal_hands": 95,
+      "cumulative_hands": 275,
+      "cumulative_rate": 0.18618821936357483
+    },
+    {
+      "step": 2,
+      "key": "heavy_blow",
+      "marginal_hands": 64,
+      "cumulative_hands": 339,
+      "cumulative_rate": 0.22951929587000677
+    },
+    {
+      "step": 3,
+      "key": "critical_eye",
+      "marginal_hands": 78,
+      "cumulative_hands": 417,
+      "cumulative_rate": 0.2823290453622207
+    },
+    {
+      "step": 4,
+      "key": "precise_strike",
+      "marginal_hands": 92,
+      "cumulative_hands": 509,
+      "cumulative_rate": 0.34461746784021663
+    },
+    {
+      "step": 5,
+      "key": "glass_cannon",
+      "marginal_hands": 100,
+      "cumulative_hands": 609,
+      "cumulative_rate": 0.41232227488151657
+    },
+    {
+      "step": 6,
+      "key": "heavy_critical",
+      "marginal_hands": 120,
+      "cumulative_hands": 729,
+      "cumulative_rate": 0.4935680433310765
+    },
+    {
+      "step": 7,
+      "key": "light_attack",
+      "marginal_hands": 138,
+      "cumulative_hands": 867,
+      "cumulative_rate": 0.5870006770480705
+    },
+    {
+      "step": 8,
+      "key": "sharpened_edge",
+      "marginal_hands": 166,
+      "cumulative_hands": 1033,
+      "cumulative_rate": 0.6993906567366283
+    },
+    {
+      "step": 9,
+      "key": "critical_power",
+      "marginal_hands": 191,
+      "cumulative_hands": 1224,
+      "cumulative_rate": 0.8287068381855112
+    },
+    {
+      "step": 10,
+      "key": "critical_momentum",
+      "marginal_hands": 28,
+      "cumulative_hands": 1252,
+      "cumulative_rate": 0.8476641841570751
+    },
+    {
+      "step": 11,
+      "key": "first_strike",
+      "marginal_hands": 28,
+      "cumulative_hands": 1280,
+      "cumulative_rate": 0.8666215301286392
+    },
+    {
+      "step": 12,
+      "key": "overclock",
+      "marginal_hands": 22,
+      "cumulative_hands": 1302,
+      "cumulative_rate": 0.8815165876777251
+    },
+    {
+      "step": 13,
+      "key": "critical_training",
+      "marginal_hands": 23,
+      "cumulative_hands": 1325,
+      "cumulative_rate": 0.8970886932972241
+    },
+    {
+      "step": 14,
+      "key": "brutal_force",
+      "marginal_hands": 27,
+      "cumulative_hands": 1352,
+      "cumulative_rate": 0.9153689911983751
+    },
+    {
+      "step": 15,
+      "key": "last_stand",
+      "marginal_hands": 25,
+      "cumulative_hands": 1377,
+      "cumulative_rate": 0.9322951929587001
+    },
+    {
+      "step": 16,
+      "key": "escalation",
+      "marginal_hands": 27,
+      "cumulative_hands": 1404,
+      "cumulative_rate": 0.950575490859851
+    },
+    {
+      "step": 17,
+      "key": "battle_focus",
+      "marginal_hands": 30,
+      "cumulative_hands": 1434,
+      "cumulative_rate": 0.970886932972241
+    },
+    {
+      "step": 18,
+      "key": "critical_engine",
+      "marginal_hands": 10,
+      "cumulative_hands": 1444,
+      "cumulative_rate": 0.977657413676371
+    },
+    {
+      "step": 19,
+      "key": "critical_conversion",
+      "marginal_hands": 7,
+      "cumulative_hands": 1451,
+      "cumulative_rate": 0.982396750169262
+    },
+    {
+      "step": 20,
+      "key": "growth_engine",
+      "marginal_hands": 5,
+      "cumulative_hands": 1456,
+      "cumulative_rate": 0.985781990521327
+    },
+    {
+      "step": 21,
+      "key": "momentum",
+      "marginal_hands": 5,
+      "cumulative_hands": 1461,
+      "cumulative_rate": 0.989167230873392
+    },
+    {
+      "step": 22,
+      "key": "brutal_critical",
+      "marginal_hands": 5,
+      "cumulative_hands": 1466,
+      "cumulative_rate": 0.992552471225457
+    },
+    {
+      "step": 23,
+      "key": "double_strike",
+      "marginal_hands": 4,
+      "cumulative_hands": 1470,
+      "cumulative_rate": 0.995260663507109
+    },
+    {
+      "step": 24,
+      "key": "boss_devourer",
+      "marginal_hands": 3,
+      "cumulative_hands": 1473,
+      "cumulative_rate": 0.997291807718348
+    },
+    {
+      "step": 25,
+      "key": "follow_up_strike",
+      "marginal_hands": 2,
+      "cumulative_hands": 1475,
+      "cumulative_rate": 0.998645903859174
+    },
+    {
+      "step": 26,
+      "key": "overflow",
+      "marginal_hands": 2,
+      "cumulative_hands": 1477,
+      "cumulative_rate": 1.0
+    }
+  ],
+  "greedy_thresholds": {
+    "30": {
+      "step": 4,
+      "keys": [
+        "steady_force",
+        "heavy_blow",
+        "critical_eye",
+        "precise_strike"
+      ],
+      "cumulative_hands": 509,
+      "cumulative_rate": 0.34461746784021663
+    },
+    "50": {
+      "step": 7,
+      "keys": [
+        "steady_force",
+        "heavy_blow",
+        "critical_eye",
+        "precise_strike",
+        "glass_cannon",
+        "heavy_critical",
+        "light_attack"
+      ],
+      "cumulative_hands": 867,
+      "cumulative_rate": 0.5870006770480705
+    },
+    "70": {
+      "step": 9,
+      "keys": [
+        "steady_force",
+        "heavy_blow",
+        "critical_eye",
+        "precise_strike",
+        "glass_cannon",
+        "heavy_critical",
+        "light_attack",
+        "sharpened_edge",
+        "critical_power"
+      ],
+      "cumulative_hands": 1224,
+      "cumulative_rate": 0.8287068381855112
+    },
+    "80": {
+      "step": 9,
+      "keys": [
+        "steady_force",
+        "heavy_blow",
+        "critical_eye",
+        "precise_strike",
+        "glass_cannon",
+        "heavy_critical",
+        "light_attack",
+        "sharpened_edge",
+        "critical_power"
+      ],
+      "cumulative_hands": 1224,
+      "cumulative_rate": 0.8287068381855112
+    }
+  }
+}

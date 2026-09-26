@@ -1,0 +1,1871 @@
+{
+  "seed": 20260828,
+  "trials": 10,
+  "max_attempts": 10,
+  "pe_take_opportunities": 1477,
+  "pe_applied": 54,
+  "pe_application_rate": 0.03656059580230196,
+  "fallback_count": 1423,
+  "fallback_rate": 0.963439404197698,
+  "fallback_reasons": {
+    "unsupported_card": 1423
+  },
+  "unsupported_cards": {
+    "battle_focus": 32,
+    "boss_devourer": 3,
+    "brutal_critical": 7,
+    "brutal_force": 42,
+    "critical_conversion": 10,
+    "critical_engine": 10,
+    "critical_eye": 264,
+    "critical_momentum": 60,
+    "critical_power": 240,
+    "critical_training": 45,
+    "double_strike": 5,
+    "escalation": 33,
+    "first_strike": 59,
+    "follow_up_strike": 3,
+    "glass_cannon": 264,
+    "growth_engine": 5,
+    "heavy_blow": 255,
+    "heavy_critical": 246,
+    "last_stand": 33,
+    "light_attack": 239,
+    "momentum": 7,
+    "overclock": 34,
+    "overflow": 3,
+    "precise_strike": 274,
+    "sharpened_edge": 247,
+    "steady_force": 269
+  },
+  "first_divergences": [
+    {
+      "kind": "selection_divergence",
+      "legacy": {
+        "seed": 20260828,
+        "trial_index": 0,
+        "profile": "balanced",
+        "allow_overdrive": true,
+        "attempt": 7,
+        "decision_index": 15,
+        "take_mode": "legacy",
+        "next_wave": 67,
+        "phase": "xp",
+        "forced_rarity": null,
+        "forced_card": null,
+        "starter": false,
+        "reroll_trace": [
+          {
+            "hand": [
+              "experience",
+              "fast_learner",
+              "power_up"
+            ],
+            "eligible": [
+              "experience",
+              "fast_learner",
+              "power_up"
+            ],
+            "legacy_winner": "power_up",
+            "legacy_score": 0.624,
+            "reroll_index": 0,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "scholar",
+              "quick_learner",
+              "study_break"
+            ],
+            "eligible": [
+              "scholar",
+              "quick_learner",
+              "study_break"
+            ],
+            "legacy_winner": "quick_learner",
+            "legacy_score": 0.1875,
+            "reroll_index": 1,
+            "stop_reason": "exhausted"
+          }
+        ],
+        "rerolls_used": 1,
+        "hand_keys": [
+          "scholar",
+          "quick_learner",
+          "study_break"
+        ],
+        "hand_legacy_scores": {
+          "scholar": 0.15,
+          "quick_learner": 0.1875,
+          "study_break": -0.07500000000000001
+        },
+        "eligible_keys": [
+          "scholar",
+          "quick_learner",
+          "study_break"
+        ],
+        "legacy_winner": "quick_learner",
+        "legacy_score": 0.1875,
+        "legacy_refine_gate": false,
+        "pre_decision_rng_digest": "6f54e2a646738ece",
+        "candidates": [
+          {
+            "card_id": "scholar",
+            "legacy_score": 0.15,
+            "pe_status": "not_evaluated"
+          },
+          {
+            "card_id": "quick_learner",
+            "legacy_score": 0.1875,
+            "pe_status": "not_evaluated"
+          },
+          {
+            "card_id": "study_break",
+            "legacy_score": -0.07500000000000001,
+            "pe_status": "not_evaluated"
+          }
+        ],
+        "action": "take",
+        "selected_card": "quick_learner",
+        "decision_source": "legacy",
+        "fallback_reason": null,
+        "upgrades": {},
+        "post_decision_rng_digest": "85c05a4914ec2b11"
+      },
+      "pe": {
+        "seed": 20260828,
+        "trial_index": 0,
+        "profile": "balanced",
+        "allow_overdrive": true,
+        "attempt": 7,
+        "decision_index": 15,
+        "take_mode": "pe",
+        "next_wave": 67,
+        "phase": "xp",
+        "forced_rarity": null,
+        "forced_card": null,
+        "starter": false,
+        "reroll_trace": [
+          {
+            "hand": [
+              "experience",
+              "fast_learner",
+              "power_up"
+            ],
+            "eligible": [
+              "experience",
+              "fast_learner",
+              "power_up"
+            ],
+            "legacy_winner": "power_up",
+            "legacy_score": 0.624,
+            "reroll_index": 0,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "scholar",
+              "quick_learner",
+              "study_break"
+            ],
+            "eligible": [
+              "scholar",
+              "quick_learner",
+              "study_break"
+            ],
+            "legacy_winner": "quick_learner",
+            "legacy_score": 0.1875,
+            "reroll_index": 1,
+            "stop_reason": "exhausted"
+          }
+        ],
+        "rerolls_used": 1,
+        "hand_keys": [
+          "scholar",
+          "quick_learner",
+          "study_break"
+        ],
+        "hand_legacy_scores": {
+          "scholar": 0.15,
+          "quick_learner": 0.1875,
+          "study_break": -0.07500000000000001
+        },
+        "eligible_keys": [
+          "scholar",
+          "quick_learner",
+          "study_break"
+        ],
+        "legacy_winner": "quick_learner",
+        "legacy_score": 0.1875,
+        "legacy_refine_gate": false,
+        "pre_decision_rng_digest": "6f54e2a646738ece",
+        "candidates": [
+          {
+            "card_id": "scholar",
+            "take_eligible": true,
+            "legacy_score": 0.15,
+            "pe_status": "ok",
+            "immediate_combat_pe": 0.0,
+            "conditional_combat_pe": 0.0,
+            "growth_pe": 0.0,
+            "xp_pe": 0.0,
+            "total_pe": 0.0,
+            "predicted_run_end_wave": 74,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": 0.0,
+            "conditional_status": "ok"
+          },
+          {
+            "card_id": "quick_learner",
+            "take_eligible": true,
+            "legacy_score": 0.1875,
+            "pe_status": "ok",
+            "immediate_combat_pe": 0.0,
+            "conditional_combat_pe": 0.0,
+            "growth_pe": 0.0,
+            "xp_pe": 0.0,
+            "total_pe": 0.0,
+            "predicted_run_end_wave": 74,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": 0.0,
+            "conditional_status": "ok"
+          },
+          {
+            "card_id": "study_break",
+            "take_eligible": true,
+            "legacy_score": -0.07500000000000001,
+            "pe_status": "ok",
+            "immediate_combat_pe": -0.008773924307504899,
+            "conditional_combat_pe": 0.0,
+            "growth_pe": 0.0,
+            "xp_pe": 0.0,
+            "total_pe": -0.005264354584502939,
+            "predicted_run_end_wave": 74,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": -0.01038589530905492,
+            "conditional_status": "ok"
+          }
+        ],
+        "action": "take",
+        "selected_card": "scholar",
+        "decision_source": "pe",
+        "fallback_reason": null,
+        "upgrades": {},
+        "post_decision_rng_digest": "85c05a4914ec2b11"
+      }
+    },
+    {
+      "kind": "selection_divergence",
+      "legacy": {
+        "seed": 20260828,
+        "trial_index": 1,
+        "profile": "balanced",
+        "allow_overdrive": true,
+        "attempt": 9,
+        "decision_index": 15,
+        "take_mode": "legacy",
+        "next_wave": 61,
+        "phase": "xp",
+        "forced_rarity": null,
+        "forced_card": null,
+        "starter": false,
+        "reroll_trace": [
+          {
+            "hand": [
+              "critical_power",
+              "light_attack",
+              "precise_strike"
+            ],
+            "eligible": [
+              "critical_power",
+              "light_attack",
+              "precise_strike"
+            ],
+            "legacy_winner": "light_attack",
+            "legacy_score": 0.405,
+            "reroll_index": 0,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "rapid_fire",
+              "scholar",
+              "fast_learner"
+            ],
+            "eligible": [
+              "rapid_fire",
+              "scholar",
+              "fast_learner"
+            ],
+            "legacy_winner": "rapid_fire",
+            "legacy_score": 0.63,
+            "reroll_index": 1,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "experience",
+              "boss_research",
+              "study_break"
+            ],
+            "eligible": [
+              "experience",
+              "boss_research",
+              "study_break"
+            ],
+            "legacy_winner": "boss_research",
+            "legacy_score": 0.195,
+            "reroll_index": 2,
+            "stop_reason": "exhausted"
+          }
+        ],
+        "rerolls_used": 2,
+        "hand_keys": [
+          "experience",
+          "boss_research",
+          "study_break"
+        ],
+        "hand_legacy_scores": {
+          "experience": 0.156,
+          "boss_research": 0.195,
+          "study_break": -0.069
+        },
+        "eligible_keys": [
+          "experience",
+          "boss_research",
+          "study_break"
+        ],
+        "legacy_winner": "boss_research",
+        "legacy_score": 0.195,
+        "legacy_refine_gate": false,
+        "pre_decision_rng_digest": "185cae4d36f61709",
+        "candidates": [
+          {
+            "card_id": "experience",
+            "legacy_score": 0.156,
+            "pe_status": "not_evaluated"
+          },
+          {
+            "card_id": "boss_research",
+            "legacy_score": 0.195,
+            "pe_status": "not_evaluated"
+          },
+          {
+            "card_id": "study_break",
+            "legacy_score": -0.069,
+            "pe_status": "not_evaluated"
+          }
+        ],
+        "action": "take",
+        "selected_card": "boss_research",
+        "decision_source": "legacy",
+        "fallback_reason": null,
+        "upgrades": {},
+        "post_decision_rng_digest": "f4b4cf354c9eb73b"
+      },
+      "pe": {
+        "seed": 20260828,
+        "trial_index": 1,
+        "profile": "balanced",
+        "allow_overdrive": true,
+        "attempt": 9,
+        "decision_index": 15,
+        "take_mode": "pe",
+        "next_wave": 61,
+        "phase": "xp",
+        "forced_rarity": null,
+        "forced_card": null,
+        "starter": false,
+        "reroll_trace": [
+          {
+            "hand": [
+              "critical_power",
+              "light_attack",
+              "precise_strike"
+            ],
+            "eligible": [
+              "critical_power",
+              "light_attack",
+              "precise_strike"
+            ],
+            "legacy_winner": "light_attack",
+            "legacy_score": 0.405,
+            "reroll_index": 0,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "rapid_fire",
+              "scholar",
+              "fast_learner"
+            ],
+            "eligible": [
+              "rapid_fire",
+              "scholar",
+              "fast_learner"
+            ],
+            "legacy_winner": "rapid_fire",
+            "legacy_score": 0.63,
+            "reroll_index": 1,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "experience",
+              "boss_research",
+              "study_break"
+            ],
+            "eligible": [
+              "experience",
+              "boss_research",
+              "study_break"
+            ],
+            "legacy_winner": "boss_research",
+            "legacy_score": 0.195,
+            "reroll_index": 2,
+            "stop_reason": "exhausted"
+          }
+        ],
+        "rerolls_used": 2,
+        "hand_keys": [
+          "experience",
+          "boss_research",
+          "study_break"
+        ],
+        "hand_legacy_scores": {
+          "experience": 0.156,
+          "boss_research": 0.195,
+          "study_break": -0.069
+        },
+        "eligible_keys": [
+          "experience",
+          "boss_research",
+          "study_break"
+        ],
+        "legacy_winner": "boss_research",
+        "legacy_score": 0.195,
+        "legacy_refine_gate": false,
+        "pre_decision_rng_digest": "185cae4d36f61709",
+        "candidates": [
+          {
+            "card_id": "experience",
+            "take_eligible": true,
+            "legacy_score": 0.156,
+            "pe_status": "ok",
+            "immediate_combat_pe": 0.0,
+            "conditional_combat_pe": 0.0,
+            "growth_pe": 0.0,
+            "xp_pe": 0.004983385944789345,
+            "total_pe": 0.0007475078917184017,
+            "predicted_run_end_wave": 71,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": 0.0,
+            "conditional_status": "ok"
+          },
+          {
+            "card_id": "boss_research",
+            "take_eligible": true,
+            "legacy_score": 0.195,
+            "pe_status": "ok",
+            "immediate_combat_pe": -0.006966901039389431,
+            "conditional_combat_pe": -1.8167285857502563e-16,
+            "growth_pe": 0.0,
+            "xp_pe": 0.0,
+            "total_pe": -0.004180140623633768,
+            "predicted_run_end_wave": 71,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": -0.006967110644303524,
+            "conditional_status": "ok"
+          },
+          {
+            "card_id": "study_break",
+            "take_eligible": true,
+            "legacy_score": -0.069,
+            "pe_status": "ok",
+            "immediate_combat_pe": -0.008773924307505343,
+            "conditional_combat_pe": -4.037174635000569e-16,
+            "growth_pe": 0.0,
+            "xp_pe": 0.004984233183145259,
+            "total_pe": -0.004516719607031659,
+            "predicted_run_end_wave": 71,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": -0.004150120004478147,
+            "conditional_status": "ok"
+          }
+        ],
+        "action": "take",
+        "selected_card": "experience",
+        "decision_source": "pe",
+        "fallback_reason": null,
+        "upgrades": {},
+        "post_decision_rng_digest": "f4b4cf354c9eb73b"
+      }
+    },
+    {
+      "kind": "selection_divergence",
+      "legacy": {
+        "seed": 20260828,
+        "trial_index": 2,
+        "profile": "balanced",
+        "allow_overdrive": true,
+        "attempt": 8,
+        "decision_index": 16,
+        "take_mode": "legacy",
+        "next_wave": 80,
+        "phase": "xp",
+        "forced_rarity": null,
+        "forced_card": null,
+        "starter": false,
+        "reroll_trace": [
+          {
+            "hand": [
+              "study_break",
+              "heavy_critical",
+              "precise_strike"
+            ],
+            "eligible": [
+              "study_break",
+              "heavy_critical",
+              "precise_strike"
+            ],
+            "legacy_winner": "heavy_critical",
+            "legacy_score": 0.11700000000000002,
+            "reroll_index": 0,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "heavy_blow",
+              "sharpened_edge",
+              "experience"
+            ],
+            "eligible": [
+              "heavy_blow",
+              "sharpened_edge",
+              "experience"
+            ],
+            "legacy_winner": "heavy_blow",
+            "legacy_score": 0.42300000000000004,
+            "reroll_index": 1,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "scholar",
+              "fast_learner",
+              "rapid_fire"
+            ],
+            "eligible": [
+              "scholar",
+              "fast_learner",
+              "rapid_fire"
+            ],
+            "legacy_winner": "scholar",
+            "legacy_score": 0.925,
+            "reroll_index": 2,
+            "stop_reason": "exhausted"
+          }
+        ],
+        "rerolls_used": 2,
+        "hand_keys": [
+          "scholar",
+          "fast_learner",
+          "rapid_fire"
+        ],
+        "hand_legacy_scores": {
+          "scholar": 0.925,
+          "fast_learner": -0.07500000000000001,
+          "rapid_fire": 0.612
+        },
+        "eligible_keys": [
+          "scholar",
+          "fast_learner",
+          "rapid_fire"
+        ],
+        "legacy_winner": "scholar",
+        "legacy_score": 0.925,
+        "legacy_refine_gate": false,
+        "pre_decision_rng_digest": "59febf6846bea82c",
+        "candidates": [
+          {
+            "card_id": "scholar",
+            "legacy_score": 0.925,
+            "pe_status": "not_evaluated"
+          },
+          {
+            "card_id": "fast_learner",
+            "legacy_score": -0.07500000000000001,
+            "pe_status": "not_evaluated"
+          },
+          {
+            "card_id": "rapid_fire",
+            "legacy_score": 0.612,
+            "pe_status": "not_evaluated"
+          }
+        ],
+        "action": "take",
+        "selected_card": "scholar",
+        "decision_source": "legacy",
+        "fallback_reason": null,
+        "upgrades": {},
+        "post_decision_rng_digest": "f15425cb612876d8"
+      },
+      "pe": {
+        "seed": 20260828,
+        "trial_index": 2,
+        "profile": "balanced",
+        "allow_overdrive": true,
+        "attempt": 8,
+        "decision_index": 16,
+        "take_mode": "pe",
+        "next_wave": 80,
+        "phase": "xp",
+        "forced_rarity": null,
+        "forced_card": null,
+        "starter": false,
+        "reroll_trace": [
+          {
+            "hand": [
+              "study_break",
+              "heavy_critical",
+              "precise_strike"
+            ],
+            "eligible": [
+              "study_break",
+              "heavy_critical",
+              "precise_strike"
+            ],
+            "legacy_winner": "heavy_critical",
+            "legacy_score": 0.11700000000000002,
+            "reroll_index": 0,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "heavy_blow",
+              "sharpened_edge",
+              "experience"
+            ],
+            "eligible": [
+              "heavy_blow",
+              "sharpened_edge",
+              "experience"
+            ],
+            "legacy_winner": "heavy_blow",
+            "legacy_score": 0.42300000000000004,
+            "reroll_index": 1,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "scholar",
+              "fast_learner",
+              "rapid_fire"
+            ],
+            "eligible": [
+              "scholar",
+              "fast_learner",
+              "rapid_fire"
+            ],
+            "legacy_winner": "scholar",
+            "legacy_score": 0.925,
+            "reroll_index": 2,
+            "stop_reason": "exhausted"
+          }
+        ],
+        "rerolls_used": 2,
+        "hand_keys": [
+          "scholar",
+          "fast_learner",
+          "rapid_fire"
+        ],
+        "hand_legacy_scores": {
+          "scholar": 0.925,
+          "fast_learner": -0.07500000000000001,
+          "rapid_fire": 0.612
+        },
+        "eligible_keys": [
+          "scholar",
+          "fast_learner",
+          "rapid_fire"
+        ],
+        "legacy_winner": "scholar",
+        "legacy_score": 0.925,
+        "legacy_refine_gate": false,
+        "pre_decision_rng_digest": "59febf6846bea82c",
+        "candidates": [
+          {
+            "card_id": "scholar",
+            "take_eligible": true,
+            "legacy_score": 0.925,
+            "pe_status": "ok",
+            "immediate_combat_pe": 0.0,
+            "conditional_combat_pe": 0.0,
+            "growth_pe": 0.0,
+            "xp_pe": 0.004332004539092755,
+            "total_pe": 0.0006498006808639133,
+            "predicted_run_end_wave": 91,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": 0.0,
+            "conditional_status": "ok"
+          },
+          {
+            "card_id": "fast_learner",
+            "take_eligible": true,
+            "legacy_score": -0.07500000000000001,
+            "pe_status": "ok",
+            "immediate_combat_pe": -0.008773924307505307,
+            "conditional_combat_pe": 0.0,
+            "growth_pe": 0.0,
+            "xp_pe": 0.004328125257492298,
+            "total_pe": -0.004615135795879339,
+            "predicted_run_end_wave": 91,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": -0.004274393797107638,
+            "conditional_status": "ok"
+          },
+          {
+            "card_id": "rapid_fire",
+            "take_eligible": true,
+            "legacy_score": 0.612,
+            "pe_status": "ok",
+            "immediate_combat_pe": 0.05799194697768684,
+            "conditional_combat_pe": 0.0,
+            "growth_pe": 0.0,
+            "xp_pe": 0.0,
+            "total_pe": 0.0347951681866121,
+            "predicted_run_end_wave": 91,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": 0.06361474130925115,
+            "conditional_status": "ok"
+          }
+        ],
+        "action": "take",
+        "selected_card": "rapid_fire",
+        "decision_source": "pe",
+        "fallback_reason": null,
+        "upgrades": {},
+        "post_decision_rng_digest": "f15425cb612876d8"
+      }
+    },
+    {
+      "kind": "selection_divergence",
+      "legacy": {
+        "seed": 20260828,
+        "trial_index": 3,
+        "profile": "balanced",
+        "allow_overdrive": true,
+        "attempt": 1,
+        "decision_index": 4,
+        "take_mode": "legacy",
+        "next_wave": 14,
+        "phase": "xp",
+        "forced_rarity": null,
+        "forced_card": null,
+        "starter": false,
+        "reroll_trace": [
+          {
+            "hand": [
+              "scholar",
+              "fast_learner",
+              "steady_force"
+            ],
+            "eligible": [
+              "scholar",
+              "fast_learner",
+              "steady_force"
+            ],
+            "legacy_winner": "steady_force",
+            "legacy_score": 0.6,
+            "reroll_index": 0,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "rapid_fire",
+              "power_up",
+              "experience"
+            ],
+            "eligible": [
+              "rapid_fire",
+              "power_up",
+              "experience"
+            ],
+            "legacy_winner": "power_up",
+            "legacy_score": 0.612,
+            "reroll_index": 1,
+            "stop_reason": "exhausted"
+          }
+        ],
+        "rerolls_used": 1,
+        "hand_keys": [
+          "rapid_fire",
+          "power_up",
+          "experience"
+        ],
+        "hand_legacy_scores": {
+          "rapid_fire": 0.606,
+          "power_up": 0.612,
+          "experience": 0.15
+        },
+        "eligible_keys": [
+          "rapid_fire",
+          "power_up",
+          "experience"
+        ],
+        "legacy_winner": "power_up",
+        "legacy_score": 0.612,
+        "legacy_refine_gate": false,
+        "pre_decision_rng_digest": "6d21cef838d32314",
+        "candidates": [
+          {
+            "card_id": "rapid_fire",
+            "legacy_score": 0.606,
+            "pe_status": "not_evaluated"
+          },
+          {
+            "card_id": "power_up",
+            "legacy_score": 0.612,
+            "pe_status": "not_evaluated"
+          },
+          {
+            "card_id": "experience",
+            "legacy_score": 0.15,
+            "pe_status": "not_evaluated"
+          }
+        ],
+        "action": "take",
+        "selected_card": "power_up",
+        "decision_source": "legacy",
+        "fallback_reason": null,
+        "upgrades": {},
+        "post_decision_rng_digest": "a1da7e3d36594bd4"
+      },
+      "pe": {
+        "seed": 20260828,
+        "trial_index": 3,
+        "profile": "balanced",
+        "allow_overdrive": true,
+        "attempt": 1,
+        "decision_index": 4,
+        "take_mode": "pe",
+        "next_wave": 14,
+        "phase": "xp",
+        "forced_rarity": null,
+        "forced_card": null,
+        "starter": false,
+        "reroll_trace": [
+          {
+            "hand": [
+              "scholar",
+              "fast_learner",
+              "steady_force"
+            ],
+            "eligible": [
+              "scholar",
+              "fast_learner",
+              "steady_force"
+            ],
+            "legacy_winner": "steady_force",
+            "legacy_score": 0.6,
+            "reroll_index": 0,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "rapid_fire",
+              "power_up",
+              "experience"
+            ],
+            "eligible": [
+              "rapid_fire",
+              "power_up",
+              "experience"
+            ],
+            "legacy_winner": "power_up",
+            "legacy_score": 0.612,
+            "reroll_index": 1,
+            "stop_reason": "exhausted"
+          }
+        ],
+        "rerolls_used": 1,
+        "hand_keys": [
+          "rapid_fire",
+          "power_up",
+          "experience"
+        ],
+        "hand_legacy_scores": {
+          "rapid_fire": 0.606,
+          "power_up": 0.612,
+          "experience": 0.15
+        },
+        "eligible_keys": [
+          "rapid_fire",
+          "power_up",
+          "experience"
+        ],
+        "legacy_winner": "power_up",
+        "legacy_score": 0.612,
+        "legacy_refine_gate": false,
+        "pre_decision_rng_digest": "6d21cef838d32314",
+        "candidates": [
+          {
+            "card_id": "rapid_fire",
+            "take_eligible": true,
+            "legacy_score": 0.606,
+            "pe_status": "ok",
+            "immediate_combat_pe": 0.06694678963061318,
+            "conditional_combat_pe": -1.1102230246251565e-16,
+            "growth_pe": 0.0,
+            "xp_pe": 0.0,
+            "total_pe": 0.04016807377836784,
+            "predicted_run_end_wave": 23,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": 0.05557291535194632,
+            "conditional_status": "ok"
+          },
+          {
+            "card_id": "power_up",
+            "take_eligible": true,
+            "legacy_score": 0.612,
+            "pe_status": "ok",
+            "immediate_combat_pe": 0.06694678963061318,
+            "conditional_combat_pe": -1.1102230246251565e-16,
+            "growth_pe": 0.0,
+            "xp_pe": 0.0,
+            "total_pe": 0.04016807377836784,
+            "predicted_run_end_wave": 23,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": 0.05557291535194632,
+            "conditional_status": "ok"
+          },
+          {
+            "card_id": "experience",
+            "take_eligible": true,
+            "legacy_score": 0.15,
+            "pe_status": "ok",
+            "immediate_combat_pe": 0.0,
+            "conditional_combat_pe": 0.0,
+            "growth_pe": 0.0,
+            "xp_pe": 0.0180661731689402,
+            "total_pe": 0.00270992597534103,
+            "predicted_run_end_wave": 23,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": 0.0,
+            "conditional_status": "ok"
+          }
+        ],
+        "action": "take",
+        "selected_card": "rapid_fire",
+        "decision_source": "pe",
+        "fallback_reason": null,
+        "upgrades": {},
+        "post_decision_rng_digest": "a1da7e3d36594bd4"
+      }
+    },
+    null,
+    {
+      "kind": "selection_divergence",
+      "legacy": {
+        "seed": 20260828,
+        "trial_index": 5,
+        "profile": "balanced",
+        "allow_overdrive": true,
+        "attempt": 1,
+        "decision_index": 2,
+        "take_mode": "legacy",
+        "next_wave": 8,
+        "phase": "xp",
+        "forced_rarity": null,
+        "forced_card": null,
+        "starter": true,
+        "reroll_trace": [
+          {
+            "hand": [
+              "steady_force",
+              "heavy_blow",
+              "glass_cannon"
+            ],
+            "eligible": [
+              "steady_force"
+            ],
+            "legacy_winner": "steady_force",
+            "legacy_score": 0.6,
+            "reroll_index": 0,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "rapid_fire",
+              "scholar",
+              "power_up"
+            ],
+            "eligible": [
+              "rapid_fire",
+              "power_up"
+            ],
+            "legacy_winner": "power_up",
+            "legacy_score": 0.606,
+            "reroll_index": 1,
+            "stop_reason": "exhausted"
+          }
+        ],
+        "rerolls_used": 1,
+        "hand_keys": [
+          "rapid_fire",
+          "scholar",
+          "power_up"
+        ],
+        "hand_legacy_scores": {
+          "rapid_fire": 0.6,
+          "scholar": 0.15,
+          "power_up": 0.606
+        },
+        "eligible_keys": [
+          "rapid_fire",
+          "power_up"
+        ],
+        "legacy_winner": "power_up",
+        "legacy_score": 0.606,
+        "legacy_refine_gate": false,
+        "pre_decision_rng_digest": "ec839456eced0b6c",
+        "candidates": [
+          {
+            "card_id": "rapid_fire",
+            "legacy_score": 0.6,
+            "pe_status": "not_evaluated"
+          },
+          {
+            "card_id": "power_up",
+            "legacy_score": 0.606,
+            "pe_status": "not_evaluated"
+          }
+        ],
+        "action": "take",
+        "selected_card": "power_up",
+        "decision_source": "legacy",
+        "fallback_reason": null,
+        "upgrades": {},
+        "post_decision_rng_digest": "82b80d4c96dcd989"
+      },
+      "pe": {
+        "seed": 20260828,
+        "trial_index": 5,
+        "profile": "balanced",
+        "allow_overdrive": true,
+        "attempt": 1,
+        "decision_index": 2,
+        "take_mode": "pe",
+        "next_wave": 8,
+        "phase": "xp",
+        "forced_rarity": null,
+        "forced_card": null,
+        "starter": true,
+        "reroll_trace": [
+          {
+            "hand": [
+              "steady_force",
+              "heavy_blow",
+              "glass_cannon"
+            ],
+            "eligible": [
+              "steady_force"
+            ],
+            "legacy_winner": "steady_force",
+            "legacy_score": 0.6,
+            "reroll_index": 0,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "rapid_fire",
+              "scholar",
+              "power_up"
+            ],
+            "eligible": [
+              "rapid_fire",
+              "power_up"
+            ],
+            "legacy_winner": "power_up",
+            "legacy_score": 0.606,
+            "reroll_index": 1,
+            "stop_reason": "exhausted"
+          }
+        ],
+        "rerolls_used": 1,
+        "hand_keys": [
+          "rapid_fire",
+          "scholar",
+          "power_up"
+        ],
+        "hand_legacy_scores": {
+          "rapid_fire": 0.6,
+          "scholar": 0.15,
+          "power_up": 0.606
+        },
+        "eligible_keys": [
+          "rapid_fire",
+          "power_up"
+        ],
+        "legacy_winner": "power_up",
+        "legacy_score": 0.606,
+        "legacy_refine_gate": false,
+        "pre_decision_rng_digest": "ec839456eced0b6c",
+        "candidates": [
+          {
+            "card_id": "rapid_fire",
+            "take_eligible": true,
+            "legacy_score": 0.6,
+            "pe_status": "ok",
+            "immediate_combat_pe": 0.07918124604762482,
+            "conditional_combat_pe": -1.5265566588595902e-16,
+            "growth_pe": 0.0,
+            "xp_pe": 0.0,
+            "total_pe": 0.0475087476285748,
+            "predicted_run_end_wave": 9,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": 0.22299308838964138,
+            "conditional_status": "ok"
+          },
+          {
+            "card_id": "scholar",
+            "take_eligible": false,
+            "legacy_score": 0.15,
+            "pe_status": "ok",
+            "immediate_combat_pe": 0.0,
+            "conditional_combat_pe": 0.0,
+            "growth_pe": 0.0,
+            "xp_pe": 0.0,
+            "total_pe": 0.0,
+            "predicted_run_end_wave": 9,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": 0.0,
+            "conditional_status": "ok"
+          },
+          {
+            "card_id": "power_up",
+            "take_eligible": true,
+            "legacy_score": 0.606,
+            "pe_status": "ok",
+            "immediate_combat_pe": 0.07918124604762482,
+            "conditional_combat_pe": -1.5265566588595902e-16,
+            "growth_pe": 0.0,
+            "xp_pe": 0.0,
+            "total_pe": 0.0475087476285748,
+            "predicted_run_end_wave": 9,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": 0.22299308838964138,
+            "conditional_status": "ok"
+          }
+        ],
+        "action": "take",
+        "selected_card": "rapid_fire",
+        "decision_source": "pe",
+        "fallback_reason": null,
+        "upgrades": {},
+        "post_decision_rng_digest": "82b80d4c96dcd989"
+      }
+    },
+    {
+      "kind": "selection_divergence",
+      "legacy": {
+        "seed": 20260828,
+        "trial_index": 6,
+        "profile": "balanced",
+        "allow_overdrive": true,
+        "attempt": 2,
+        "decision_index": 9,
+        "take_mode": "legacy",
+        "next_wave": 28,
+        "phase": "xp",
+        "forced_rarity": null,
+        "forced_card": null,
+        "starter": false,
+        "reroll_trace": [
+          {
+            "hand": [
+              "rapid_fire",
+              "sharpened_edge",
+              "heavy_blow"
+            ],
+            "eligible": [
+              "rapid_fire",
+              "sharpened_edge",
+              "heavy_blow"
+            ],
+            "legacy_winner": "rapid_fire",
+            "legacy_score": 0.612,
+            "reroll_index": 0,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "experience",
+              "scholar",
+              "accelerated_learning"
+            ],
+            "eligible": [
+              "experience",
+              "scholar",
+              "accelerated_learning"
+            ],
+            "legacy_winner": "accelerated_learning",
+            "legacy_score": 1.00585,
+            "reroll_index": 1,
+            "stop_reason": "exhausted"
+          }
+        ],
+        "rerolls_used": 1,
+        "hand_keys": [
+          "experience",
+          "scholar",
+          "accelerated_learning"
+        ],
+        "hand_legacy_scores": {
+          "experience": 0.156,
+          "scholar": 0.156,
+          "accelerated_learning": 1.00585
+        },
+        "eligible_keys": [
+          "experience",
+          "scholar",
+          "accelerated_learning"
+        ],
+        "legacy_winner": "accelerated_learning",
+        "legacy_score": 1.00585,
+        "legacy_refine_gate": false,
+        "pre_decision_rng_digest": "6152b8a71a8395bc",
+        "candidates": [
+          {
+            "card_id": "experience",
+            "legacy_score": 0.156,
+            "pe_status": "not_evaluated"
+          },
+          {
+            "card_id": "scholar",
+            "legacy_score": 0.156,
+            "pe_status": "not_evaluated"
+          },
+          {
+            "card_id": "accelerated_learning",
+            "legacy_score": 1.00585,
+            "pe_status": "not_evaluated"
+          }
+        ],
+        "action": "take",
+        "selected_card": "accelerated_learning",
+        "decision_source": "legacy",
+        "fallback_reason": null,
+        "upgrades": {},
+        "post_decision_rng_digest": "40aa7b18131f46dc"
+      },
+      "pe": {
+        "seed": 20260828,
+        "trial_index": 6,
+        "profile": "balanced",
+        "allow_overdrive": true,
+        "attempt": 2,
+        "decision_index": 9,
+        "take_mode": "pe",
+        "next_wave": 28,
+        "phase": "xp",
+        "forced_rarity": null,
+        "forced_card": null,
+        "starter": false,
+        "reroll_trace": [
+          {
+            "hand": [
+              "rapid_fire",
+              "sharpened_edge",
+              "heavy_blow"
+            ],
+            "eligible": [
+              "rapid_fire",
+              "sharpened_edge",
+              "heavy_blow"
+            ],
+            "legacy_winner": "rapid_fire",
+            "legacy_score": 0.612,
+            "reroll_index": 0,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "experience",
+              "scholar",
+              "accelerated_learning"
+            ],
+            "eligible": [
+              "experience",
+              "scholar",
+              "accelerated_learning"
+            ],
+            "legacy_winner": "accelerated_learning",
+            "legacy_score": 1.00585,
+            "reroll_index": 1,
+            "stop_reason": "exhausted"
+          }
+        ],
+        "rerolls_used": 1,
+        "hand_keys": [
+          "experience",
+          "scholar",
+          "accelerated_learning"
+        ],
+        "hand_legacy_scores": {
+          "experience": 0.156,
+          "scholar": 0.156,
+          "accelerated_learning": 1.00585
+        },
+        "eligible_keys": [
+          "experience",
+          "scholar",
+          "accelerated_learning"
+        ],
+        "legacy_winner": "accelerated_learning",
+        "legacy_score": 1.00585,
+        "legacy_refine_gate": false,
+        "pre_decision_rng_digest": "6152b8a71a8395bc",
+        "candidates": [
+          {
+            "card_id": "experience",
+            "take_eligible": true,
+            "legacy_score": 0.156,
+            "pe_status": "ok",
+            "immediate_combat_pe": 0.008600171761917519,
+            "conditional_combat_pe": 0.0,
+            "growth_pe": 0.0,
+            "xp_pe": -0.00016647838550108707,
+            "total_pe": 0.005135131299325348,
+            "predicted_run_end_wave": 34,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": 0.014831455429185236,
+            "conditional_status": "ok"
+          },
+          {
+            "card_id": "scholar",
+            "take_eligible": true,
+            "legacy_score": 0.156,
+            "pe_status": "ok",
+            "immediate_combat_pe": 0.0,
+            "conditional_combat_pe": 0.0,
+            "growth_pe": 0.0,
+            "xp_pe": 0.007045549860323811,
+            "total_pe": 0.0010568324790485716,
+            "predicted_run_end_wave": 34,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": 0.0,
+            "conditional_status": "ok"
+          },
+          {
+            "card_id": "accelerated_learning",
+            "take_eligible": true,
+            "legacy_score": 1.00585,
+            "pe_status": "ok",
+            "immediate_combat_pe": 0.002042103134412665,
+            "conditional_combat_pe": 0.0,
+            "growth_pe": 0.0,
+            "xp_pe": 0.0006531797830452921,
+            "total_pe": 0.0013232388481043927,
+            "predicted_run_end_wave": 34,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": 0.0037903703022209023,
+            "conditional_status": "ok"
+          }
+        ],
+        "action": "take",
+        "selected_card": "experience",
+        "decision_source": "pe",
+        "fallback_reason": null,
+        "upgrades": {},
+        "post_decision_rng_digest": "40aa7b18131f46dc"
+      }
+    },
+    {
+      "kind": "selection_divergence",
+      "legacy": {
+        "seed": 20260828,
+        "trial_index": 7,
+        "profile": "balanced",
+        "allow_overdrive": true,
+        "attempt": 8,
+        "decision_index": 17,
+        "take_mode": "legacy",
+        "next_wave": 81,
+        "phase": "xp",
+        "forced_rarity": null,
+        "forced_card": null,
+        "starter": false,
+        "reroll_trace": [
+          {
+            "hand": [
+              "light_attack",
+              "critical_eye",
+              "heavy_blow"
+            ],
+            "eligible": [
+              "light_attack",
+              "critical_eye",
+              "heavy_blow"
+            ],
+            "legacy_winner": "heavy_blow",
+            "legacy_score": 0.41700000000000004,
+            "reroll_index": 0,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "heavy_critical",
+              "study_break",
+              "rapid_fire"
+            ],
+            "eligible": [
+              "heavy_critical",
+              "study_break",
+              "rapid_fire"
+            ],
+            "legacy_winner": "rapid_fire",
+            "legacy_score": 0.606,
+            "reroll_index": 1,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "accelerated_learning",
+              "fast_learner",
+              "scholar"
+            ],
+            "eligible": [
+              "accelerated_learning",
+              "fast_learner",
+              "scholar"
+            ],
+            "legacy_winner": "accelerated_learning",
+            "legacy_score": 1.0850499999999998,
+            "reroll_index": 2,
+            "stop_reason": "exhausted"
+          }
+        ],
+        "rerolls_used": 2,
+        "hand_keys": [
+          "accelerated_learning",
+          "fast_learner",
+          "scholar"
+        ],
+        "hand_legacy_scores": {
+          "accelerated_learning": 1.0850499999999998,
+          "fast_learner": -0.05700000000000002,
+          "scholar": 0.16799999999999998
+        },
+        "eligible_keys": [
+          "accelerated_learning",
+          "fast_learner",
+          "scholar"
+        ],
+        "legacy_winner": "accelerated_learning",
+        "legacy_score": 1.0850499999999998,
+        "legacy_refine_gate": false,
+        "pre_decision_rng_digest": "33ffd59793192dab",
+        "candidates": [
+          {
+            "card_id": "accelerated_learning",
+            "legacy_score": 1.0850499999999998,
+            "pe_status": "not_evaluated"
+          },
+          {
+            "card_id": "fast_learner",
+            "legacy_score": -0.05700000000000002,
+            "pe_status": "not_evaluated"
+          },
+          {
+            "card_id": "scholar",
+            "legacy_score": 0.16799999999999998,
+            "pe_status": "not_evaluated"
+          }
+        ],
+        "action": "take",
+        "selected_card": "accelerated_learning",
+        "decision_source": "legacy",
+        "fallback_reason": null,
+        "upgrades": {},
+        "post_decision_rng_digest": "aec8a8a5a8cd35f7"
+      },
+      "pe": {
+        "seed": 20260828,
+        "trial_index": 7,
+        "profile": "balanced",
+        "allow_overdrive": true,
+        "attempt": 8,
+        "decision_index": 17,
+        "take_mode": "pe",
+        "next_wave": 81,
+        "phase": "xp",
+        "forced_rarity": null,
+        "forced_card": null,
+        "starter": false,
+        "reroll_trace": [
+          {
+            "hand": [
+              "light_attack",
+              "critical_eye",
+              "heavy_blow"
+            ],
+            "eligible": [
+              "light_attack",
+              "critical_eye",
+              "heavy_blow"
+            ],
+            "legacy_winner": "heavy_blow",
+            "legacy_score": 0.41700000000000004,
+            "reroll_index": 0,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "heavy_critical",
+              "study_break",
+              "rapid_fire"
+            ],
+            "eligible": [
+              "heavy_critical",
+              "study_break",
+              "rapid_fire"
+            ],
+            "legacy_winner": "rapid_fire",
+            "legacy_score": 0.606,
+            "reroll_index": 1,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "accelerated_learning",
+              "fast_learner",
+              "scholar"
+            ],
+            "eligible": [
+              "accelerated_learning",
+              "fast_learner",
+              "scholar"
+            ],
+            "legacy_winner": "accelerated_learning",
+            "legacy_score": 1.0850499999999998,
+            "reroll_index": 2,
+            "stop_reason": "exhausted"
+          }
+        ],
+        "rerolls_used": 2,
+        "hand_keys": [
+          "accelerated_learning",
+          "fast_learner",
+          "scholar"
+        ],
+        "hand_legacy_scores": {
+          "accelerated_learning": 1.0850499999999998,
+          "fast_learner": -0.05700000000000002,
+          "scholar": 0.16799999999999998
+        },
+        "eligible_keys": [
+          "accelerated_learning",
+          "fast_learner",
+          "scholar"
+        ],
+        "legacy_winner": "accelerated_learning",
+        "legacy_score": 1.0850499999999998,
+        "legacy_refine_gate": false,
+        "pre_decision_rng_digest": "33ffd59793192dab",
+        "candidates": [
+          {
+            "card_id": "accelerated_learning",
+            "take_eligible": true,
+            "legacy_score": 1.0850499999999998,
+            "pe_status": "ok",
+            "immediate_combat_pe": 0.0048376948723803815,
+            "conditional_combat_pe": 0.0,
+            "growth_pe": 0.0,
+            "xp_pe": 0.00045914046522542006,
+            "total_pe": 0.0029714879932120418,
+            "predicted_run_end_wave": 98,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": 0.003091319197386349,
+            "conditional_status": "ok"
+          },
+          {
+            "card_id": "fast_learner",
+            "take_eligible": true,
+            "legacy_score": -0.05700000000000002,
+            "pe_status": "ok",
+            "immediate_combat_pe": 0.026274642871012777,
+            "conditional_combat_pe": 0.0,
+            "growth_pe": 0.0,
+            "xp_pe": 0.013667991572825899,
+            "total_pe": 0.01781498445853155,
+            "predicted_run_end_wave": 98,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": 0.01959065399321436,
+            "conditional_status": "ok"
+          },
+          {
+            "card_id": "scholar",
+            "take_eligible": true,
+            "legacy_score": 0.16799999999999998,
+            "pe_status": "ok",
+            "immediate_combat_pe": 0.0,
+            "conditional_combat_pe": 0.0,
+            "growth_pe": 0.0,
+            "xp_pe": 0.0069031106737172075,
+            "total_pe": 0.0010354666010575812,
+            "predicted_run_end_wave": 98,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": 0.0,
+            "conditional_status": "ok"
+          }
+        ],
+        "action": "take",
+        "selected_card": "fast_learner",
+        "decision_source": "pe",
+        "fallback_reason": null,
+        "upgrades": {},
+        "post_decision_rng_digest": "aec8a8a5a8cd35f7"
+      }
+    },
+    null,
+    {
+      "kind": "selection_divergence",
+      "legacy": {
+        "seed": 20260828,
+        "trial_index": 9,
+        "profile": "balanced",
+        "allow_overdrive": true,
+        "attempt": 1,
+        "decision_index": 12,
+        "take_mode": "legacy",
+        "next_wave": 44,
+        "phase": "xp",
+        "forced_rarity": null,
+        "forced_card": null,
+        "starter": false,
+        "reroll_trace": [
+          {
+            "hand": [
+              "scholar",
+              "experience",
+              "heavy_blow"
+            ],
+            "eligible": [
+              "scholar",
+              "experience",
+              "heavy_blow"
+            ],
+            "legacy_winner": "heavy_blow",
+            "legacy_score": 0.387,
+            "reroll_index": 0,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "knowledge_conversion",
+              "fast_learner",
+              "rapid_fire"
+            ],
+            "eligible": [
+              "knowledge_conversion",
+              "fast_learner",
+              "rapid_fire"
+            ],
+            "legacy_winner": "knowledge_conversion",
+            "legacy_score": 1.7638499999999997,
+            "reroll_index": 1,
+            "stop_reason": "threshold"
+          }
+        ],
+        "rerolls_used": 1,
+        "hand_keys": [
+          "knowledge_conversion",
+          "fast_learner",
+          "rapid_fire"
+        ],
+        "hand_legacy_scores": {
+          "knowledge_conversion": 1.7638499999999997,
+          "fast_learner": -0.07500000000000001,
+          "rapid_fire": 0.612
+        },
+        "eligible_keys": [
+          "knowledge_conversion",
+          "fast_learner",
+          "rapid_fire"
+        ],
+        "legacy_winner": "knowledge_conversion",
+        "legacy_score": 1.7638499999999997,
+        "legacy_refine_gate": false,
+        "pre_decision_rng_digest": "7afbe5ac1b719961",
+        "candidates": [
+          {
+            "card_id": "knowledge_conversion",
+            "legacy_score": 1.7638499999999997,
+            "pe_status": "not_evaluated"
+          },
+          {
+            "card_id": "fast_learner",
+            "legacy_score": -0.07500000000000001,
+            "pe_status": "not_evaluated"
+          },
+          {
+            "card_id": "rapid_fire",
+            "legacy_score": 0.612,
+            "pe_status": "not_evaluated"
+          }
+        ],
+        "action": "take",
+        "selected_card": "knowledge_conversion",
+        "decision_source": "legacy",
+        "fallback_reason": null,
+        "upgrades": {},
+        "post_decision_rng_digest": "9569709f27359d79"
+      },
+      "pe": {
+        "seed": 20260828,
+        "trial_index": 9,
+        "profile": "balanced",
+        "allow_overdrive": true,
+        "attempt": 1,
+        "decision_index": 12,
+        "take_mode": "pe",
+        "next_wave": 44,
+        "phase": "xp",
+        "forced_rarity": null,
+        "forced_card": null,
+        "starter": false,
+        "reroll_trace": [
+          {
+            "hand": [
+              "scholar",
+              "experience",
+              "heavy_blow"
+            ],
+            "eligible": [
+              "scholar",
+              "experience",
+              "heavy_blow"
+            ],
+            "legacy_winner": "heavy_blow",
+            "legacy_score": 0.387,
+            "reroll_index": 0,
+            "stop_reason": "reroll"
+          },
+          {
+            "hand": [
+              "knowledge_conversion",
+              "fast_learner",
+              "rapid_fire"
+            ],
+            "eligible": [
+              "knowledge_conversion",
+              "fast_learner",
+              "rapid_fire"
+            ],
+            "legacy_winner": "knowledge_conversion",
+            "legacy_score": 1.7638499999999997,
+            "reroll_index": 1,
+            "stop_reason": "threshold"
+          }
+        ],
+        "rerolls_used": 1,
+        "hand_keys": [
+          "knowledge_conversion",
+          "fast_learner",
+          "rapid_fire"
+        ],
+        "hand_legacy_scores": {
+          "knowledge_conversion": 1.7638499999999997,
+          "fast_learner": -0.07500000000000001,
+          "rapid_fire": 0.612
+        },
+        "eligible_keys": [
+          "knowledge_conversion",
+          "fast_learner",
+          "rapid_fire"
+        ],
+        "legacy_winner": "knowledge_conversion",
+        "legacy_score": 1.7638499999999997,
+        "legacy_refine_gate": false,
+        "pre_decision_rng_digest": "7afbe5ac1b719961",
+        "candidates": [
+          {
+            "card_id": "knowledge_conversion",
+            "take_eligible": true,
+            "legacy_score": 1.7638499999999997,
+            "pe_status": "ok",
+            "immediate_combat_pe": 0.0,
+            "conditional_combat_pe": 0.0,
+            "growth_pe": 0.0,
+            "xp_pe": 0.0,
+            "total_pe": 0.0,
+            "predicted_run_end_wave": 45,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": 0.0,
+            "conditional_status": "ok"
+          },
+          {
+            "card_id": "fast_learner",
+            "take_eligible": true,
+            "legacy_score": -0.07500000000000001,
+            "pe_status": "ok",
+            "immediate_combat_pe": -0.008773924307505121,
+            "conditional_combat_pe": 0.0,
+            "growth_pe": 0.0,
+            "xp_pe": 0.0,
+            "total_pe": -0.005264354584503072,
+            "predicted_run_end_wave": 45,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": -0.024152012734680373,
+            "conditional_status": "ok"
+          },
+          {
+            "card_id": "rapid_fire",
+            "take_eligible": true,
+            "legacy_score": 0.612,
+            "pe_status": "ok",
+            "immediate_combat_pe": 0.057991946977686726,
+            "conditional_combat_pe": -1.1102230246251565e-16,
+            "growth_pe": 0.0,
+            "xp_pe": 0.0,
+            "total_pe": 0.03479516818661197,
+            "predicted_run_end_wave": 45,
+            "prediction_confidence": "low",
+            "terminal_break_probability_delta": 0.16912454878466648,
+            "conditional_status": "ok"
+          }
+        ],
+        "action": "take",
+        "selected_card": "rapid_fire",
+        "decision_source": "pe",
+        "fallback_reason": null,
+        "upgrades": {},
+        "post_decision_rng_digest": "9569709f27359d79"
+      }
+    }
+  ],
+  "red_flags": [],
+  "ambiguous_pe_takes": [
+    [
+      0,
+      7,
+      15
+    ],
+    [
+      3,
+      1,
+      4
+    ],
+    [
+      3,
+      2,
+      5
+    ],
+    [
+      5,
+      1,
+      2
+    ]
+  ]
+}

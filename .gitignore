@@ -1,0 +1,32 @@
+# Dependencies / build
+node_modules/
+dist/
+tmp/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Generated archives
+*.zip
+
+# Simulation outputs:
+# Keep human-readable reports/summaries, ignore large raw logs
+output/*
+!output/*.md
+!output/*.json
+
+# Unrelated project
+assignment-helper/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
