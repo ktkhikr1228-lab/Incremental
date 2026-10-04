@@ -100,18 +100,17 @@ class TakeModeTests(unittest.TestCase):
                 self.assertEqual(run.counts["rapid_fire"], 1)
                 self.assertEqual(run.counts[third], 0)
 
-    def test_unsupported_eligible_falls_back_even_if_ineligible_is_supported(self):
-        hand = [sim.CARD_BY_KEY[key] for key in ("power_up", "steady_force", "experience")]
-        # Starter permits the first two; the supported but ineligible XP card
-        # cannot rescue an incomplete PE comparison.
-        legacy = {"power_up": 1.3, "steady_force": 1.2, "experience": .1}
+    def test_unsupported_eligible_falls_back_whole_hand(self):
+        hand = [sim.CARD_BY_KEY[key] for key in ("power_up", "overclock", "experience")]
+        # The legal unsupported card forces whole-hand fallback.
+        legacy = {"power_up": 1.3, "overclock": 1.2, "experience": .1}
         evaluated = []
         run, _, row = self.choose("pe", hand, legacy, {"power_up": 100.0},
-                                  run=sim.RunState(), evaluated_keys=evaluated)
-        self.assertEqual(row["eligible_keys"], ["power_up", "steady_force"])
-        self.assertEqual(row["ineligible_keys"], ["experience"])
+                                  run=sim.RunState(card_count=3), evaluated_keys=evaluated)
+        self.assertEqual(row["eligible_keys"], ["power_up", "overclock", "experience"])
+        self.assertEqual(row["ineligible_keys"], [])
         self.assertEqual(row["decision_source"], "fallback_legacy")
-        self.assertEqual(row["fallback_reason"], "unsupported_card:steady_force")
+        self.assertEqual(row["fallback_reason"], "unsupported_card:overclock")
         self.assertEqual(row["evaluated_pe_keys"], [])
         self.assertEqual(evaluated, [])
         self.assertEqual(run.counts["power_up"], 1)

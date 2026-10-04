@@ -300,6 +300,13 @@ def _snapshot_values(
     boss: bool,
     use_dp: bool,
     include_weapon: bool = True,
+    *,
+    weapon_base_provider=None,
+    weapon_modifier_provider=None,
+    action_factor_provider=None,
+    crit_factor_provider=None,
+    follow_values_provider=None,
+    xp_multiplier: float = 1.0,
 ) -> dict[str, float | bool | int]:
     counts = run.counts
     state = state_of(permanent)
@@ -307,7 +314,7 @@ def _snapshot_values(
     levels = state.levels if use_dp else {key: 0 for key in ITEM_ORDER}
     c_amp, u_amp, r_amp = epic.amps(counts)
     weapon_mods = (
-        WEAPON_MODIFIER_PROVIDER(run, permanent)
+        (weapon_modifier_provider or WEAPON_MODIFIER_PROVIDER)(run, permanent)
         if include_weapon else default_weapon_modifier_provider(run, permanent)
     )
 
@@ -338,15 +345,15 @@ def _snapshot_values(
 
     accelerated = rare.accelerated_learning_bonus(run.accelerated_units) * r_amp
     xp_bonus = .20 * c_amp * counts.get("experience", 0) + accelerated * counts.get("accelerated_learning", 0)
-    general_xp = (1.0 + c.xp_per_level) ** levels["xp_gain"] * (1.0 + xp_bonus)
+    general_xp = (1.0 + c.xp_per_level) ** levels["xp_gain"] * (1.0 + xp_bonus) * xp_multiplier
     boss_xp = general_xp * (1.0 + .50 * c_amp * counts.get("boss_scholar", 0) + .30 * u_amp * counts.get("boss_research", 0))
 
     attack_bonus = .25 * c_amp * counts.get("power_up", 0) + .35 * u_amp * counts.get("brutal_force", 0) + .15 * u_amp * counts.get("balanced_training", 0)
     raw_base = 1.0 + attack_bonus
-    if run.kills >= 10 and include_weapon:
+    if (run.kills >= 10 or weapon_base_provider is not None) and include_weapon:
         weapon_add = .25 * c_amp * counts.get("weapon_training", 0) + .10 * u_amp * counts.get("overclock", 0)
         weapon_mult = 1.10 * (1.0 + c.weapon_atk_per_level) ** levels["weapon_atk"]
-        weapon_base = WEAPON_BASE_PROVIDER(run, permanent)
+        weapon_base = (weapon_base_provider or WEAPON_BASE_PROVIDER)(run, permanent)
         effective_weapon = (weapon_base + weapon_mods["weapon_atk_additive"]) * (
             1.0 + weapon_add + weapon_mods["weapon_atk_pct"]
         ) * weapon_mult
@@ -367,7 +374,7 @@ def _snapshot_values(
         all_damage_bonus += rare.knowledge_conversion_bonus(general_xp) * r_amp
     all_damage = 1.0 + all_damage_bonus
 
-    crit_factor = epic.crit_expected_multiplier(raw_crit, crit_mult, multi_crit)
+    crit_factor = (crit_factor_provider or epic.crit_expected_multiplier)(raw_crit, crit_mult, multi_crit)
     if compression:
         crit_factor = crit_mult
     hit_count = 1.0 + .20 * r_amp * counts.get("multi_hit", 0)
@@ -379,13 +386,15 @@ def _snapshot_values(
         follow_damage = .50 * r_amp + .25 * r_amp * counts.get("double_strike", 0)
         if counts.get("follow_up_echo", 0) and not counts.get("follow_up_strike", 0):
             follow_rate, follow_damage = .10, .50
+    if follow_values_provider is not None:
+        follow_rate, follow_damage = follow_values_provider(follow_rate, follow_damage)
     follow_rate = min(1.0, follow_rate)
     follow_depth = 2 if counts.get("follow_up_echo", 0) else (1 if follow_unlocked else 0)
     reaction_rate = min(.80, .15 * r_amp * counts.get("re_action", 0))
     if counts.get("chain_action", 0) and reaction_rate <= 0:
         reaction_rate = .15
     reaction_depth = 2 if counts.get("chain_action", 0) else (1 if reaction_rate > 0 else 0)
-    series = epic.action_factor(
+    series = (action_factor_provider or epic.action_factor)(
         crit_factor, hit_count, supplemental,
         bool(counts.get("resonant_damage", 0)), bool(counts.get("echoing_damage", 0)),
         follow_rate, follow_damage, follow_depth, reaction_rate, reaction_depth,
@@ -400,6 +409,8 @@ def _snapshot_values(
         "crit_rate": displayed_crit, "crit_mult": crit_mult, "follow_rate": follow_rate,
         "multi_tier": math.floor(raw_crit + 1e-12) if multi_crit else 0,
         "time_collapse": bool(counts.get("time_collapse", 0)),
+        "hit_count": hit_count, "supplemental": supplemental,
+        "reaction_rate": reaction_rate, "follow_damage": follow_damage,
     }
 
 

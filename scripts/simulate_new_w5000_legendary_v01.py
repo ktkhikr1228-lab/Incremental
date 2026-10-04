@@ -484,9 +484,9 @@ def action_factor(crit_factor: float, hit_count: float, supplemental: float,
                   supplemental_crits: bool, supplemental_follows: bool,
                   follow_rate: float, follow_damage: float, follow_depth: int,
                   reaction_rate: float, reaction_depth: int,
-                  inversion_conversion: float = 0.40) -> float:
+                  inversion_conversion: float = 0.40, *, counts=None) -> float:
     run = getattr(dp, "_active_legendary_run", None)
-    counts = run.counts if run is not None else {}
+    counts = (run.counts if run is not None else {}) if counts is None else counts
     if counts.get("critical_overload", 0):
         crit_factor = 1.0
     follow_unlocked = bool(follow_rate > 0 or follow_depth > 0 or counts.get("recursive_follow_up", 0))

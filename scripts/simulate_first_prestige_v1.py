@@ -38,6 +38,53 @@ from first_prestige_defense_model import (
 
 SEED = 20260828
 DEFAULT_TRIALS = 30
+
+
+@dataclass(frozen=True)
+class CardRNGStreams:
+    """Diagnostic-only split inside card drafting."""
+
+    rarity: random.Random
+    hand: random.Random
+    reroll: random.Random
+
+    @classmethod
+    def shared(cls, rng: random.Random) -> "CardRNGStreams":
+        return cls(rng, rng, rng)
+
+
+@dataclass(frozen=True)
+class RNGStreams:
+    """Optional diagnostic RNG split; normal simulations keep one shared RNG."""
+
+    card: random.Random
+    weapon: random.Random
+    relic: random.Random
+    combat: random.Random
+    card_detail: CardRNGStreams | None = None
+
+    @classmethod
+    def shared(cls, rng: random.Random) -> "RNGStreams":
+        return cls(rng, rng, rng, rng)
+
+
+def derived_rng_seed(base_seed: int, stream: str, branch: int = 0) -> int:
+    payload = f"{base_seed}:{stream}:{branch}".encode("utf-8")
+    return int.from_bytes(hashlib.sha256(payload).digest()[:8], "big")
+
+
+def make_split_rng_streams(base_seed: int, branch: int = 0) -> RNGStreams:
+    return RNGStreams(*(
+        random.Random(derived_rng_seed(base_seed, stream, branch))
+        for stream in ("card", "weapon", "relic", "combat")
+    ))
+
+
+def make_split_card_rng_streams(base_seed: int, branch: int = 0) -> CardRNGStreams:
+    return CardRNGStreams(*(
+        random.Random(derived_rng_seed(base_seed, f"card:{stream}", branch))
+        for stream in ("rarity", "hand", "reroll")
+    ))
 PRESTIGE_WAVE = 10_000
 DP_GROWTH = 1.0315
 POWER_ANCHORS = (
@@ -319,6 +366,101 @@ def enemy_time_limit(wave: int, glass_cannons: int) -> float:
     return max(1.0, base * 0.90**glass_cannons)
 
 
+DP_V01_ITEMS = (
+    "base_atk", "attack_speed", "xp_gain", "crit_rate", "crit_multiplier",
+    "weapon_atk", "luck", "weapon_find", "weapon_quality",
+)
+DP_V01_UNLOCK_WAVES = {
+    "base_atk": 0, "attack_speed": 0, "xp_gain": 0, "crit_rate": 100,
+    "crit_multiplier": 250, "weapon_atk": 500, "luck": 750,
+    "weapon_find": 1000, "weapon_quality": 1500,
+}
+DP_V01_COST_WEIGHTS = {
+    "base_atk": 1.00, "attack_speed": 1.10, "xp_gain": 0.90,
+    "crit_rate": 1.60, "crit_multiplier": 2.00, "weapon_atk": 1.30,
+    "luck": 2.20, "weapon_find": 2.50, "weapon_quality": 2.80,
+}
+
+
+@dataclass(frozen=True)
+class DPV01Config:
+    enabled: bool = False
+    base_cost: float = 8.0
+    cost_growth: float = 1.065
+    atk_per_level: float = 0.28
+    as_per_level: float = 0.22
+    xp_per_level: float = 0.14
+    crit_rate_per_level: float = 0.055
+    crit_mult_per_level: float = 0.140
+    weapon_atk_per_level: float = 0.28
+    luck_per_effective_level: float = 0.025
+    weapon_find_per_effective_level: float = 0.09
+    weapon_quality_rate: float = 0.05
+    death_base: int = 9
+    death_divisor: int = 11
+    record_bonus: int = 3
+    big_boss_bonus: int = 3
+    reroll_cost: int = 90
+
+
+UNLIMITED_BOOST_NODES = (
+    "base_atk", "weapon_atk", "attack_speed",
+    "crit_multiplier", "all_damage", "boss_damage",
+)
+UNLIMITED_BOOST_V02_NODES = (
+    "base_atk", "weapon_atk", "finale_mastery",
+    "crit_multiplier", "all_damage", "boss_damage",
+)
+UNLIMITED_BOOST_ALL_NODES = tuple(dict.fromkeys(
+    UNLIMITED_BOOST_NODES + UNLIMITED_BOOST_V02_NODES
+))
+
+
+@dataclass(frozen=True)
+class UnlimitedBoostConfig:
+    """Experimental post-W4000 material sink; disabled in every normal profile."""
+
+    enabled: bool = False
+    version: str = "v0.1"
+    node_order: tuple[str, ...] = UNLIMITED_BOOST_NODES
+    unlock_wave: int = 4000
+    cost_growth: float = 1.70
+    softcap_start: int = 5
+    softcap_rate: float = 0.50
+    weapon_base_costs: tuple[tuple[str, float], ...] = (
+        ("base_atk", 80.0), ("weapon_atk", 70.0), ("attack_speed", 90.0),
+        ("finale_mastery", 90.0),
+    )
+    relic_base_costs: tuple[tuple[str, float], ...] = (
+        ("crit_multiplier", 35.0), ("all_damage", 50.0), ("boss_damage", 40.0),
+    )
+    base_atk_per_level: float = 0.05
+    weapon_atk_per_level: float = 0.05
+    attack_speed_per_level: float = 0.05
+    crit_multiplier_per_level: float = 0.10
+    all_damage_per_level: float = 0.05
+    boss_damage_per_level: float = 0.10
+    base_atk_power_per_level: float = 0.0
+    weapon_atk_power_per_level: float = 0.0
+    crit_multiplier_log10_per_level: float = 0.0
+    all_damage_power_per_level: float = 0.0
+    boss_damage_power_per_level: float = 0.0
+    finale_mastery_power_per_level: float = 0.0
+    finale_mastery_start_wave: int = 4500
+    suppressed_nodes: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class FinaleConfig:
+    """Experimental additive enemy-Power layer; disabled by default."""
+
+    enabled: bool = False
+    anchors: tuple[tuple[int, float], ...] = (
+        (4500, 0.0), (4600, 10.0), (4700, 20.0),
+        (4800, 30.0), (4900, 40.0), (5000, 50.0),
+    )
+
+
 @dataclass
 class PermanentState:
     atk: int = 0
@@ -354,6 +496,22 @@ class PermanentState:
     memory_candidate_keys: tuple[str, ...] = ()
     memory_carries: int = 0
     memory_card_seconds: float = 0.0
+    dp_v01_levels: dict[str, int] = field(
+        default_factory=lambda: {key: 0 for key in DP_V01_ITEMS}
+    )
+    dp_v01_unlocked: set[str] = field(
+        default_factory=lambda: {"base_atk", "attack_speed", "xp_gain"}
+    )
+    dp_v01_claimed_records: set[int] = field(default_factory=set)
+    dp_v01_total_earned: int = 0
+    dp_v01_total_spent: int = 0
+    dp_v01_reroll_bought: bool = False
+    unlimited_boost_unlocked: bool = False
+    unlimited_boost_levels: dict[str, int] = field(
+        default_factory=lambda: {key: 0 for key in UNLIMITED_BOOST_ALL_NODES}
+    )
+    unlimited_boost_weapon_spent: float = 0.0
+    unlimited_boost_relic_spent: float = 0.0
 
     @property
     def total_levels(self) -> int:
@@ -361,7 +519,7 @@ class PermanentState:
 
     @property
     def rerolls(self) -> int:
-        return 2 if self.total_levels >= 10 else 1
+        return 2 if self.dp_v01_reroll_bought or self.total_levels >= 10 else 1
 
     @property
     def initial_xp(self) -> float:
@@ -410,11 +568,18 @@ class RunState:
     assimilation_power: float = 0.0
     perfect_overdrive_stacks: int = 0
     legendary_growth_log: float = 0.0
+    legendary_growth_by_key: dict[str, float] = field(default_factory=dict)
     momentum_ready: bool = False
     milestone_choices: set[int] = field(default_factory=set)
+    milestone_card_keys: dict[int, str] = field(default_factory=dict)
+    milestone_power_deltas: dict[int, float] = field(default_factory=dict)
+    card_first_acquired_wave: dict[str, int] = field(default_factory=dict)
+    card_acquisition_log: list[tuple[int, str]] = field(default_factory=list)
+    card_immediate_power_deltas: list[tuple[int, str, float]] = field(default_factory=list)
     synergy_tag: str | None = None
     allow_overdrive: bool = True
     checkpoint_power: dict[int, tuple[float, float, float, float]] = field(default_factory=dict)
+    checkpoint_states: dict[int, dict[str, object]] = field(default_factory=dict)
     reach_elapsed: dict[int, tuple[float, float]] = field(default_factory=dict)
     w2500_state: dict[str, object] | None = None
     next_relic_drop: int = 0
@@ -454,7 +619,9 @@ class RunResult:
     counts: collections.Counter[str]
     failure_wave: int | None
     checkpoints: dict[int, tuple[float, float, float, float]]
+    checkpoint_states: dict[int, dict[str, object]]
     reach_elapsed: dict[int, tuple[float, float]]
+    end_state: dict[str, object]
     w2500_state: dict[str, object] | None
 
 
@@ -502,6 +669,14 @@ class TrialResult:
     memory_carries: int
     memory_card_seconds: float
     checkpoints: dict[int, tuple[float, float, float, float]]
+    first_reach_checkpoints: dict[int, tuple[float, float, float, float]]
+    first_reach_checkpoint_states: dict[int, dict[str, object]]
+    dp_v01_levels: dict[str, int]
+    dp_balance: int
+    dp_total_earned: int
+    dp_total_spent: int
+    dp_reroll_bought: bool
+    run_end_states: tuple[dict[str, object], ...]
     w2500_state: dict[str, object] | None
 
 
@@ -530,15 +705,49 @@ class SimConfig:
     memory_card_unlock_wave: int = 500
     target_wave: int = PRESTIGE_WAVE
     enemy_curve_scale: float = 1.0
+    enemy_progression_anchors: tuple[tuple[int, float], ...] | None = None
+    progression_after_2500_scale: float | None = None
     card_upgrade_cap: int = len(CARD_UPGRADE_COSTS)
     relic_selection_enabled: bool = True
     exponential_core_multiplier: float = 1.05
     exponential_core_unlock_wave: int = 5000
+    exponential_core_guaranteed_wave: int | None = None
+    exponential_core_growth_stages: tuple[tuple[int, int, float], ...] = ()
+    diagnostic_checkpoints: tuple[int, ...] = ()
     disabled_card_keys: frozenset[str] = frozenset()
     take_mode: str = "legacy"
+    dp_v01: DPV01Config = DPV01Config()
+    disabled_guaranteed_choice_waves: frozenset[int] = frozenset()
+    diagnostic_suppress_boss_devourer: bool = False
+    diagnostic_boss_devourer_growth_multiplier: float = 1.0
+    diagnostic_boss_devourer_base_power: float = 0.0
+    diagnostic_fixed_wave_power_milestones: tuple[tuple[int, float], ...] = ()
+    diagnostic_frozen_dp_items: frozenset[str] = frozenset()
+    diagnostic_dp_level_caps: tuple[tuple[str, int], ...] = ()
+    diagnostic_dp_baseline_levels: tuple[tuple[str, int], ...] = ()
+    diagnostic_late_dp_effect_scale: float = 1.0
+    diagnostic_infinite_barrage_power_cap: float | None = None
+    diagnostic_freeze_weapon_permanent_progression: bool = False
+    diagnostic_relic_power_wave_cap: int | None = None
+    diagnostic_suppressed_card_keys: frozenset[str] = frozenset()
+    diagnostic_card_effect_stack_caps: tuple[tuple[str, float], ...] = ()
+    diagnostic_card_effect_stack_floors: tuple[tuple[str, float], ...] = ()
+    diagnostic_escalation_growth_scale: float = 1.0
+    diagnostic_infinite_barrage_strength: float = 1.0
+    diagnostic_infinite_barrage_mode: str = "legacy"
+    diagnostic_infinite_barrage_v2_trigger_attacks: int = 20
+    diagnostic_infinite_barrage_v2_damage_attacks: float = 5.0
+    diagnostic_infinite_barrage_v2_growth_power_cap: float | None = None
+    unlimited_boost: UnlimitedBoostConfig = UnlimitedBoostConfig()
+    finale: FinaleConfig = FinaleConfig()
 
 
 def enemy_progression_wave(wave: int, config: SimConfig) -> int:
+    if config.enemy_progression_anchors is not None:
+        return min(
+            PRESTIGE_WAVE,
+            max(1, round(interpolate_anchors(wave, config.enemy_progression_anchors))),
+        )
     if config.target_wave == 5000:
         if config.defense.enabled and wave > 2500:
             return min(PRESTIGE_WAVE, round(interpolate_anchors(wave, VARIANT_E_ENEMY_WAVE_ANCHORS)))
@@ -547,6 +756,13 @@ def enemy_progression_wave(wave: int, config: SimConfig) -> int:
 
 
 def progression_wave(wave: int, config: SimConfig) -> int:
+    if config.progression_after_2500_scale is not None:
+        if wave <= 2500:
+            return min(PRESTIGE_WAVE, max(1, wave))
+        return min(
+            PRESTIGE_WAVE,
+            2500 + round((wave - 2500) * config.progression_after_2500_scale),
+        )
     if config.target_wave == 5000:
         return min(
             PRESTIGE_WAVE,
@@ -556,7 +772,16 @@ def progression_wave(wave: int, config: SimConfig) -> int:
 
 
 def progression_units(wave: int, config: SimConfig) -> float:
+    if config.progression_after_2500_scale is not None and wave > 2500:
+        return config.progression_after_2500_scale
     return 2.20 if config.target_wave == 5000 and wave > 2500 else 1.0
+
+
+def relic_progression_wave(permanent: PermanentState, config: SimConfig) -> int:
+    wave = permanent.max_wave
+    if config.diagnostic_relic_power_wave_cap is not None:
+        wave = min(wave, config.diagnostic_relic_power_wave_cap)
+    return progression_wave(wave, config)
 
 
 def configured_enemy_power(wave: int, config: SimConfig) -> float:
@@ -569,11 +794,136 @@ def configured_enemy_power(wave: int, config: SimConfig) -> float:
     )
     if config.target_wave == 5000 and config.defense.enabled:
         power -= interpolate_anchors(wave, VARIANT_E_ENEMY_POWER_RELIEF_ANCHORS)
-    return power
+    return power + finale_added_power(wave, config)
+
+
+def finale_added_power(wave: int, config: SimConfig) -> float:
+    finale = config.finale
+    if not finale.enabled or wave < finale.anchors[0][0]:
+        return 0.0
+    return interpolate_anchors(wave, finale.anchors)
 
 
 def n(counts: collections.Counter[str], key: str) -> int:
     return counts.get(key, 0)
+
+
+def dp_v01_soft_levels(level: int, first: int = 10, second: int = 25) -> float:
+    return min(level, first) + max(min(level - first, second - first), 0) * 0.5 + max(level - second, 0) * 0.2
+
+
+def diagnostic_dp_level(permanent: PermanentState, key: str, config: SimConfig) -> float:
+    level = float(permanent.dp_v01_levels[key])
+    baseline = dict(config.diagnostic_dp_baseline_levels).get(key)
+    if baseline is not None:
+        preserved = min(level, float(baseline))
+        level = preserved + max(0.0, level - float(baseline)) * config.diagnostic_late_dp_effect_scale
+    cap = dict(config.diagnostic_dp_level_caps).get(key)
+    return level if cap is None else min(level, float(cap))
+
+
+def dp_v01_next_cost(permanent: PermanentState, key: str, config: SimConfig) -> int:
+    level = permanent.dp_v01_levels[key]
+    return math.ceil(
+        config.dp_v01.base_cost
+        * DP_V01_COST_WEIGHTS[key]
+        * config.dp_v01.cost_growth**level
+    )
+
+
+def dp_v01_unlock(permanent: PermanentState) -> None:
+    for key, wave in DP_V01_UNLOCK_WAVES.items():
+        if permanent.max_wave >= wave:
+            permanent.dp_v01_unlocked.add(key)
+
+
+def award_and_spend_dp_v01(permanent: PermanentState, reached: int, config: SimConfig) -> int:
+    """Apply the existing Economy B + Power C candidate after one death."""
+    candidate = config.dp_v01
+    dp_v01_unlock(permanent)
+    regular = candidate.death_base + reached // candidate.death_divisor
+    new_records = [
+        wave for wave in range(25, reached + 1, 25)
+        if wave not in permanent.dp_v01_claimed_records
+    ]
+    permanent.dp_v01_claimed_records.update(new_records)
+    record = len(new_records) * candidate.record_bonus
+    big_boss = (reached // 100) * candidate.big_boss_bonus
+    gained = regular + record + big_boss
+    permanent.banked_dp += gained
+    permanent.dp_v01_total_earned += gained
+
+    if (
+        permanent.max_wave >= 400
+        and not permanent.dp_v01_reroll_bought
+        and permanent.banked_dp >= candidate.reroll_cost
+    ):
+        permanent.banked_dp -= candidate.reroll_cost
+        permanent.dp_v01_total_spent += candidate.reroll_cost
+        permanent.dp_v01_reroll_bought = True
+
+    while True:
+        eligible = [
+            key for key in DP_V01_ITEMS
+            if key in permanent.dp_v01_unlocked
+            and key not in config.diagnostic_frozen_dp_items
+            and dp_v01_next_cost(permanent, key, config) <= permanent.banked_dp
+        ]
+        if not eligible:
+            break
+        key = min(
+            eligible,
+            key=lambda item: (dp_v01_next_cost(permanent, item, config), DP_V01_ITEMS.index(item)),
+        )
+        cost = dp_v01_next_cost(permanent, key, config)
+        permanent.banked_dp -= cost
+        permanent.dp_v01_total_spent += cost
+        permanent.dp_v01_levels[key] += 1
+    return gained
+
+
+def dp_v01_luck_weight(permanent: PermanentState, rarity: str, config: SimConfig) -> float:
+    if not config.dp_v01.enabled:
+        return 1.0
+    effective = dp_v01_soft_levels(diagnostic_dp_level(permanent, "luck", config))
+    bonus = config.dp_v01.luck_per_effective_level * effective
+    rarity_scale = {"C": 0.0, "U": 1.0, "R": 1.5, "E": 2.0, "L": 2.5}.get(rarity, 0.0)
+    return 1.0 + rarity_scale * bonus
+
+
+def dp_v01_weapon_find_multiplier(permanent: PermanentState, config: SimConfig) -> float:
+    if not config.dp_v01.enabled:
+        return 1.0
+    effective = dp_v01_soft_levels(diagnostic_dp_level(permanent, "weapon_find", config))
+    return 1.0 + config.dp_v01.weapon_find_per_effective_level * effective
+
+
+def dp_v01_weapon_quality_progress(permanent: PermanentState, config: SimConfig) -> float:
+    if not config.dp_v01.enabled:
+        return 0.0
+    effective = dp_v01_soft_levels(diagnostic_dp_level(permanent, "weapon_quality", config))
+    return 1.0 - math.exp(-config.dp_v01.weapon_quality_rate * effective)
+
+
+def exponential_core_big_boss_count(run: RunState, config: SimConfig) -> int:
+    wave = config.exponential_core_guaranteed_wave
+    if wave is None or run.kills < wave or not n(run.counts, "exponential_core"):
+        return 0
+    return 1 + (run.kills - wave) // 100
+
+
+def exponential_core_exponent(run: RunState, config: SimConfig) -> float:
+    """Return the active Base ATK exponent without mutating Run state."""
+    if not n(run.counts, "exponential_core"):
+        return 1.0
+    if not config.exponential_core_growth_stages:
+        return config.exponential_core_multiplier
+    count = exponential_core_big_boss_count(run, config)
+    exponent = 1.0
+    for start, end, increment in config.exponential_core_growth_stages:
+        covered = max(0, min(count, end) - start + 1)
+        exponent += covered * increment
+    return exponent
 
 
 def card_enhancement(run: RunState, key: str) -> float:
@@ -642,23 +992,233 @@ def crit_log_multiplier(chance: float, multiplier: float, counts: collections.Co
     return log10_weighted(((1 - fraction, tier_log(raw_tier)), (fraction, tier_log(raw_tier + 1))))
 
 
-def dynamic_damage_log(run: RunState, permanent: PermanentState, config: SimConfig) -> float:
+def diagnostic_card_effect_count(run: RunState, key: str, config: SimConfig) -> int:
+    """Return owned stacks that are active in effect-suppression diagnostics."""
+    if key in config.diagnostic_suppressed_card_keys:
+        return 0
+    return n(run.counts, key)
+
+
+def diagnostic_effect_run(run: RunState, config: SimConfig) -> RunState:
+    """Return a combat-only view with selected owned card effects disabled."""
+    caps = dict(config.diagnostic_card_effect_stack_caps)
+    floors = dict(config.diagnostic_card_effect_stack_floors)
+    if not config.diagnostic_suppressed_card_keys and not caps and not floors:
+        return run
+    adjusted = copy.copy(run)
+    adjusted.counts = run.counts.copy()
+    adjusted.tag_counts = run.tag_counts.copy()
+    for key in config.diagnostic_suppressed_card_keys:
+        stacks = n(run.counts, key)
+        if stacks <= 0:
+            continue
+        adjusted.counts[key] = 0
+        item = CARD_BY_KEY.get(key)
+        if item is not None:
+            for tag in item.tags:
+                adjusted.tag_counts[tag] = max(0, adjusted.tag_counts[tag] - stacks)
+    for key in set(caps) | set(floors):
+        if key in config.diagnostic_suppressed_card_keys:
+            continue
+        original = float(run.counts.get(key, 0))
+        effective = original
+        if key in caps:
+            effective = min(effective, float(caps[key]))
+        if key in floors:
+            effective = max(effective, float(floors[key]))
+        adjusted.counts[key] = effective
+        item = CARD_BY_KEY.get(key)
+        if item is not None:
+            delta = effective - original
+            for tag in item.tags:
+                adjusted.tag_counts[tag] = max(0, adjusted.tag_counts[tag] + delta)
+    return adjusted
+
+
+def diagnostic_legendary_growth_log(run: RunState, config: SimConfig) -> float:
+    by_key = getattr(run, "legendary_growth_by_key", {})
+    if not by_key:
+        return run.legendary_growth_log
+    return sum(
+        power * (config.diagnostic_infinite_barrage_strength if key == "infinite_barrage" else 1.0)
+        for key, power in by_key.items()
+        if key not in config.diagnostic_suppressed_card_keys
+        and not (
+            key == "infinite_barrage"
+            and config.diagnostic_infinite_barrage_mode == "v2_fixed_ratio"
+        )
+    )
+
+
+def follow_up_expected_multiplier(run: RunState) -> float:
+    counts = run.counts
+    if not n(counts, "follow_up_strike"):
+        return 1.0
+    amp = limit_amplification(counts)
+    follow_rate = 0.10 * amp + 0.15 * amp * enhanced_count(run, "double_strike")
+    follow_damage = 0.50 * amp + 0.25 * amp * enhanced_count(run, "double_strike")
+    q = min(0.50, 0.25 * follow_rate)
+    chain = 1.0
+    if n(counts, "recursive_follow_up"):
+        chain = 1 / (1 - q)
+    elif n(counts, "follow_up_echo"):
+        chain = 1 + q
+    return 1.0 + follow_rate * chain * follow_damage
+
+
+def infinite_barrage_power(
+    run: RunState,
+    attack_speed: float,
+    config: SimConfig,
+) -> float:
+    if (
+        "infinite_barrage" in config.diagnostic_suppressed_card_keys
+        or not n(run.counts, "infinite_barrage")
+    ):
+        return 0.0
+    if config.diagnostic_infinite_barrage_mode == "v2_fixed_ratio":
+        trigger_attacks = config.diagnostic_infinite_barrage_v2_trigger_attacks
+        damage_attacks = config.diagnostic_infinite_barrage_v2_damage_attacks
+        if trigger_attacks <= 0 or damage_attacks < 0:
+            raise ValueError("Infinite Barrage v2 requires trigger_attacks > 0 and damage_attacks >= 0")
+        # AS determines how often normal attacks occur. Because one Barrage worth
+        # `damage_attacks` normal attacks fires every `trigger_attacks` attacks,
+        # its long-run DPS share is fixed and does not convert raw AS into Power.
+        barrage_normal_ratio = damage_attacks / trigger_attacks
+        cap = config.diagnostic_infinite_barrage_v2_growth_power_cap
+        growth_power = 0.0
+        if cap is not None and cap > 0:
+            growth = getattr(run, "legendary_growth_by_key", {}).get("infinite_barrage", 0.0)
+            growth_power = cap * (1.0 - math.exp(-max(0.0, growth) / cap))
+        barrage_normal_ratio *= 10**growth_power
+        # Follow-Up is already present in aggregate DPS, but v2 Barrage must not
+        # copy or trigger it. Add only Barrage damage based on the normal-attack
+        # component, rather than multiplying the whole attack family.
+        attack_family = follow_up_expected_multiplier(run)
+        return math.log10((attack_family + barrage_normal_ratio) / attack_family)
+    if config.diagnostic_infinite_barrage_mode != "legacy":
+        raise ValueError(
+            f"unknown Infinite Barrage mode: {config.diagnostic_infinite_barrage_mode}"
+        )
+    excess_steps = math.floor(max(0.0, attack_speed - 1.0) + 1e-12)
+    growth = getattr(run, "legendary_growth_by_key", {}).get("infinite_barrage", 0.0)
+    scaled_growth = config.diagnostic_infinite_barrage_strength * growth
+    static_power = (
+        config.diagnostic_infinite_barrage_strength
+        * excess_steps
+        * math.log10(1.25)
+    )
+    raw = static_power + scaled_growth
+    cap = config.diagnostic_infinite_barrage_power_cap
+    if cap is None:
+        return static_power
+    if cap <= 0:
+        return 0.0
+    return cap * (1.0 - math.exp(-raw / cap)) - scaled_growth
+
+
+def dynamic_damage_log(
+    run: RunState,
+    permanent: PermanentState,
+    config: SimConfig,
+    attack_speed: float = 1.0,
+) -> float:
+    run = diagnostic_effect_run(run, config)
     counts = run.counts
     effective_kills = progression_wave(run.kills, config)
-    value = (effective_kills // 10) * counts.get("escalation", 0) * math.log10(1 + 0.05 * positive_amp(run, "escalation"))
-    value += run.growth_units * math.log10(1 + 0.05 * positive_amp(run, "growth_engine"))
-    value += run.boss_devourer_units * math.log10(1 + 0.15 * positive_amp(run, "boss_devourer"))
-    value += run.assimilation_power
-    value += run.legendary_growth_log
+    value = (
+        config.diagnostic_escalation_growth_scale
+        * (effective_kills // 10)
+        * counts.get("escalation", 0)
+        * math.log10(1 + 0.05 * positive_amp(run, "escalation"))
+    )
+    if n(counts, "growth_engine"):
+        value += run.growth_units * math.log10(1 + 0.05 * positive_amp(run, "growth_engine"))
+    if not config.diagnostic_suppress_boss_devourer and n(counts, "boss_devourer"):
+        value += run.boss_devourer_units * math.log10(1 + 0.15 * positive_amp(run, "boss_devourer"))
+        value += config.diagnostic_boss_devourer_base_power
+    value += sum(
+        power for wave, power in config.diagnostic_fixed_wave_power_milestones
+        if run.kills >= wave
+    )
+    if n(counts, "boss_assimilation"):
+        value += run.assimilation_power
+    value += diagnostic_legendary_growth_log(run, config)
+    value += infinite_barrage_power(run, attack_speed, config)
     if run.momentum_ready and counts.get("momentum", 0):
         value += counts["momentum"] * math.log10(1 + 0.50 * positive_amp(run, "momentum"))
     if permanent.relic_unlocked:
         value += math.log10(1 + 0.01 * (effective_kills // 10))
-    value += relic_average_power(progression_wave(permanent.max_wave, config), config.relic_scale) * permanent.relic_quality
-    value += run.perfect_overdrive_stacks * math.log10(1.01)
+    value += relic_average_power(relic_progression_wave(permanent, config), config.relic_scale) * permanent.relic_quality
+    if n(counts, "perfect_overdrive"):
+        value += run.perfect_overdrive_stacks * math.log10(1.01)
     if counts.get("final_equation", 0):
         value *= 1.10
     return value
+
+
+def unlimited_boost_effective_levels(level: int, boost: UnlimitedBoostConfig) -> float:
+    before = min(level, boost.softcap_start)
+    after = max(0, level - boost.softcap_start)
+    return before + after * boost.softcap_rate
+
+
+def unlimited_boost_cost(node: str, level: int, boost: UnlimitedBoostConfig) -> tuple[str, float]:
+    weapon_costs = dict(boost.weapon_base_costs)
+    relic_costs = dict(boost.relic_base_costs)
+    if node in weapon_costs:
+        return "weapon", math.ceil(weapon_costs[node] * boost.cost_growth**level)
+    if node in relic_costs:
+        return "relic", math.ceil(relic_costs[node] * boost.cost_growth**level)
+    raise KeyError(node)
+
+
+def ensure_unlimited_boost_state(permanent: PermanentState) -> None:
+    """Backfill diagnostic checkpoints pickled before Unlimited Boost existed."""
+    if not hasattr(permanent, "unlimited_boost_unlocked"):
+        permanent.unlimited_boost_unlocked = False
+    if not hasattr(permanent, "unlimited_boost_levels"):
+        permanent.unlimited_boost_levels = {key: 0 for key in UNLIMITED_BOOST_ALL_NODES}
+    else:
+        for key in UNLIMITED_BOOST_ALL_NODES:
+            permanent.unlimited_boost_levels.setdefault(key, 0)
+    if not hasattr(permanent, "unlimited_boost_weapon_spent"):
+        permanent.unlimited_boost_weapon_spent = 0.0
+    if not hasattr(permanent, "unlimited_boost_relic_spent"):
+        permanent.unlimited_boost_relic_spent = 0.0
+
+
+def purchase_unlimited_boost(permanent: PermanentState, config: SimConfig) -> bool:
+    """Unlock and spend materials using a deterministic balanced test policy."""
+    ensure_unlimited_boost_state(permanent)
+    boost = config.unlimited_boost
+    if not boost.enabled:
+        return False
+    if permanent.max_wave >= boost.unlock_wave:
+        permanent.unlimited_boost_unlocked = True
+    if not permanent.unlimited_boost_unlocked:
+        return False
+    changed = False
+    while True:
+        affordable = []
+        for order, node in enumerate(boost.node_order):
+            level = permanent.unlimited_boost_levels[node]
+            currency, cost = unlimited_boost_cost(node, level, boost)
+            balance = permanent.weapon_material if currency == "weapon" else permanent.relic_material
+            if balance + 1e-12 >= cost:
+                affordable.append((level, order, node, currency, cost))
+        if not affordable:
+            break
+        _, _, node, currency, cost = min(affordable)
+        if currency == "weapon":
+            permanent.weapon_material -= cost
+            permanent.unlimited_boost_weapon_spent += cost
+        else:
+            permanent.relic_material -= cost
+            permanent.unlimited_boost_relic_spent += cost
+        permanent.unlimited_boost_levels[node] += 1
+        changed = True
+    return changed
 
 
 def compute_snapshot(
@@ -667,8 +1227,27 @@ def compute_snapshot(
     boss: bool,
     config: SimConfig = SimConfig(),
 ) -> Snapshot:
+    run = diagnostic_effect_run(run, config)
     counts = run.counts
     amp = limit_amplification(counts)
+    dp_levels = {
+        key: diagnostic_dp_level(permanent, key, config)
+        for key in permanent.dp_v01_levels
+    }
+    dp_candidate = config.dp_v01
+    boost = config.unlimited_boost
+    stored_boost_levels = getattr(
+        permanent, "unlimited_boost_levels",
+        {key: 0 for key in UNLIMITED_BOOST_ALL_NODES},
+    )
+    boost_unlocked = getattr(permanent, "unlimited_boost_unlocked", False)
+    boost_levels = {
+        key: (
+            unlimited_boost_effective_levels(stored_boost_levels.get(key, 0), boost)
+            if boost.enabled and boost_unlocked and key not in boost.suppressed_nodes else 0.0
+        )
+        for key in UNLIMITED_BOOST_ALL_NODES
+    }
 
     crit_chance = (
         0.01
@@ -680,6 +1259,8 @@ def compute_snapshot(
         + 0.10 * amp * enhanced_count(run, "critical_training")
         - 0.10 * n(counts, "brutal_critical")
     )
+    if dp_candidate.enabled:
+        crit_chance += dp_levels["crit_rate"] * dp_candidate.crit_rate_per_level
     crit_chance = max(0.0, crit_chance)
 
     crit_multiplier = (
@@ -690,6 +1271,12 @@ def compute_snapshot(
     )
     crit_multiplier *= (1 + 0.50 * positive_amp(run, "heavy_critical")) ** n(counts, "heavy_critical")
     crit_multiplier *= (1 + 0.50 * positive_amp(run, "brutal_critical")) ** n(counts, "brutal_critical")
+    if dp_candidate.enabled:
+        crit_multiplier += dp_levels["crit_multiplier"] * dp_candidate.crit_mult_per_level
+    crit_multiplier += boost_levels["crit_multiplier"] * boost.crit_multiplier_per_level
+    crit_multiplier *= 10 ** (
+        boost_levels["crit_multiplier"] * boost.crit_multiplier_log10_per_level
+    )
 
     as_bonus = (
         0.20 * amp * enhanced_count(run, "rapid_fire")
@@ -700,6 +1287,9 @@ def compute_snapshot(
     )
     base_interval = max(0.1, 1.0 - 0.1 * permanent.interval_level)
     attack_speed = (1.0 / base_interval) * 1.05**permanent.attack_speed * (1 + as_bonus)
+    if dp_candidate.enabled:
+        attack_speed *= (1 + dp_candidate.as_per_level) ** dp_levels["attack_speed"]
+    attack_speed *= 1 + boost_levels["attack_speed"] * boost.attack_speed_per_level
     attack_speed *= 0.90 ** (n(counts, "heavy_blow") + n(counts, "brutal_force"))
     attack_speed *= 0.95 ** n(counts, "precise_strike")
     attack_speed *= 0.97 ** n(counts, "heavy_critical")
@@ -710,16 +1300,19 @@ def compute_snapshot(
         + 0.25 * amp * enhanced_count(run, "fast_learner")
         + 0.30 * amp * enhanced_count(run, "study_break")
         + 0.35 * amp * enhanced_count(run, "risky_study")
-        + 0.03 * positive_amp(run, "accelerated_learning") * run.accelerated_units
+        + (0.03 * positive_amp(run, "accelerated_learning") * run.accelerated_units
+           if n(counts, "accelerated_learning") else 0.0)
     )
     general_xp = 1.05**permanent.xp * (1 + xp_bonus)
+    if dp_candidate.enabled:
+        general_xp *= (1 + dp_candidate.xp_per_level) ** dp_levels["xp_gain"]
     general_xp *= 0.90 ** n(counts, "battle_focus")
     if permanent.relic_unlocked:
         general_xp *= 1.02
     boss_xp = general_xp * (
         1 + 1.00 * amp * enhanced_count(run, "scholar") + 0.25 * amp * enhanced_count(run, "boss_research")
     )
-    if permanent.total_levels >= 75:
+    if not dp_candidate.enabled and permanent.total_levels >= 75:
         boss_xp *= 1.50
 
     attack_bonus = (
@@ -729,17 +1322,29 @@ def compute_snapshot(
         + 0.50 * amp * enhanced_count(run, "brutal_force")
     )
     log_attack = permanent.atk * math.log10(1.10) + math.log10(1 + attack_bonus)
+    if dp_candidate.enabled:
+        log_attack += dp_levels["base_atk"] * math.log10(1 + dp_candidate.atk_per_level)
     log_attack += n(counts, "light_attack") * math.log10(0.90)
     log_attack += n(counts, "fast_learner") * math.log10(0.98)
     log_attack += n(counts, "overclock") * math.log10(0.90)
     if run.weapon:
         log_attack += run.weapon_power
+        if dp_candidate.enabled:
+            log_attack += dp_levels["weapon_atk"] * math.log10(1 + dp_candidate.weapon_atk_per_level)
+        log_attack += math.log10(
+            1 + boost_levels["weapon_atk"] * boost.weapon_atk_per_level
+        )
+        log_attack += (
+            boost_levels["weapon_atk"] * boost.weapon_atk_power_per_level
+        )
+    log_attack += math.log10(1 + boost_levels["base_atk"] * boost.base_atk_per_level)
+    log_attack += boost_levels["base_atk"] * boost.base_atk_power_per_level
     if permanent.relic_unlocked:
         log_attack += math.log10(1.02)
     if n(counts, "double_scaling"):
         log_attack += math.log10(1 + 0.25 * max(0.0, attack_speed - 1))
     if n(counts, "exponential_core"):
-        log_attack *= config.exponential_core_multiplier
+        log_attack *= exponential_core_exponent(run, config)
 
     xp_excess = max(0.0, general_xp - 1.0)
     all_damage_bonus = (
@@ -749,43 +1354,63 @@ def compute_snapshot(
         + 0.03 * amp * (crit_chance // 0.10) * enhanced_count(run, "critical_conversion")
         + 0.25 * amp * xp_excess * enhanced_count(run, "knowledge_conversion")
         + 0.50 * xp_excess * n(counts, "perfect_learning")
+        + boost_levels["all_damage"] * boost.all_damage_per_level
     )
     log_damage = log_attack + math.log10(attack_speed)
     log_damage += crit_log_multiplier(crit_chance, crit_multiplier, counts)
     log_damage += math.log10(1 + all_damage_bonus)
+    log_damage += boost_levels["all_damage"] * boost.all_damage_power_per_level
     # Event-driven growth stacks are separate multiplicative engines. Static
     # all-Damage bonuses above remain additive within their shared category.
     effective_kills = progression_wave(run.kills, config)
-    log_damage += (effective_kills // 10) * n(counts, "escalation") * math.log10(1 + 0.05 * positive_amp(run, "escalation"))
-    log_damage += run.growth_units * math.log10(1 + 0.05 * positive_amp(run, "growth_engine"))
-    log_damage += run.boss_devourer_units * math.log10(1 + 0.15 * positive_amp(run, "boss_devourer"))
-    milestone_log = milestone_damage_log(permanent.total_levels, config.milestone_power_scale)
+    log_damage += (
+        config.diagnostic_escalation_growth_scale
+        * (effective_kills // 10)
+        * n(counts, "escalation")
+        * math.log10(1 + 0.05 * positive_amp(run, "escalation"))
+    )
+    if n(counts, "growth_engine"):
+        log_damage += run.growth_units * math.log10(1 + 0.05 * positive_amp(run, "growth_engine"))
+    if not config.diagnostic_suppress_boss_devourer and n(counts, "boss_devourer"):
+        log_damage += run.boss_devourer_units * math.log10(1 + 0.15 * positive_amp(run, "boss_devourer"))
+        log_damage += config.diagnostic_boss_devourer_base_power
+    log_damage += sum(
+        power for wave, power in config.diagnostic_fixed_wave_power_milestones
+        if run.kills >= wave
+    )
+    milestone_log = (
+        0.0 if dp_candidate.enabled
+        else milestone_damage_log(permanent.total_levels, config.milestone_power_scale)
+    )
     log_damage += milestone_log
-    log_damage += run.assimilation_power
-    log_damage += run.legendary_growth_log
+    if n(counts, "boss_assimilation"):
+        log_damage += run.assimilation_power
+    log_damage += diagnostic_legendary_growth_log(run, config)
 
     # Negative effects are deliberately not amplified by Limit Break/Shatter.
     log_damage += n(counts, "risky_study") * math.log10(0.90)
     if boss:
         log_damage += math.log10(1 + 0.40 * amp * enhanced_count(run, "boss_research"))
+        log_damage += math.log10(
+            1 + boost_levels["boss_damage"] * boost.boss_damage_per_level
+        )
+        log_damage += boost_levels["boss_damage"] * boost.boss_damage_power_per_level
     else:
         log_damage += n(counts, "boss_research") * math.log10(0.95)
+    current_wave = progression_wave(run.kills + 1, config)
+    if (
+        config.finale.enabled
+        and current_wave >= boost.finale_mastery_start_wave
+    ):
+        log_damage += (
+            boost_levels["finale_mastery"]
+            * boost.finale_mastery_power_per_level
+        )
 
     # Expected follow-up damage, including the agreed recursion cap.
-    if n(counts, "follow_up_strike"):
-        follow_rate = 0.10 * amp + 0.15 * amp * enhanced_count(run, "double_strike")
-        follow_damage = 0.50 * amp + 0.25 * amp * enhanced_count(run, "double_strike")
-        q = min(0.50, 0.25 * follow_rate)
-        chain = 1.0
-        if n(counts, "recursive_follow_up"):
-            chain = 1 / (1 - q)
-        elif n(counts, "follow_up_echo"):
-            chain = 1 + q
-        log_damage += math.log10(1 + follow_rate * chain * follow_damage)
+    log_damage += math.log10(follow_up_expected_multiplier(run))
 
-    if n(counts, "infinite_barrage"):
-        excess_steps = math.floor(max(0.0, attack_speed - 1.0) + 1e-12)
-        log_damage += excess_steps * math.log10(1.25)
+    log_damage += infinite_barrage_power(run, attack_speed, config)
     if n(counts, "knowledge_collapse"):
         excess_steps = math.floor(xp_excess + 1e-12)
         log_damage += excess_steps * math.log10(1.30)
@@ -793,9 +1418,10 @@ def compute_snapshot(
         log_damage += n(counts, "momentum") * math.log10(1 + 0.50 * positive_amp(run, "momentum"))
     if permanent.relic_unlocked:
         log_damage += math.log10(1 + 0.01 * (effective_kills // 10))
-    average_relic = relic_average_power(progression_wave(permanent.max_wave, config), config.relic_scale) * permanent.relic_quality
+    average_relic = relic_average_power(relic_progression_wave(permanent, config), config.relic_scale) * permanent.relic_quality
     log_damage += average_relic
-    log_damage += run.perfect_overdrive_stacks * math.log10(1.01)
+    if n(counts, "perfect_overdrive"):
+        log_damage += run.perfect_overdrive_stacks * math.log10(1.01)
 
     if n(counts, "final_equation"):
         log_damage *= 1.10
@@ -812,6 +1438,15 @@ def compute_snapshot(
         + math.log10(1.0 / base_interval)
         + milestone_log
     )
+    if dp_candidate.enabled:
+        dp_power = (
+            dp_levels["base_atk"] * math.log10(1 + dp_candidate.atk_per_level)
+            + dp_levels["attack_speed"] * math.log10(1 + dp_candidate.as_per_level)
+            + (
+                dp_levels["weapon_atk"] * math.log10(1 + dp_candidate.weapon_atk_per_level)
+                if run.weapon else 0.0
+            )
+        )
 
     return Snapshot(
         log_dps=log_damage,
@@ -832,6 +1467,59 @@ def compute_snapshot(
         weapon_power=run.weapon_power if run.weapon else 0.0,
         relic_power=average_relic + fixed_relic,
     )
+
+
+def build_run_end_state(
+    run: RunState,
+    permanent: PermanentState,
+    config: SimConfig,
+    failure_wave: int | None,
+) -> dict[str, object]:
+    normal = compute_snapshot(run, permanent, False, config)
+    boss = compute_snapshot(run, permanent, True, config)
+    rarity = collections.Counter()
+    card_rarities = {item.key: item.rarity for item in CARDS}
+    for key, count in run.counts.items():
+        if count > 0 and key in card_rarities:
+            rarity[card_rarities[key]] += count
+    return {
+        "reached_wave": run.kills,
+        "failure_wave": failure_wave,
+        "cards": {key: count for key, count in sorted(run.counts.items()) if count > 0},
+        "rarity_composition": {key: rarity.get(key, 0) for key in RARITY_ORDER},
+        "card_count": run.card_count,
+        "boss_devourer_first_wave": run.card_first_acquired_wave.get("boss_devourer"),
+        "boss_devourer_units": run.boss_devourer_units,
+        "card_first_acquired_wave": dict(run.card_first_acquired_wave),
+        "card_acquisition_log": list(run.card_acquisition_log),
+        "card_immediate_power_deltas": list(run.card_immediate_power_deltas),
+        "normal_power": normal.log_dps,
+        "boss_power": boss.log_dps,
+        "base_attack_power": normal.base_attack_power,
+        "all_damage": normal.all_damage,
+        "attack_speed": normal.attack_speed,
+        "xp_multiplier": normal.general_xp,
+        "crit_rate": normal.crit_chance,
+        "crit_multiplier": normal.crit_multiplier,
+        "follow_up_rate": normal.follow_rate,
+        "multi_crit_tier": normal.multi_crit_tier,
+        "weapon_owned": run.weapon,
+        "weapon_power": run.weapon_power if run.weapon else 0.0,
+        "weapon_rarity": run.weapon_rarity if run.weapon else None,
+        "weapon_origin_wave": run.weapon_origin_wave if run.weapon else None,
+        "relic_unlocked": permanent.relic_unlocked,
+        "relic_power": normal.relic_power,
+        "relic_quality": permanent.relic_quality,
+        "relic_types": len(permanent.relic_types),
+        "weapon_material": permanent.weapon_material,
+        "relic_material": permanent.relic_material,
+        "unlimited_boost_unlocked": permanent.unlimited_boost_unlocked,
+        "unlimited_boost_levels": permanent.unlimited_boost_levels.copy(),
+        "unlimited_boost_weapon_spent": permanent.unlimited_boost_weapon_spent,
+        "unlimited_boost_relic_spent": permanent.unlimited_boost_relic_spent,
+        "milestone_cards": dict(run.milestone_card_keys),
+        "milestone_power_deltas": dict(run.milestone_power_deltas),
+    }
 
 
 def time_curve_integral(start: float, end: float, limit: float, enabled: bool) -> float:
@@ -999,13 +1687,22 @@ def time_to_kill_with_defense(
     return estimate
 
 
-def rarity_chances(permanent: PermanentState) -> tuple[tuple[str, float], ...]:
-    rare_bonus = 0.01 if permanent.total_levels >= 100 else 0.0
+def rarity_chances(permanent: PermanentState, config: SimConfig = SimConfig()) -> tuple[tuple[str, float], ...]:
+    rare_bonus = 0.01 if not config.dp_v01.enabled and permanent.total_levels >= 100 else 0.0
     if permanent.max_wave >= 2500:
-        return (("C", 0.9345 - rare_bonus), ("U", 0.05), ("R", 0.01 + rare_bonus), ("E", 0.005), ("L", 0.0005))
-    if permanent.max_wave >= 500:
-        return (("C", 0.938 - rare_bonus), ("U", 0.05), ("R", 0.01 + rare_bonus), ("E", 0.002))
-    return (("C", 0.94 - rare_bonus), ("U", 0.05), ("R", 0.01 + rare_bonus))
+        base = (("C", 0.9345 - rare_bonus), ("U", 0.05), ("R", 0.01 + rare_bonus), ("E", 0.005), ("L", 0.0005))
+    elif permanent.max_wave >= 500:
+        base = (("C", 0.938 - rare_bonus), ("U", 0.05), ("R", 0.01 + rare_bonus), ("E", 0.002))
+    else:
+        base = (("C", 0.94 - rare_bonus), ("U", 0.05), ("R", 0.01 + rare_bonus))
+    if not config.dp_v01.enabled:
+        return base
+    weighted = tuple(
+        (rarity, chance * dp_v01_luck_weight(permanent, rarity, config))
+        for rarity, chance in base
+    )
+    total = sum(chance for _, chance in weighted)
+    return tuple((rarity, chance / total) for rarity, chance in weighted)
 
 
 def available_cards(
@@ -1030,10 +1727,10 @@ def available_cards(
     ]
 
 
-def draw_rarity(rng: random.Random, permanent: PermanentState) -> str:
+def draw_rarity(rng: random.Random, permanent: PermanentState, config: SimConfig = SimConfig()) -> str:
     value = rng.random()
     cumulative = 0.0
-    for rarity, chance in rarity_chances(permanent):
+    for rarity, chance in rarity_chances(permanent, config):
         cumulative += chance
         if value < cumulative:
             return rarity
@@ -1049,13 +1746,17 @@ def draw_hand(
     forced_card: str | None = None,
     excluded: set[str] | None = None,
     starter_guarantee: bool = False,
+    rarity_rng: random.Random | None = None,
+    key_rng: random.Random | None = None,
 ) -> list[Card]:
+    rarity_rng = rng if rarity_rng is None else rarity_rng
+    key_rng = rng if key_rng is None else key_rng
     excluded = set() if excluded is None else set(excluded)
     hand: list[Card] = []
     if forced_card:
         hand.append(CARD_BY_KEY[forced_card])
     for _ in range(3 - len(hand)):
-        rarity = forced_rarity or draw_rarity(rng, permanent)
+        rarity = forced_rarity or draw_rarity(rarity_rng, permanent, config)
         candidates = [
             item
             for item in available_cards(rarity, run, permanent, config)
@@ -1070,20 +1771,20 @@ def draw_hand(
                 ]
                 if candidates:
                     break
-        hand.append(rng.choice(candidates))
+        hand.append(key_rng.choice(candidates))
     if starter_guarantee and not any(item.key in STARTER_SAFE_KEYS for item in hand):
         candidates = [CARD_BY_KEY[key] for key in STARTER_SAFE_ORDER if key not in {item.key for item in hand}]
-        hand[0] = rng.choice(candidates)
+        hand[0] = key_rng.choice(candidates)
     return hand
 
 
-def acquire_card(run: RunState, item: Card) -> None:
+def acquire_card(run: RunState, item: Card, config: SimConfig = SimConfig()) -> None:
     run.counts[item.key] += 1
     for tag in item.tags:
         run.tag_counts[tag] += 1
     # These engines count their own acquisition and every later card acquisition.
-    run.growth_units += n(run.counts, "growth_engine")
-    run.accelerated_units += n(run.counts, "accelerated_learning")
+    run.growth_units += diagnostic_card_effect_count(run, "growth_engine", config)
+    run.accelerated_units += diagnostic_card_effect_count(run, "accelerated_learning", config)
     run.card_count += 1
     run.choices += 1
     run.effect_version += 1
@@ -1123,7 +1824,7 @@ def carry_memory_card(
         options,
         key=lambda item: card_score(profile, item, run, permanent, 1, config),
     )
-    acquire_card(run, selected)
+    acquire_card(run, selected, config)
     permanent.memory_carries += 1
     permanent.memory_card_seconds += MEMORY_CARD_DECISION_SECONDS
     permanent.interaction_seconds += MEMORY_CARD_DECISION_SECONDS
@@ -1365,7 +2066,9 @@ def choose_card(
     forced_rarity: str | None = None,
     forced_card: str | None = None,
     allow_reroll: bool = True,
-) -> None:
+    card_rng_streams: CardRNGStreams | None = None,
+) -> str | None:
+    card_streams = CardRNGStreams.shared(rng) if card_rng_streams is None else card_rng_streams
     if config.take_mode not in {"legacy", "pe"}:
         raise ValueError(f"unknown take mode: {config.take_mode}")
     log_decision = TAKE_BRANCH_ENABLED and profile == "balanced"
@@ -1382,6 +2085,8 @@ def choose_card(
         forced_rarity,
         forced_card,
         starter_guarantee=starter,
+        rarity_rng=card_streams.rarity,
+        key_rng=card_streams.hand,
     )
     rerolls = permanent.rerolls if allow_reroll and forced_rarity is None else 0
     excluded: set[str] = set()
@@ -1441,7 +2146,7 @@ def choose_card(
             reroll_trace[-1]["stop_reason"] = "reroll"
         excluded.update(candidate.key for candidate in hand)
         hand = draw_hand(
-            rng,
+            card_streams.reroll,
             run,
             permanent,
             config,
@@ -1505,7 +2210,7 @@ def choose_card(
                         "upgrades": dict(run.card_upgrades - before_upgrades),
                         "post_decision_rng_digest": _take_rng_digest(rng)})
             TAKE_BRANCH_ROWS.append(log)
-        return
+        return None
     decision_source = "legacy"
     fallback_reason = None
     if profile == "balanced" and config.take_mode == "pe":
@@ -1522,7 +2227,18 @@ def choose_card(
                 run.synergy_tag = tag
                 break
     record_card_decision(permanent, best, rerolls_used, automated)
-    acquire_card(run, best)
+    immediate_before = None
+    if best.key == "infinite_barrage":
+        immediate_before = compute_snapshot(run, permanent, next_wave % 10 == 0, config).log_dps
+    if n(run.counts, best.key) == 0:
+        run.card_first_acquired_wave[best.key] = next_wave
+    acquire_card(run, best, config)
+    run.card_acquisition_log.append((next_wave, best.key))
+    if immediate_before is not None:
+        immediate_after = compute_snapshot(run, permanent, next_wave % 10 == 0, config).log_dps
+        run.card_immediate_power_deltas.append(
+            (next_wave, best.key, immediate_after - immediate_before)
+        )
     spend_card_points(profile, run, permanent, next_wave, config)
     if log_decision:
         log.update({"action": "take", "selected_card": best.key,
@@ -1530,6 +2246,7 @@ def choose_card(
                     "upgrades": dict(run.card_upgrades - before_upgrades),
                     "post_decision_rng_digest": _take_rng_digest(rng)})
         TAKE_BRANCH_ROWS.append(log)
+    return best.key
 
 
 def matching_legendary(rng: random.Random, run: RunState) -> str:
@@ -1547,6 +2264,18 @@ def matching_legendary(rng: random.Random, run: RunState) -> str:
     return rng.choice(tied)
 
 
+def grant_profile_exponential_core(run: RunState, config: SimConfig) -> bool:
+    """Grant a profile-defined Core without changing the normal card pool."""
+    wave = config.exponential_core_guaranteed_wave
+    if wave is None or run.kills != wave or n(run.counts, "exponential_core"):
+        return False
+    # This is a profile milestone, not a Draft: it must not increment card
+    # count, choices, Growth Engine, Accelerated Learning, or synergy tags.
+    run.counts["exponential_core"] += 1
+    run.effect_version += 1
+    return True
+
+
 def process_guaranteed_choices(
     rng: random.Random,
     profile: str,
@@ -1554,13 +2283,20 @@ def process_guaranteed_choices(
     permanent: PermanentState,
     next_wave: int,
     config: SimConfig,
+    card_rng_streams: CardRNGStreams | None = None,
 ) -> None:
+    grant_profile_exponential_core(run, config)
     milestones = ((25, "U"), (100, "R"), (500, "E"), (2500, "L"))
     for wave, rarity in milestones:
         if run.kills == wave and wave not in run.milestone_choices:
+            if wave in config.disabled_guaranteed_choice_waves:
+                run.milestone_choices.add(wave)
+                continue
             permanent.max_wave = max(permanent.max_wave, wave)
-            forced = matching_legendary(rng, run) if wave == 2500 else None
-            choose_card(
+            forced_rng = card_rng_streams.hand if card_rng_streams is not None else rng
+            forced = matching_legendary(forced_rng, run) if wave == 2500 else None
+            before_power = compute_snapshot(run, permanent, wave % 10 == 0, config).log_dps
+            selected = choose_card(
                 rng,
                 profile,
                 run,
@@ -1570,7 +2306,12 @@ def process_guaranteed_choices(
                 rarity,
                 forced,
                 allow_reroll=False,
+                card_rng_streams=card_rng_streams,
             )
+            after_power = compute_snapshot(run, permanent, wave % 10 == 0, config).log_dps
+            if selected is not None:
+                run.milestone_card_keys[wave] = selected
+            run.milestone_power_deltas[wave] = after_power - before_power
             run.milestone_choices.add(wave)
 
 
@@ -1584,18 +2325,31 @@ def draw_from_distribution(rng: random.Random, distribution: tuple[tuple[str, fl
     return distribution[-1][0]
 
 
-def weapon_rarity_distribution(wave: int) -> tuple[tuple[str, float], ...]:
+def weapon_rarity_distribution(
+    wave: int,
+    permanent: PermanentState | None = None,
+    config: SimConfig = SimConfig(),
+) -> tuple[tuple[str, float], ...]:
     if wave < 100:
-        return (("C", 0.75), ("U", 0.22), ("R", 0.03))
-    if wave < 500:
-        return (("C", 0.60), ("U", 0.32), ("R", 0.08))
-    if wave < 2500:
-        return (("C", 0.35), ("U", 0.45), ("R", 0.18), ("E", 0.02))
-    if wave < 5000:
-        return (("C", 0.10), ("U", 0.30), ("R", 0.55), ("E", 0.049), ("L", 0.001))
-    if wave < 7500:
-        return (("C", 0.05), ("U", 0.20), ("R", 0.60), ("E", 0.149), ("L", 0.001))
-    return (("C", 0.03), ("U", 0.15), ("R", 0.62), ("E", 0.198), ("L", 0.002))
+        base = (("C", 0.75), ("U", 0.22), ("R", 0.03))
+    elif wave < 500:
+        base = (("C", 0.60), ("U", 0.32), ("R", 0.08))
+    elif wave < 2500:
+        base = (("C", 0.35), ("U", 0.45), ("R", 0.18), ("E", 0.02))
+    elif wave < 5000:
+        base = (("C", 0.10), ("U", 0.30), ("R", 0.55), ("E", 0.049), ("L", 0.001))
+    elif wave < 7500:
+        base = (("C", 0.05), ("U", 0.20), ("R", 0.60), ("E", 0.149), ("L", 0.001))
+    else:
+        base = (("C", 0.03), ("U", 0.15), ("R", 0.62), ("E", 0.198), ("L", 0.002))
+    if permanent is None or not config.dp_v01.enabled:
+        return base
+    weighted = tuple(
+        (rarity, chance * dp_v01_luck_weight(permanent, rarity, config))
+        for rarity, chance in base
+    )
+    total = sum(chance for _, chance in weighted)
+    return tuple((rarity, chance / total) for rarity, chance in weighted)
 
 
 def relic_rarity(rng: random.Random) -> str:
@@ -1697,12 +2451,14 @@ def roll_weapon(
     generated: bool = False,
 ) -> None:
     reward_wave = progression_wave(wave, config)
-    distribution = weapon_rarity_distribution(reward_wave)
+    distribution = weapon_rarity_distribution(reward_wave, permanent, config)
     allowed = [(rarity, chance) for rarity, chance in distribution if RARITY_ORDER.index(rarity) >= RARITY_ORDER.index(minimum_rarity)]
     total = sum(chance for _, chance in allowed)
     normalized = tuple((rarity, chance / total) for rarity, chance in allowed)
     rarity = draw_from_distribution(rng, normalized)
-    power = weapon_base_power(reward_wave, config.weapon_scale) + RARITY_POWER[rarity] + rng.uniform(-0.10, 0.10)
+    quality = dp_v01_weapon_quality_progress(permanent, config)
+    roll_min = -0.10 + 0.20 * quality
+    power = weapon_base_power(reward_wave, config.weapon_scale) + RARITY_POWER[rarity] + rng.uniform(roll_min, 0.10)
     equip_or_smelt_weapon(permanent, run, max(0.0, power), rarity, reward_wave)
     if generated:
         permanent.weapon_generations += 1
@@ -1717,6 +2473,8 @@ def forge_starting_weapon(
     run: RunState,
     config: SimConfig,
 ) -> None:
+    if config.diagnostic_freeze_weapon_permanent_progression:
+        return
     if permanent.weapon_acquisitions < 5 or permanent.max_wave < 10:
         return
     if permanent.max_wave >= 5000:
@@ -1741,14 +2499,20 @@ def process_boss_loot(
     run: RunState,
     wave: int,
     config: SimConfig,
+    relic_rng: random.Random | None = None,
 ) -> bool:
+    relic_rng = rng if relic_rng is None else relic_rng
     changed_weapon = False
     if wave == 10:
         equip_or_smelt_weapon(permanent, run, math.log10(1.10), "C", wave)
         changed_weapon = True
     elif wave >= 20:
         guaranteed_big = wave % 100 == 0
-        drop_chance = (0.50, 0.75, 1.0)[min(2, run.weapon_pity)]
+        drop_chance = min(
+            1.0,
+            (0.50, 0.75, 1.0)[min(2, run.weapon_pity)]
+            * dp_v01_weapon_find_multiplier(permanent, config),
+        )
         if guaranteed_big or rng.random() < drop_chance:
             roll_weapon(rng, permanent, run, wave, config)
             run.weapon_pity = 0
@@ -1764,7 +2528,7 @@ def process_boss_loot(
             permanent.first_big_bosses.add(wave)
             permanent.weapon_material += 5.0
             permanent.relic_material += 2.0
-        forge_relics(rng, permanent, config)
+        forge_relics(relic_rng, permanent, config)
     return changed_weapon
 
 
@@ -1786,7 +2550,7 @@ def convert_surplus_material(permanent: PermanentState, config: SimConfig) -> No
 
 def purchase_game_speed(permanent: PermanentState, config: SimConfig) -> None:
     """Buy unlocked first-prestige speed levels before optional material conversion."""
-    if not config.game_speed_enabled:
+    if not config.game_speed_enabled or config.diagnostic_freeze_weapon_permanent_progression:
         return
     while permanent.game_speed_level < len(GAME_SPEED_MATERIAL_COSTS):
         level_index = permanent.game_speed_level
@@ -1843,7 +2607,16 @@ def run_once(
     target_wave: int | None = None,
     initial_run: RunState | None = None,
     start_wave: int = 1,
+    rng_streams: RNGStreams | None = None,
+    checkpoint_capture=None,
+    pre_reward_checkpoint_capture=None,
+    run_start_capture=None,
+    run_end_capture=None,
 ) -> RunResult:
+    ensure_unlimited_boost_state(permanent)
+    streams = RNGStreams.shared(rng) if rng_streams is None else rng_streams
+    card_rng, weapon_rng, relic_rng = streams.card, streams.weapon, streams.relic
+    card_detail = streams.card_detail
     target_wave = config.target_wave if target_wave is None else target_wave
     interaction_at_start = permanent.interaction_seconds
     run = initial_run
@@ -1853,26 +2626,46 @@ def run_once(
             card_points=permanent.initial_card_points if config.initial_card_points_enabled else 0,
             allow_overdrive=allow_overdrive,
         )
-        run.next_relic_drop = next_geometric_drop(rng, 0)
+        run.next_relic_drop = next_geometric_drop(relic_rng, 0)
+    elif not hasattr(run, "legendary_growth_by_key"):
+        # Backward compatibility for diagnostic checkpoints pickled before
+        # per-Legendary growth attribution was introduced.
+        run.legendary_growth_by_key = {}
+    if not hasattr(run, "card_immediate_power_deltas"):
+        run.card_immediate_power_deltas = []
     reward_skip_end = reward_preserving_skip_end(permanent, config)
     if initial_run is None:
-        forge_starting_weapon(rng, permanent, run, config)
-        carry_memory_card(rng, profile, run, permanent, config)
+        forge_starting_weapon(weapon_rng, permanent, run, config)
+        carry_memory_card(card_rng, profile, run, permanent, config)
         while run.xp_level_count < len(CARD_COSTS) and run.xp >= CARD_COSTS[run.xp_level_count]:
             run.xp -= CARD_COSTS[run.xp_level_count]
-            choose_card(rng, profile, run, permanent, 1, config)
+            choose_card(card_rng, profile, run, permanent, 1, config, card_rng_streams=card_detail)
             run.xp_level_count += 1
+
+    if run_start_capture is not None:
+        run_start_capture(run, permanent, streams)
 
     snapshot_cache: dict[bool, tuple[Snapshot, float]] = {}
     for wave in range(start_wave, target_wave + 1):
         boss = wave % 10 == 0
         if boss not in snapshot_cache:
-            snapshot_cache[boss] = (compute_snapshot(run, permanent, boss, config), dynamic_damage_log(run, permanent, config))
+            initial_snapshot = compute_snapshot(run, permanent, boss, config)
+            snapshot_cache[boss] = (
+                initial_snapshot,
+                dynamic_damage_log(
+                    run, permanent, config, initial_snapshot.attack_speed
+                ),
+            )
         snapshot, cached_dynamic = snapshot_cache[boss]
-        effective_log_dps = snapshot.log_dps + dynamic_damage_log(run, permanent, config) - cached_dynamic
-        pre_quick_learner = n(run.counts, "quick_learner")
-        pre_limit_amp = limit_amplification(run.counts)
-        limit = enemy_time_limit(wave, n(run.counts, "glass_cannon"))
+        effective_log_dps = (
+            snapshot.log_dps
+            + dynamic_damage_log(run, permanent, config, snapshot.attack_speed)
+            - cached_dynamic
+        )
+        effect_run = diagnostic_effect_run(run, config)
+        pre_quick_learner = n(effect_run.counts, "quick_learner")
+        pre_limit_amp = limit_amplification(effect_run.counts)
+        limit = enemy_time_limit(wave, n(effect_run.counts, "glass_cannon"))
         total_power = configured_enemy_power(wave, config)
         ttk = time_to_kill_with_defense(
             wave,
@@ -1896,6 +2689,8 @@ def run_once(
         if ttk is None:
             run.combat_seconds += limit * time_multiplier / permanent.game_speed
             permanent.max_wave = max(permanent.max_wave, run.kills)
+            if run_end_capture is not None:
+                run_end_capture(run, permanent, streams, wave)
             return RunResult(
                 run.kills,
                 run.combat_seconds,
@@ -1908,14 +2703,16 @@ def run_once(
                 run.counts.copy(),
                 wave,
                 dict(run.checkpoint_power),
+                {key: value.copy() for key, value in run.checkpoint_states.items()},
                 dict(run.reach_elapsed),
+                build_run_end_state(run, permanent, config, wave),
                 run.w2500_state,
             )
 
         run.combat_seconds += ttk * time_multiplier / permanent.game_speed
         quick = ttk <= 3.0 + 1e-12
-        had_momentum = n(run.counts, "momentum") > 0
-        had_overdrive = allow_overdrive and n(run.counts, "perfect_overdrive") > 0
+        had_momentum = diagnostic_card_effect_count(run, "momentum", config) > 0
+        had_overdrive = allow_overdrive and diagnostic_card_effect_count(run, "perfect_overdrive", config) > 0
         run.kills = wave
         permanent.max_wave = max(permanent.max_wave, wave)
         progress_units = progression_units(wave, config)
@@ -1924,35 +2721,50 @@ def run_once(
             permanent.relic_unlocked = True
             snapshot_cache.clear()
         if boss:
-            if process_boss_loot(rng, permanent, run, wave, config):
+            if process_boss_loot(weapon_rng, permanent, run, wave, config, relic_rng):
                 snapshot_cache.clear()
             purchase_game_speed(permanent, config)
+            if purchase_unlimited_boost(permanent, config):
+                snapshot_cache.clear()
         if boss:
-            run.boss_devourer_units += progress_units * n(run.counts, "boss_devourer")
+            if not config.diagnostic_suppress_boss_devourer:
+                run.boss_devourer_units += (
+                    progress_units
+                    * diagnostic_card_effect_count(run, "boss_devourer", config)
+                    * config.diagnostic_boss_devourer_growth_multiplier
+                )
             run.assimilation_power += (
-                progress_units * total_power * 0.0005 * n(run.counts, "boss_assimilation")
+                progress_units * total_power * 0.0005
+                * diagnostic_card_effect_count(run, "boss_assimilation", config)
             )
         tier_logs = []
-        if n(run.counts, "critical_singularity"):
-            tier_logs.append(math.floor(snapshot.crit_chance + 1e-12))
-        if n(run.counts, "recursive_follow_up"):
-            tier_logs.append(math.floor(snapshot.follow_rate + 1e-12))
-        if n(run.counts, "infinite_barrage"):
-            tier_logs.append(math.floor(max(0.0, snapshot.attack_speed - 1.0) + 1e-12))
-        if n(run.counts, "knowledge_collapse"):
-            tier_logs.append(math.floor(max(0.0, snapshot.general_xp - 1.0) + 1e-12))
-        for tier in tier_logs:
-            run.legendary_growth_log += progress_units * math.log10(1 + min(0.01, 0.002 * tier))
+        if diagnostic_card_effect_count(run, "critical_singularity", config):
+            tier_logs.append(("critical_singularity", math.floor(snapshot.crit_chance + 1e-12)))
+        if diagnostic_card_effect_count(run, "recursive_follow_up", config):
+            tier_logs.append(("recursive_follow_up", math.floor(snapshot.follow_rate + 1e-12)))
+        if diagnostic_card_effect_count(run, "infinite_barrage", config):
+            tier_logs.append(("infinite_barrage", math.floor(max(0.0, snapshot.attack_speed - 1.0) + 1e-12)))
+        if diagnostic_card_effect_count(run, "knowledge_collapse", config):
+            tier_logs.append(("knowledge_collapse", math.floor(max(0.0, snapshot.general_xp - 1.0) + 1e-12)))
+        for key, tier in tier_logs:
+            growth = progress_units * math.log10(1 + min(0.01, 0.002 * tier))
+            run.legendary_growth_log += growth
+            run.legendary_growth_by_key[key] = run.legendary_growth_by_key.get(key, 0.0) + growth
         if quick and had_overdrive:
             run.perfect_overdrive_stacks += progress_units
         run.momentum_ready = quick and had_momentum
 
         if wave >= run.next_relic_drop:
-            acquire_relic(rng, permanent, config)
-            run.next_relic_drop = next_geometric_drop(rng, wave)
+            acquire_relic(relic_rng, permanent, config)
+            run.next_relic_drop = next_geometric_drop(relic_rng, wave)
 
+        if pre_reward_checkpoint_capture is not None:
+            pre_reward_checkpoint_capture(wave, run, permanent, streams)
         effect_version_before = run.effect_version
-        process_guaranteed_choices(rng, profile, run, permanent, wave + 1, config)
+        process_guaranteed_choices(
+            card_rng, profile, run, permanent, wave + 1, config,
+            card_rng_streams=card_detail,
+        )
 
         base_xp = 1 + (progression_wave(wave, config) - 1) // 10
         # Use the pre-fight snapshot: milestone/card rewards earned after the
@@ -1966,12 +2778,15 @@ def run_once(
         run.xp += gained
         while run.xp_level_count < len(CARD_COSTS) and run.xp + 1e-12 >= CARD_COSTS[run.xp_level_count]:
             run.xp -= CARD_COSTS[run.xp_level_count]
-            choose_card(rng, profile, run, permanent, wave + 1, config)
+            choose_card(
+                card_rng, profile, run, permanent, wave + 1, config,
+                card_rng_streams=card_detail,
+            )
             run.xp_level_count += 1
         if run.effect_version != effect_version_before:
             snapshot_cache.clear()
 
-        if wave in CHECKPOINTS:
+        if wave in CHECKPOINTS or wave in config.diagnostic_checkpoints:
             checkpoint = compute_snapshot(run, permanent, boss, config)
             card_power = checkpoint.log_dps - checkpoint.dp_power - checkpoint.weapon_power - checkpoint.relic_power
             run.checkpoint_power[wave] = (
@@ -1980,6 +2795,68 @@ def run_once(
                 checkpoint.relic_power,
                 checkpoint.dp_power,
             )
+            reported_dp_levels = (
+                permanent.dp_v01_levels if config.dp_v01.enabled
+                else {"base_atk": permanent.atk, "attack_speed": permanent.attack_speed, "xp_gain": permanent.xp}
+            )
+            run.checkpoint_states[wave] = {
+                "player_power": checkpoint.log_dps,
+                "enemy_power": configured_enemy_power(wave, config),
+                "finale_added_power": finale_added_power(wave, config),
+                "margin_power": checkpoint.log_dps - configured_enemy_power(wave, config),
+                "base_attack_power": checkpoint.base_attack_power,
+                "all_damage": checkpoint.all_damage,
+                "attack_speed": checkpoint.attack_speed,
+                "xp_multiplier": checkpoint.general_xp,
+                "boss_xp_multiplier": checkpoint.boss_xp,
+                "crit_rate": checkpoint.crit_chance,
+                "crit_multiplier": checkpoint.crit_multiplier,
+                "follow_up_rate": checkpoint.follow_rate,
+                "multi_crit_tier": checkpoint.multi_crit_tier,
+                "card_count": run.card_count,
+                "dp_total_level": sum(reported_dp_levels.values()),
+                "dp_atk_level": reported_dp_levels["base_atk"],
+                "dp_as_level": reported_dp_levels["attack_speed"],
+                "dp_xp_level": reported_dp_levels["xp_gain"],
+                "dp_crit_rate_level": reported_dp_levels.get("crit_rate", 0),
+                "dp_crit_multiplier_level": reported_dp_levels.get("crit_multiplier", 0),
+                "dp_weapon_atk_level": reported_dp_levels.get("weapon_atk", 0),
+                "dp_luck_level": reported_dp_levels.get("luck", 0),
+                "dp_weapon_find_level": reported_dp_levels.get("weapon_find", 0),
+                "dp_weapon_quality_level": reported_dp_levels.get("weapon_quality", 0),
+                "dp_balance": permanent.banked_dp,
+                "dp_total_earned": permanent.dp_v01_total_earned,
+                "dp_total_spent": permanent.dp_v01_total_spent,
+                "dp_reroll_bought": permanent.dp_v01_reroll_bought,
+                "interval_level": permanent.interval_level,
+                "game_speed_level": permanent.game_speed_level,
+                "weapon_owned": run.weapon,
+                "weapon_power": checkpoint.weapon_power,
+                "weapon_rarity": run.weapon_rarity if run.weapon else None,
+                "weapon_origin_wave": run.weapon_origin_wave if run.weapon else None,
+                "weapon_material": permanent.weapon_material,
+                "weapon_acquisitions": permanent.weapon_acquisitions,
+                "weapon_generations": permanent.weapon_generations,
+                "relic_unlocked": permanent.relic_unlocked,
+                "relic_power": checkpoint.relic_power,
+                "relic_quality": permanent.relic_quality,
+                "relic_material": permanent.relic_material,
+                "relic_drops": permanent.relic_drops,
+                "relic_generations": permanent.relic_generations,
+                "relic_types": len(permanent.relic_types),
+                "unlimited_boost_unlocked": permanent.unlimited_boost_unlocked,
+                "unlimited_boost_levels": permanent.unlimited_boost_levels.copy(),
+                "unlimited_boost_weapon_spent": permanent.unlimited_boost_weapon_spent,
+                "unlimited_boost_relic_spent": permanent.unlimited_boost_relic_spent,
+                "growth_units": run.growth_units,
+                "accelerated_units": run.accelerated_units,
+                "boss_devourer_units": run.boss_devourer_units,
+                "assimilation_power": run.assimilation_power,
+                "legendary_growth_power": run.legendary_growth_log,
+                "perfect_overdrive_stacks": run.perfect_overdrive_stacks,
+                "guaranteed_card": run.milestone_card_keys.get(wave),
+                "guaranteed_card_immediate_power_delta": run.milestone_power_deltas.get(wave, 0.0),
+            }
             if wave == 2500 and run.w2500_state is None:
                 run.w2500_state = {
                     "base_atk": (
@@ -2001,14 +2878,18 @@ def run_once(
                         if item.rarity == "L" and n(run.counts, item.key)
                     ),
                 }
+            if checkpoint_capture is not None:
+                checkpoint_capture(wave, run, permanent, streams)
 
-        if wave in REACH_WAVES or wave in VARIANT_REACH_WAVES:
+        if wave in REACH_WAVES or wave in VARIANT_REACH_WAVES or wave in config.diagnostic_checkpoints:
             run.reach_elapsed[wave] = (
                 run.combat_seconds,
                 permanent.interaction_seconds - interaction_at_start,
             )
 
         if wave >= target_wave:
+            if run_end_capture is not None:
+                run_end_capture(run, permanent, streams, None)
             return RunResult(
                 run.kills,
                 run.combat_seconds,
@@ -2021,7 +2902,9 @@ def run_once(
                 run.counts.copy(),
                 None,
                 dict(run.checkpoint_power),
+                {key: value.copy() for key, value in run.checkpoint_states.items()},
                 dict(run.reach_elapsed),
+                build_run_end_state(run, permanent, config, None),
                 run.w2500_state,
             )
 
@@ -2081,7 +2964,12 @@ def run_trial(
     profile: str,
     config: SimConfig,
     allow_overdrive: bool,
+    rng_streams: RNGStreams | None = None,
+    checkpoint_capture=None,
+    pre_reward_checkpoint_capture=None,
+    attempt_checkpoint_capture=None,
 ) -> TrialResult:
+    streams = RNGStreams.shared(rng) if rng_streams is None else rng_streams
     permanent = PermanentState(
         automation_enabled=config.automation_enabled,
         rare_card_automation_enabled=config.future_qol_enabled,
@@ -2099,20 +2987,38 @@ def run_trial(
     final_result: RunResult | None = None
     reaches: list[int] = []
     reach_seconds: dict[int, float] = {}
+    first_reach_checkpoints: dict[int, tuple[float, float, float, float]] = {}
+    first_reach_checkpoint_states: dict[int, dict[str, object]] = {}
+    run_end_states: list[dict[str, object]] = []
     w2500_state: dict[str, object] | None = None
 
     for attempt in range(1, config.max_attempts + 1):
         if TAKE_BRANCH_ENABLED:
             TAKE_BRANCH_CONTEXT.update({"attempt": attempt, "decision_index": 0})
+        dispatched_checkpoint_capture = checkpoint_capture
+        if attempt_checkpoint_capture is not None:
+            def dispatched_checkpoint_capture(wave, run, permanent, live_streams, *, _attempt=attempt):
+                if checkpoint_capture is not None:
+                    checkpoint_capture(wave, run, permanent, live_streams)
+                attempt_checkpoint_capture(_attempt, wave, run, permanent, live_streams)
         combat_before = total_seconds
         interaction_before = permanent.interaction_seconds
-        result = run_once(rng, profile, permanent, config, allow_overdrive)
+        result = run_once(
+            rng, profile, permanent, config, allow_overdrive,
+            rng_streams=streams, checkpoint_capture=dispatched_checkpoint_capture,
+            pre_reward_checkpoint_capture=pre_reward_checkpoint_capture,
+        )
         for wave, (combat_elapsed, interaction_elapsed) in result.reach_elapsed.items():
             reach_seconds.setdefault(
                 wave,
                 combat_before + interaction_before + combat_elapsed + interaction_elapsed,
             )
+        for wave, powers in result.checkpoints.items():
+            first_reach_checkpoints.setdefault(wave, powers)
+        for wave, state in result.checkpoint_states.items():
+            first_reach_checkpoint_states.setdefault(wave, state.copy())
         reaches.append(result.reached)
+        run_end_states.append(result.end_state.copy())
         if attempt == 1:
             first_reached = result.reached
         total_kills += result.reached
@@ -2145,10 +3051,10 @@ def run_trial(
                 total_cards_dissolved=total_dissolved,
                 total_card_upgrades=total_card_upgrades,
                 total_card_points_spent=total_card_points_spent,
-                permanent_levels=permanent.total_levels,
-                atk_levels=permanent.atk,
-                as_levels=permanent.attack_speed,
-                xp_levels=permanent.xp,
+                permanent_levels=(sum(permanent.dp_v01_levels.values()) if config.dp_v01.enabled else permanent.total_levels),
+                atk_levels=(permanent.dp_v01_levels["base_atk"] if config.dp_v01.enabled else permanent.atk),
+                as_levels=(permanent.dp_v01_levels["attack_speed"] if config.dp_v01.enabled else permanent.attack_speed),
+                xp_levels=(permanent.dp_v01_levels["xp_gain"] if config.dp_v01.enabled else permanent.xp),
                 interval_level=permanent.interval_level,
                 interval_dp_spent=permanent.interval_dp_spent,
                 game_speed_level=permanent.game_speed_level,
@@ -2169,16 +3075,29 @@ def run_trial(
                 memory_carries=permanent.memory_carries,
                 memory_card_seconds=permanent.memory_card_seconds,
                 checkpoints=result.checkpoints,
+                first_reach_checkpoints=first_reach_checkpoints,
+                first_reach_checkpoint_states=first_reach_checkpoint_states,
+                dp_v01_levels=permanent.dp_v01_levels.copy(),
+                dp_balance=permanent.banked_dp,
+                dp_total_earned=permanent.dp_v01_total_earned,
+                dp_total_spent=permanent.dp_v01_total_spent,
+                dp_reroll_bought=permanent.dp_v01_reroll_bought,
+                run_end_states=tuple(run_end_states),
                 w2500_state=w2500_state,
             )
 
         best_failed = max(best_failed, result.reached)
-        gained = result.reached // 5
+        gained = (
+            award_and_spend_dp_v01(permanent, result.reached, config)
+            if config.dp_v01.enabled
+            else result.reached // 5
+        )
         total_dp += gained
-        allocate_and_spend_dp(permanent, profile, gained, config)
+        if not config.dp_v01.enabled:
+            allocate_and_spend_dp(permanent, profile, gained, config)
         purchase_game_speed(permanent, config)
         convert_surplus_material(permanent, config)
-        forge_relics(rng, permanent, config)
+        forge_relics(streams.relic, permanent, config)
 
     assert final_result is not None
     return TrialResult(
@@ -2200,10 +3119,10 @@ def run_trial(
         total_cards_dissolved=total_dissolved,
         total_card_upgrades=total_card_upgrades,
         total_card_points_spent=total_card_points_spent,
-        permanent_levels=permanent.total_levels,
-        atk_levels=permanent.atk,
-        as_levels=permanent.attack_speed,
-        xp_levels=permanent.xp,
+        permanent_levels=(sum(permanent.dp_v01_levels.values()) if config.dp_v01.enabled else permanent.total_levels),
+        atk_levels=(permanent.dp_v01_levels["base_atk"] if config.dp_v01.enabled else permanent.atk),
+        as_levels=(permanent.dp_v01_levels["attack_speed"] if config.dp_v01.enabled else permanent.attack_speed),
+        xp_levels=(permanent.dp_v01_levels["xp_gain"] if config.dp_v01.enabled else permanent.xp),
         interval_level=permanent.interval_level,
         interval_dp_spent=permanent.interval_dp_spent,
         game_speed_level=permanent.game_speed_level,
@@ -2224,6 +3143,14 @@ def run_trial(
         memory_carries=permanent.memory_carries,
         memory_card_seconds=permanent.memory_card_seconds,
         checkpoints=final_result.checkpoints,
+        first_reach_checkpoints=first_reach_checkpoints,
+        first_reach_checkpoint_states=first_reach_checkpoint_states,
+        dp_v01_levels=permanent.dp_v01_levels.copy(),
+        dp_balance=permanent.banked_dp,
+        dp_total_earned=permanent.dp_v01_total_earned,
+        dp_total_spent=permanent.dp_v01_total_spent,
+        dp_reroll_bought=permanent.dp_v01_reroll_bought,
+        run_end_states=tuple(run_end_states),
         w2500_state=w2500_state,
     )
 
@@ -2610,6 +3537,55 @@ def build_report(
     return "\n".join(lines) + "\n"
 
 
+def build_cli_config(args: argparse.Namespace) -> SimConfig:
+    """Build the unchanged legacy formal/D/E configuration from CLI args."""
+    experimental = args.variant in {"D", "E"}
+    return SimConfig(
+        dp_growth=args.dp_growth,
+        weapon_scale=args.weapon_scale,
+        relic_scale=args.relic_scale,
+        milestone_power_scale=args.milestone_power_scale,
+        hp_bonus_scale=args.hp_bonus_scale,
+        midgame_relief=args.midgame_relief,
+        max_attempts=args.max_attempts,
+        automation_enabled=args.automation,
+        game_speed_enabled=args.game_speed,
+        initial_card_points_enabled=args.initial_card_points,
+        sweep_enabled=args.sweep,
+        reward_skip_enabled=(
+            experimental if args.reward_skip is None else experimental and args.reward_skip
+        ),
+        interval_enabled=args.attack_interval,
+        defense=DefenseConfig(
+            enabled=args.variant == "E",
+            start_wave=500 if args.variant == "E" else 1,
+            power_anchors=(
+                VARIANT_E_DEFENSE_POWER_ANCHORS
+                if args.variant == "E"
+                else DefenseConfig().power_anchors
+            ),
+            use_future_power_curve=False,
+            armor_break_base=args.armor_break_base,
+            crit_break_weight=args.crit_break_weight,
+            followup_break_weight=args.followup_break_weight,
+            average_break_time_ratio=args.average_break_time_ratio,
+            final_boss_requires_full_break=args.final_boss_full_break,
+        ),
+        future_qol_enabled=args.future_qol,
+        future_sweep_multiplier=args.future_sweep_multiplier,
+        memory_card_enabled=args.memory_card,
+        memory_card_unlock_wave=args.memory_card_unlock_wave,
+        target_wave=5000 if experimental else PRESTIGE_WAVE,
+        enemy_curve_scale=1.0,
+        card_upgrade_cap=1 if experimental else len(CARD_UPGRADE_COSTS),
+        relic_selection_enabled=not experimental,
+        exponential_core_multiplier=1.02 if experimental else 1.05,
+        exponential_core_unlock_wave=2500 if experimental else 5000,
+        disabled_card_keys=frozenset({"final_equation"}) if experimental else frozenset(),
+        take_mode=args.take_mode,
+    )
+
+
 def main() -> None:
     global SHADOW_CARD_VALUE_LIMIT, TAKE_BRANCH_ENABLED
     if hasattr(sys.stdout, "reconfigure"):
@@ -2673,50 +3649,7 @@ def main() -> None:
     TAKE_BRANCH_CONTEXT.clear()
     TAKE_BRANCH_ENABLED = bool(args.take_branch_output)
     experimental = args.variant in {"D", "E"}
-    config = SimConfig(
-        dp_growth=args.dp_growth,
-        weapon_scale=args.weapon_scale,
-        relic_scale=args.relic_scale,
-        milestone_power_scale=args.milestone_power_scale,
-        hp_bonus_scale=args.hp_bonus_scale,
-        midgame_relief=args.midgame_relief,
-        max_attempts=args.max_attempts,
-        automation_enabled=args.automation,
-        game_speed_enabled=args.game_speed,
-        initial_card_points_enabled=args.initial_card_points,
-        sweep_enabled=args.sweep,
-        reward_skip_enabled=(
-            experimental if args.reward_skip is None else experimental and args.reward_skip
-        ),
-        interval_enabled=args.attack_interval,
-        defense=DefenseConfig(
-            enabled=args.variant == "E",
-            start_wave=500 if args.variant == "E" else 1,
-            power_anchors=(
-                VARIANT_E_DEFENSE_POWER_ANCHORS
-                if args.variant == "E"
-                else DefenseConfig().power_anchors
-            ),
-            use_future_power_curve=False,
-            armor_break_base=args.armor_break_base,
-            crit_break_weight=args.crit_break_weight,
-            followup_break_weight=args.followup_break_weight,
-            average_break_time_ratio=args.average_break_time_ratio,
-            final_boss_requires_full_break=args.final_boss_full_break,
-        ),
-        future_qol_enabled=args.future_qol,
-        future_sweep_multiplier=args.future_sweep_multiplier,
-        memory_card_enabled=args.memory_card,
-        memory_card_unlock_wave=args.memory_card_unlock_wave,
-        target_wave=5000 if experimental else PRESTIGE_WAVE,
-        enemy_curve_scale=1.0,
-        card_upgrade_cap=1 if experimental else len(CARD_UPGRADE_COSTS),
-        relic_selection_enabled=not experimental,
-        exponential_core_multiplier=1.02 if experimental else 1.05,
-        exponential_core_unlock_wave=2500 if experimental else 5000,
-        disabled_card_keys=frozenset({"final_equation"}) if experimental else frozenset(),
-        take_mode=args.take_mode,
-    )
+    config = build_cli_config(args)
     if args.variant == "formal":
         results = simulate(args.trials, config, args.workers, args.seed)
         output_text = build_report(results, args.trials, config, args.phase, args.seed)

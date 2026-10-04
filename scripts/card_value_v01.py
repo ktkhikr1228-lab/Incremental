@@ -12,13 +12,22 @@ from dataclasses import dataclass
 
 TARGET_KEYS = frozenset({
     "power_up", "rapid_fire", "execution", "time_collapse",
+    "steady_force", "heavy_blow", "critical_eye", "precise_strike",
+    "glass_cannon", "heavy_critical", "light_attack",
+    "sharpened_edge", "critical_power",
     "experience", "fast_learner", "scholar", "study_break",
     "risky_study", "quick_learner", "boss_research", "battle_scholar",
     "accelerated_learning", "knowledge_conversion", "perfect_learning",
     "knowledge_collapse",
 })
-ENCOUNTER_CONDITIONAL_KEYS = frozenset({"execution", "time_collapse"})
-XP_DRAFT_KEYS = TARGET_KEYS - frozenset({"power_up", "rapid_fire", "execution", "time_collapse"})
+ENCOUNTER_CONDITIONAL_KEYS = frozenset({"execution", "time_collapse", "glass_cannon"})
+# Keep XP-axis semantics explicit: adding a combat target must never silently
+# route it through the XP Draft timeline.
+XP_DRAFT_KEYS = frozenset({
+    "experience", "fast_learner", "scholar", "study_break", "risky_study",
+    "quick_learner", "boss_research", "battle_scholar", "accelerated_learning",
+    "knowledge_conversion", "perfect_learning", "knowledge_collapse",
+})
 
 
 def _encounter_ttk(sim, frame, snapshot, run, config, extra_power=0.0):
