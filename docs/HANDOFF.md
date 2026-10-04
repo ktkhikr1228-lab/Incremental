@@ -9,6 +9,7 @@
 - 158 scripts tests / TypeScript / vinext production build成功。追加non-blocking 9件。ブラウザseed20260828の短い手動Runで選択中進行/一覧装備/drag保管/炉即分解/カード説明を確認。balance Monte Carloなし。
 - 検証画像: output/play_ux_nonblocking_20261004.png。localhost:4173(API8765)起動。保存はまだ未実装。
 - GitHub保存対象はゲームsource/依存scripts/docs。playtest内のnested Git metadataは削除せず、親repoには通常ファイルとして収録。生成物・生ログ・無関係な文書生成scriptは除外。
+- コミット`4d3e0a3`をGitHubの`codex/play-ux-nonblocking-20261004`へpush済み。広範な既存source初収録を含むmain直接pushは安全チェックで拒否されたため、remote mainは更新していない。次のmain統合はユーザー確認後に行う。
 - 次: 実プレイ確認後にスマホ専用UI。カード必要XP/カード強化は別実験で未採用。Core/UB/Finale等未接続も維持。
 - 再現: rootで`python -m unittest discover -s scripts -p 'test_*.py' -q`、playtestで`npx tsc --noEmit`/`npm run build`/`npm run dev -- --port 4173`。
 
