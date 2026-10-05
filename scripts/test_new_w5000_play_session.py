@@ -192,9 +192,9 @@ class NewW5000PlayTests(unittest.TestCase):
         s = self.session()
         s.run.kills = 10
         s._roll_boss_weapon(10)
-        item = s.pending_equipment.pop()
+        self.assertEqual(s.pending_equipment, [])
+        item = next(iter(s.inventory.items.values()))
         self.assertEqual((item.rarity, item.base_atk, item.quality), ("C", 1, 1))
-        s.inventory.receive(item)
         s.inventory.equip(item.uid)
         self.assertAlmostEqual(10 ** s._snapshot(s.run, 11).base_attack_power, 2.1)
         rules.acquire(s.run, rules.BY_KEY["weapon_training"])

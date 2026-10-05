@@ -1,5 +1,138 @@
 # HANDOFF — 次回セッションの開始点（2026-09-27）
 
+## 最新変更のGitHub反映対象（2026-10-05）
+
+- ユーザー依頼で前回push後の手動試遊変更をコミット/pushする。対象は進行保存・ダメージ詳細・C/U一括取得・busy明滅修正・画面高さfit・小型カードrail/結果DP2列・予測表示削除/rarity表示・旧表示切替削除・ポーチ収納/転生横の武器表示、関連tests/preview scripts/本引継ぎ資料。formalやbalance値の新変更なし。
+- 再検証: Python全170 tests成功（10.441s）、Node装備6/compact6/busy5 tests、TypeScript、production build成功。origin/mainをfetchし開始時HEADとのahead/behindは0/0。通常のmain pushを使用し、force pushはしない。
+- `.local/`の進行save、依存/build/生成画像HTML、一連の変更と無関係なroot App.tsx/demo.js/index.html/packageファイル・課題用script・古い未追跡シミュレーション出力はコミットに含めない。削除もしていない。
+- サーバー再起動や試遊進行初期化は今回も行わない。ポーチ自動収納のライブ反映は前節の承認待ちを継続。エンジン移行は相談段階、Unity/Godotのプロジェクト作成や移植はこのコミットに含まない。
+
+## 入手武器を転生の右隣へ表示（2026-10-05）
+
+- ユーザー指定でMain下部「転生」直後の空き領域にポーチ武器の小型アイコン列を追加。実保管品＋満杯待ちを表示、装備中/Relicは重複表示しない。名前/+強化Lv/全文rarityラベルと色枠、hoverで効果を表示。枠内に収まらない場合はその列だけ横送り、縦スクロールやMain配置の変更はなし。
+- 個体クリックは鞄＋その個体詳細を開くのみ（ゲームactionなし）。既存の装備/分解/装備成功後Main復帰へ接続。取得時のpanel自動open/自動装備はなし。数値/backend/spec/保存処理は今回不変。
+- Node装備6 / compact6 / busy5 tests、TypeScript、production build成功。追加testは転生直後の位置、保管・待ち品表示、装備中・Relic除外、個体クリックとAPI非呼出、空の列を検証。実ブラウザでの取得試遊は未実施。今回Python側変更なし（直前の全170 tests成功を維持）。
+- 再現: playtest内でNode `scripts/test-equipment-return.mjs` / `scripts/test-compact-panels.mjs` / `scripts/test-selection-busy.mjs` / `node_modules/typescript/bin/tsc --noEmit` / `node_modules/vinext/dist/cli.js build`。ライブ再起動/リセット/pushなし。前節のポーチ自動収納を計算サーバーへ反映する再起動は、旧メモリ進行終了の承認待ちのまま。
+
+## 武器取得を一覧からポーチへ（2026-10-05）
+
+- 最新ユーザー指定: 武器は別一覧ではなくポーチへ入れる。以前の「全武器一覧で装備/保管/分解」を根拠に追加した一覧を、今回のポーチ中心の動線へ変更。MainからEquipmentList表示・Drop時の自動openを除去。既存utility/component自体は削除せず、footer「一覧」は「ポーチ」へ変更。
+- EquipmentSessionのみ、Drop時に空き保管枠へ武器を自動収納（自動装備なし）。満杯品はpendingを保持し、同じバックパックのWeapon / ポーチ内に表示。装備/分解で空き枠ができれば取得順で収納。満杯品の自動廃棄/タイマーは今回追加しない。ドラッグ・詳細からの装備/分解は保管品と未収納品に対応。装備成功booleanを確認した場合だけMainへ戻り、失敗時はポーチを維持。
+- session_store.loadは保存済み未収納武器を空き枠へ移行（個体/RNG/Run値は保持、装備は変更しない）。通常の死亡時50%回収は保管・満杯待ちの両方を一度だけ適用。Relicは同じ鞄内で取得待ちを表示するが自動収納は武器のみ。formal/D/E/独立候補シミュ・Drop率・装備数値・カード・DPは変更なし。
+- 検証: Python全170 tests成功（27.697s）。Node装備5 / compact6 / busy5 tests成功、TypeScriptとproduction build成功。新検証は自動収納/自動装備なし/満杯解消時の順序/個体とRNG不変/死亡回収/旧save移行/ポーチからの成功・失敗復帰。既存W10テストはpendingではなくinventoryから取得武器を確認するよう契約に追従。
+- 注意: 実画面の通し試遊・計算サーバー再起動は未実施。GET /api/stateで現在8765はstatus=card、targetWave=500、inventoryなし、saveSupportedなしの旧メモリセッション。保存済みEquipmentSessionは別の状態のため、再起動すると現在進行を置き換える可能性がある。勝手に開始/リセット/保存/再起動していない。次: ユーザーに旧メモリ進行終了の承認を確認してから、保存済み候補進行を維持した再起動・実画面確認。GitHub pushなし。
+- 再現: rootでbundled Python `-m unittest discover -s scripts -p 'test_*.py' -q`。playtest内でNode `scripts/test-equipment-return.mjs` / `scripts/test-compact-panels.mjs` / `scripts/test-selection-busy.mjs` / `node_modules/typescript/bin/tsc --noEmit` / `node_modules/vinext/dist/cli.js build`。
+
+## 旧表示切替ボタン削除（2026-10-05）
+
+- ユーザー指定で `first-prestige-playtest/app/page.tsx` のMain「接続・テスト設定」から「旧表示へ」を削除。旧UIの実装自体は保存し、速度設定/初期化操作/ゲーム進行/保存/数値は不変。
+- `scripts/test-selection-busy.mjs` 5 testsとTypeScript成功。再現: playtest内でbundled Node同script、および `node_modules/typescript/bin/tsc --noEmit`。ライブ進行操作・サーバー再起動・pushなし。次: 通常試遊を継続。
+
+## カードの予測表示削除・レアリティ可読性（2026-10-05）
+
+- ユーザー指定によりChoicePanelsの即時DPS/次敵TTK表示を削除（edge/modal共通）。バックエンドの候補計算・API・選択ロジック・数値は変更しない。カードは名前/効果/レアリティ/タグ/取得操作を表示。
+- 候補と所持カードのレアリティをCommon/Uncommon/Rare/Epic/Legendaryの全文色付きbadgeへ変更。灰/緑/青/紫/金の枠＋淡色背景も併用。おすすめ枠の緑色がrarityと紛らわしかったためニュートラルoutlineへ分離。busyで背景を切替しない。Mainの所持カードラベルが下で切れないよう空の遺物欄の余白とカード画像高だけ調整。装備枠数/効果/進行は不変。
+- Node compact tests6（予測表示なし・5rarityの全文badgeを追加）、busy5、装備5、TypeScript/production build成功。backend未変更のため今回はPython全体の再実行なし。
+- computer-useで実component静的fixture（APIなし）を確認: 候補/所持の灰・緑・青ラベル、予測表示なし、所持ラベルがloadout内。証跡 `output/card_rarity_readability_20261005.png`。fixtureは `output/rarity_readability_cards_fixture_20261005.html` / result版（仮データ）。以前のfixture/画像を上書きしないようpreview scriptへ出力prefix引数を追加。
+- 再現: playtestでbundled Node `scripts/test-compact-panels.mjs` / `scripts/test-selection-busy.mjs` / `scripts/test-equipment-return.mjs`、previewは `scripts/preview-compact-panels.mjs rarity_readability`。検証tab/4174は終了。ライブの取得/リトライ/リセットなし、保存状態・4173を維持、GitHub pushなし。
+
+## 候補カードの端表示・コンパクトリザルト（2026-10-05）
+
+- ユーザー確認済み: Main端へ表示するのは所持カードではなく取得候補3枚。FigmaMainのカード選択を画面全面modalから右端の280px railへ変更。元の1440×900 Mainは維持し、railの横に残る領域をResizeObserverでfit。戦闘を覆うscrimなし。700px以下は下端の小型カード列（横送り）。「選択」で開く/閉じる動線とlazy open_cards、取得/reroll/batch/eligible/busy判定は維持し、勝手に追加drawしない。
+- ChoicePanelsのplacement既定はmodal、compactResult既定false。FigmaMainだけedge/compactを渡す。Mainのresultは装備確認ボタン・武器/遺物素材欄を外し、DP一覧を横2列に変更。素材や装備そのものを削除せず、鞄に残す。旧archiveの結果工房表示は維持。再挑戦は引き続き手動。
+- 巨大な空白の原因だったカードheight90dvh/flex:1と下端へ押し付けるdl margin:autoを除去。説明/効果/即時DPS/TTK/選択/rerollは残す。前回の明滅防止CSSとbackground busy分離は維持。backend・balance・RNG・正式spec変更なし。
+- 新Node `scripts/test-compact-panels.mjs` 4 tests成功（3候補/action/違法候補disabled、結果DPとretry保持、装備/素材表示なし、archive既定維持、Main配線/自動drawなし/他panel中非表示）。既存装備5・busy5 tests、Python全167 tests（10.303s）、TypeScript/production build成功。
+- computer-useでAPI無接続の実component静的fixtureを確認。1280×720と1063×704ではカードrailとMain重なりなし、390×844では下端横送り。標準3枚のpanel縦overflowなし。resultは1280×720/390×844でDP2列・縦overflowなし。長文カードや非常に低いviewportでは内容保全のためpanel内部scrollが残る可能性あり。実プレイ選択/取得/再挑戦/初期化操作なし。
+- 再現: playtest内でbundled Node `scripts/preview-compact-panels.mjs`（localhost4174、/?death）、上記3つのtest-*.mjs。fixture/証跡は `output/compact_cards_fixture_20261005.html`、`compact_result_fixture_20261005.html`、`compact_cards_20261005.png`、`compact_result_20261005.png`。旧fixture/outputを上書きしていない。確認後4174とtemporary tabを終了し、viewport override解除。4173と保存進行は維持。GitHub pushなし。
+- 次: 実プレイで端表示の大きさと長文Rare/Epic候補を確認。今回はカード性能・取得頻度・保管満杯timeoutなどを変更していない。
+
+## カード選択の明滅修正（2026-10-04）
+
+- 原因: page.tsxはresolve/5秒autosaveを含む全actionでbusyを切替、ChoicePanelsのdisabledとCSS opacity .45/disabled背景がその都度切り替わっていた。nonBlocking戦闘は進むため、特に高速設定でカード全体が頻繁に明滅する構造だった。
+- 既存の直列action queueと全request数は維持し、resolve/save_progressは背景更新として操作busyから除外。カード取得/reroll/open_cards/装備などはforeground request数でbusyを維持し、重複操作を防ぐ。背景responseがforeground待機中にbusyを解除することもない。
+- Mainカード選択だけ入場animation/カードbackground transitionを無効化。busyによるdisabledで透明度や背景を変えず、実際のineligibleのみdata属性で薄く表示。カードの合法判定・無効化は維持。戦闘停止・draw pool/balance/spec変更なし。
+- 同じ経路で、前回装備成功復帰を妨げていたMainへの `void act(...)` adapterも発見し `act={act}` へ変更。成功boolean Promiseを実際のMainまで保つ（前回component単体testsではpage接続のvoid化を未カバー）。新page-level testsでこの戻り値も確認。
+- Node `scripts/test-selection-busy.mjs` 5 tests / 装備復帰5 tests / Python全167 tests（31.244s）成功、TypeScript/production build成功。page-level testsはmock fetch/軽量hooksで実action callbackを実行。live browserは装備一覧表示中だったため読取のみ、カード選択/再挑戦/初期化/進行変更なし。ブラウザ連続動画による明滅再確認は未実施。
+- 再現: playtestでbundled Node `scripts/test-selection-busy.mjs` と `scripts/test-equipment-return.mjs`。次: ユーザー実プレイで選択表示の安定と装備後Main復帰を確認。計算サーバー再起動/GitHub pushなし。
+
+
+## 一覧から装備成功時にMainへ戻る（2026-10-04）
+
+- ユーザー画像の武器・装備一覧で「装備」が成功したときだけ一覧を閉じMainへ戻す。取得候補gear_receive(equip:true)と保管品gear_equipの両方に適用。Main側は下に開いていた鞄・カード選択・設定等も閉じる。保管/分解/通常の閉じるの動線は変更しない。
+- page.tsxの既存action queueがAPI成功/失敗をbooleanで返すようにし、ActionHandlerへ戻り型を追加。エラーは従来どおり表示し、一覧は残す。装備前の先行closeはしない。
+- 未処理候補の最新1個を装備して消したとき、残っている古い候補を新Dropと誤認して即再openしないよう、直前の候補UID集合との差で新着を判定。本当に新しいDropでの自動表示と他パネルへの非割り込みは維持。
+- `first-prestige-playtest/scripts/test-equipment-return.mjs` 5 tests成功。成功応答待ち/候補と保管品/失敗とrejectとvoid/保管時維持/busy・装備中disabled/Mainの下層panel解除/古い候補で再openなし/真の新Dropでopenを検証。Main hooksは軽量test doubleで、ライブブラウザ通し試遊とは区別する。TypeScript/production build成功。
+- 再現: playtestでbundled Node `scripts/test-equipment-return.mjs` / `node_modules/typescript/bin/tsc --noEmit` / `node_modules/vinext/dist/cli.js build`。ライブ進行へ装備・再挑戦・初期化操作なし、backend/balance/spec不変。GitHub pushなし。
+
+
+## カード選択の縦スクロール修正（2026-10-04）
+
+- ユーザー画像のカード選択画面を対象に、choice-panels.tsxで既存上部ボタンをtoolbarへまとめ、figma-main.cssのdecision--cardsだけ高さfitを追加。3枚を横並びに保ち、番号/余白/見出しを圧縮、カードの固定min-height430pxを解除、選択ラベルを通常flowへ変更。リロールは画面下端内に固定したflex要素。死亡/DP/装備一覧など別パネルのスクロール仕様は不変。
+- 700px未満ではカード3枚を縦積みせず横送り1段へ変更。全説明を隠す/省略する処理なし。カード効果・操作action・選択判定・balance・保存仕様は変更しない。
+- 試遊は死亡画面だったため、開始/再挑戦せず実ChoicePanelsの静的renderプレビューで検証。`first-prestige-playtest/scripts/preview-card-choice.mjs`は同componentとCSSを読み、API接続なし、ボタン操作はnoop。生成物 `output/card_choice_layout_fixture_20261004.html`、画像 `output/card_choice_height_fit_20261004.png`（レイアウト用で実プレイ結果ではない）。
+- ブラウザ1063×704 / 1200×500 / 390×844でdocument高さ＝viewport高さ、panel/cardのscrollHeight＝clientHeight、リロール下端がviewport内。スマホは横送り。viewport override解除。TypeScript成功。確認用プレビューは作業後終了。
+- 再現: playtestディレクトリでbundled Node `scripts/preview-card-choice.mjs`（localhost4174、ゲームAPI無使用）。今回のブラウザ確認でライブ進行へ操作していない。次: 自然取得の長いEpic/Legendary説明で実表示を確認。正式spec/GitHub pushなし。
+- 最終検証: 保存/詳細/一括取得回帰9 tests成功（1.053s）、TypeScriptとproduction build成功。確認用tab閉鎖・4174サーバー停止、元の4173試遊は維持。
+
+
+## Main縦スクロール修正（2026-10-04）
+
+- ユーザーの訂正「横ではなく縦のスクロールをなくす」に対応。figma-main.tsx / app/figma-main.cssのみUI修正。1455px以下で左右を下へ積む前回の再配置を撤回し、元の1440×900のLeft / Battle / Right / Bottom配置を維持。ResizeObserverで `min(1, width/1440, height/900)` により全体を縮小し、メインを画面の高さへ収める。
+- 右ステータスは文字サイズを維持して行間・項目間余白だけ圧縮、スクロールなしで全マイルストーン・最高Waveまで表示。詳細・装備一覧・カード選択などの長いパネル内スクロール、カード列の横スライドは維持。接続・テスト設定は下端の重ね表示とし、展開でMainを押し下げない。
+- TypeScript `--noEmit`成功。ブラウザ1440×900 / 1200×650 / 通常1063×704でdocument scroll寸法＝viewport寸法、右欄clientHeight＝scrollHeight＝756を確認。低い画面でもfooter下端はviewport内。画面サイズoverrideは解除。画像 `output/play_main_height_fit_20261004.png`。
+- 試遊中のユーザー操作は継続していた。こちらは開始/再挑戦/選択/初期化/保存操作やサーバー再起動をしていない。戦闘・balance・spec・バックエンド不変。GitHub pushなし。
+- 次: 高さfitの実際の見やすさをユーザー確認。全体縮小方式のため狭いスマホでは小さくなる。別UI再設計は今回実施していない。保管満杯タイマーは引き続き未実装。
+
+
+## 起動反映・ブラウザ実確認（2026-10-04）
+
+- ユーザーが旧未保存進行の初期化を承認。旧dev session80612を停止し最新コードで4173/8765再起動、Mainから開始。初期化された旧メモリ進行は復元不可。以降の試遊はローカルJSONへ保存済み。
+- 画面で詳細表示→ダメージ内訳、設定→今すぐ保存/保存ファイルあり、新機能flagsを確認。2回の短い無選択RunはW7死亡、その後DP ATK/XP各1Lv購入、1倍でRun3再挑戦。自然取得手札のC/U一括操作でRapid Fire/Power Up各1枚取得、W8途中で明示pause→手動保存。
+- 新保存から再度サーバー再起動し、API status=combat / attempt3 / kills7 / cardCount2 / elapsed4.399999999999992 / DP残高2および保存ファイルSHA256が前後一致。saveErrorなし。ブラウザreloadでも同一HP56%/W8/所持2枚を復元し設定の再開ボタンを確認。
+- 現在dev session13528、http://localhost:4173/。試遊状態は一時停止のまま設定を開いて残した。復元後UI速度は既定8倍（速度設定の永続化は今回対象外）。再開前に接続・テスト設定から1倍に変更可。
+- 画像output/play_save_restored_20261004.png。新Monte Carlo/バランス変更/GitHub pushなし。保管満杯30秒の自動炉は引き続き未実装。
+
+## 保存・詳細・カード操作実装（2026-10-04）
+
+- 新W5000手動候補のみ。session_store.pyのversion1ローカルJSONへ全session属性（Run/DP/個体装備/保留候補/手札/RNG/途中HP・攻撃位相）を型タグ付き保存。既にロード済みのproject dataclassのみ復元しpickle/保存内容からのimportはしない。temp+fsync+replaceで更新、破損/旧versionは元ファイル保持して警告。保存失敗はメモリ上の進行を重複実行せず警告。
+- 保存先 `.local/play_session.json`（Git除外）。操作後/戦闘中5実秒ごと/設定の手動保存。新サーバー起動時に自動復元、オフライン進行なし。ブラウザ再読み込みで戦闘中なら一時停止で表示し設定から再開。クラッシュ時は最大約5実秒の未保存部分が失われ得る。「初期化して開始」は明示的に現セーブを置換する。
+- 詳細表示をdamage panelへ接続。Base/AS/AllDamage/攻撃系列等合算の4Powerは期待DPSに合計一致。Crit/Hit/FU/ReAction/Weapon等パラメータと条件付き倍率も表示。時間/HP条件は静的DPSへ加算しない。DP/Weaponを外した差は相互作用のため非加算として表示。
+- C/Uのみおすすめ一括取得を明示操作で追加。現行即時scoreの合法最大候補を逐次取得し最大20枚、Rare以上を含む手札/確定報酬/死亡で停止。常時自動取得ではない。XP・カード性能・legacy/PE/正式simは変更しない。
+- test_play_save_details_batch.py追加9件、全167 tests成功（30.218s）、TypeScript/build成功。HTTP隔離サーバーから保存→新Python process復元、手札選択後RNG一致、死亡→retry、非finite値codec、破損保持、出力合計・state不変、一括20枚上限を検証。
+- 稼働中8765サーバーは未再起動（旧メモリ進行を消さない）。新saveSupported/cardBatchSupportedがないサーバーへ新actionを送らない。ブラウザ新機能のend-to-end試遊は再起動承認後。GitHub pushなし。
+- 次: ユーザー承認で旧メモリ進行の扱いを決めて計算サーバー再起動。保管満杯30秒/自動炉は会話で仮決定済みだが今回対象外・未実装。候補ごと30秒、空枠で解除、明示pause停止、死亡武器50%回収/遺物候補保持してretryまで停止。
+- 再現: bundled Pythonで `-m unittest discover -s scripts -p 'test_*.py' -q`、playtestでbundled Node `node_modules/typescript/bin/tsc --noEmit` / `node_modules/vinext/dist/cli.js build` / `scripts/dev-with-sim.mjs --port 4173`。
+
+## 4項目監査（2026-10-04、修正なし）
+
+- 進行保存: sim_server.pyの単一SESSIONメモリのみ。GET stateは再表示用でディスク復元ではない。サーバー終了で消失。EquipmentInventoryのserializerは装備単体用でゲーム全体保存ではない。
+- 詳細表示: figma-main.tsxでsettingsに接続。ダメージ内訳は未接続。new_w5000_session.stateのplayerには基礎ATK/AS/Crit/XP/Hit/Supplemental/ReAction/EffectiveWeapon等があるが、寄与分解の表示/APIは別途必要。
+- 保管満杯: 空装備枠への候補直接装備可。装備済み+保管満杯で新候補装備は拒否、先に所持品分解が必要。所持済み保管品との交換は可能。候補拒否はaction全体rollback。API400をpage.tsxが汎用errorとしてpaused=trueにするため、通常の容量拒否でも戦闘停止する。事前満杯表示/一操作交換分解は未接続。過去430件の文字化け原因をこのコード経路と断定しない。
+- カード: 選択権蓄積、開いたまま次手札を順次選択可能、表示中も戦闘継続。自動取得なし。Luna単一seed診断3462枚/95Run=約36.4枚/Run、累計戦闘約9.18hに約9.5ゲーム秒/枚。手動クリック実測ではなく操作policy依存、XP変更の根拠としない。
+- 検証: test_play_nonblocking.py 9 tests成功。新Monte Carlo/ライブ操作/本体・balance変更なし。次は保存実装を最優先、詳細接続と容量エラー動線を修正するかユーザー確認。
+
+## 最新確認（2026-10-04: 続行試遊・Luna並行）
+
+- 親は既存ブラウザ状態から死亡後BC DPをATK/AS/XP各1Lv購入、手動再挑戦。カード重複（Rapid Fire/Steady Force等）・手札保持・Affix武器装備・明示pause/resumeを確認。途中8倍、終了1倍へ戻す。W75撃破/W76時間切れ、当該Run戦闘時間4分59秒、+21DP、残高22、武器素材6、死亡待機。ライブ初期化なし。画像output/playcheck_death_w76_20261004.png。ブラウザerror/warnなし。
+- 「詳細表示」は現行settingsへ接続し、ダメージ内訳は未表示。ディスク保存なし（sim_server.pyの単一SESSIONメモリ）。今回は機能追加/balance修正なし。
+- LunaはライブAPIを触らず独立EquipmentSession・seed20260828でW500単一seedスモーク。最初の140loop/Run2/W83報告は上限誤解のため除外。正しいRun上限の確認では95Run開始/94死亡、W500撃破。累計戦闘W100=3094.67s、W250=13957.82s、W500=33036.64s（約9.18h、操作時間なし、現実の待ち時間ではない）。カード3462取得、DP135Lv購入。即時火力差ベースの診断操作でStandard bot本体や代表バランス測定ではない。
+- 生集計と操作policyはoutput/luna_w500_smoke_20261004.md。武器受取拒否482回のうちStorage full52、残り430は日本語メッセージ文字化けで原因不明。拒否後に分解して進行、unexpected/nonfiniteなし。ただし拒否の全原因が正常とは未確認。診断Here-string自体は未保存で完全再現性の制約あり。画面W500通し完了と混同しない。
+- 次の優先確認: 進行保存、ダメージ詳細の接続、保管満杯時の交換/不要品分解動線、カード操作量。今回本体は変更せず、数値の自動調整なし。
+
+## 最新修正（2026-10-04: 装備通知と狭幅配置）
+
+- figma-mainのみ変更。新Drop時、カード選択/鞄/設定/DP/カード・装備詳細が開いていれば装備一覧を自動openしない。閉じた後にも遅延割り込みせず、一覧（未処理件数）で手動表示。何も開いていないcombat時の自動表示は維持。
+- 1455px以下は戦闘を先頭、装備・ステータスを下、600px以下は1列。カード列の横スライドは維持。鞄/一覧/詳細も狭幅に収まる配置。区切り線SVGの自然幅による巨大はみ出しをwidth2pxで解消。広幅の固定配置は維持。
+- 158 tests成功（9.329s）、TypeScript/production build成功。ブラウザ390/1048/1440/1600幅でpage横はみ出しなし、390幅の鞄を確認。カード表示中のW10武器取得でカードが保持され一覧1件となり、閉じても割り込みなし、一覧から手動表示。次の遮蔽物なしDropでは自動表示も確認。
+- 戦闘/spec/balance変更なし。画像output/play_narrow_fix_20261004.png。画面幅は元へ復帰。W500通し・外部公開は別途。
+
+## 最新確認（2026-10-04: Luna並行・read-only試遊）
+
+- ユーザー指定でgpt-6-luna lowがコード/既存テスト、親がブラウザ操作を担当。Lunaの全158 tests成功（9.452s）。balance/spec/code修正・Monte Carloなし。
+- 新W5000手動候補seed20260828の既存死亡状態からAS Lv0→1を9DPで購入し手動再挑戦。設定/カード表示中の進行、武器一覧装備、カード手札保持、Rapid Fire取得、死亡時選択権破棄、武器50%回収、カード説明を確認。短いRunは40撃破・W41時間切れ・表示5分7秒・+15DP。途中8倍検証、終了後1倍へ復帰。最適操作や代表バランスの結果ではない。W500通し未完了。
+- 操作性の確認事項: 新Dropで装備一覧が自動openしカード選択を覆う（figma-main.tsx latestDrop effect）。表示領域約1048pxでは横スクロールがあり全体を同時に見られない。仕様/値は未変更。画像output/luna_playcheck_20261004.png。
+- 次: 装備通知の割り込みと狭い表示領域の優先度を判断し、別途W1～500通し確認。Pythonテストはブラウザ通信失敗・操作直列化そのものを直接検証していない。
+
 ## 最新（2026-10-04: 試遊テンポ・操作改善）
 
 - 新W5000手動EquipmentSessionのみnon-blocking化。旧formal/D/E/CardValue/旧PlaySession、XP量・カード数値は今回変更なし。

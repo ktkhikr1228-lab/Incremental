@@ -1,6 +1,8 @@
-.figma-page { background:#1e1e1e; color:#f5f5f5; min-height:100vh; font-family:Arial,'Noto Sans JP',sans-serif; }
-.fm-container { overflow-x:auto; }
-.fm-screen { width:1440px; height:900px; position:relative; margin:auto; background:#1e1e1e; color:#fff; }
+.figma-page { background:#1e1e1e; color:#f5f5f5; height:100dvh; overflow:hidden; position:relative; font-family:Arial,'Noto Sans JP',sans-serif; }
+.fm-layout { width:100%; height:calc(100% - 36px); display:flex; align-items:center; gap:12px; }
+.fm-container { flex:1; height:100%; min-width:0; min-height:0; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+.fm-battle-slot { display:contents; }
+.fm-screen { width:1440px; height:900px; flex-shrink:0; position:relative; margin:auto; background:#1e1e1e; color:#fff; }
 .fm-screen button { cursor:pointer; }
 .fm-screen button:hover:not(:disabled) { filter:brightness(1.14); outline:2px solid #d2b47e; }
 .fm-screen button:active:not(:disabled) { transform:translateY(1px); }
@@ -21,11 +23,11 @@
 .fm-weapon-head .fm-item,.fm-empty-weapon { width:85px; height:85px; }
 .fm-empty-weapon img { width:85px; height:85px; }.fm-empty-weapon span { display:none; }
 .fm-weapon-effects { height:130px; padding-top:14px; font-size:22px; line-height:1.3; }.fm-weapon-effects p { margin:0 0 4px; }
-.fm-relics { display:flex; gap:12px; margin:0 8px; height:219px; }.fm-relics>div { width:100px; }.fm-relics p { font-size:16px; margin:8px 0; }
+.fm-relics { display:flex; gap:12px; margin:0 8px; height:190px; }.fm-relics>div { width:100px; }.fm-relics p { font-size:16px; margin:8px 0; }
 .fm-card-scroll { display:flex; gap:14px; overflow-x:auto; padding:4px 4px 12px; align-items:flex-start; scroll-snap-type:x proximity; }
 .fm-card-wrap { flex:0 0 94px; text-align:center; scroll-snap-align:start; color:#111; }.fm-card-wrap small { font-size:20px; }
 .fm-card { width:94px; height:121px; position:relative; }.fm-card img { width:94px; height:121px; object-fit:cover; }.fm-card span { position:absolute; inset:40px 3px 8px; font-size:13px; color:#eee; background:#262626c9; display:flex; align-items:center; justify-content:center; }
-.fm-divider { position:absolute; top:0; height:788px; }.fm-divider-left { left:405px; }.fm-divider-right { left:1076px; }
+.fm-divider { position:absolute; top:0; width:2px; height:788px; }.fm-divider-left { left:405px; }.fm-divider-right { left:1076px; }
 .fm-battle { position:absolute; left:418.5px; top:25.5px; width:652px; height:748px; }
 .fm-stage-frame { position:absolute; inset:0; width:652px; height:748px; }
 .fm-battle-inner { position:absolute; left:24.5px; top:28.5px; width:600px; height:598px; color:#111; }
@@ -37,12 +39,13 @@
 .fm-active { position:absolute; bottom:10px; left:34px; width:271px; height:100px; color:#333; font-size:24px; background:none; border:0; }.fm-active img { position:absolute; inset:0; width:271px; height:100px; z-index:0; }.fm-active { isolation:isolate; }.fm-active img { z-index:-1; }
 .fm-attack-mark { position:absolute; right:20px; bottom:46px; font-size:24px; }
 .fm-xp { position:absolute; left:21.5px; top:646.5px; width:603px; height:83px; overflow:hidden; border-radius:12px; color:#000; display:grid; place-items:center; font-size:32px; }.fm-xp img { position:absolute; inset:0; width:603px; height:83px; }.fm-xp-fill { position:absolute; left:0; top:0; bottom:0; background:#00ed13; }.fm-xp span { position:relative; }
-.fm-right { position:absolute; left:1094px; top:16px; width:332px; height:756px; font-size:27px; overflow:auto; }.fm-right h2 { font-size:32px; font-weight:400; margin:0 0 12px; }.fm-right dl { margin:0 0 10px; }.fm-right dl>div { margin-bottom:12px; }.fm-right dt { font-size:25px; }.fm-right dd { margin:0; font-size:27px; }.fm-right button { border:0; color:white; background:none; font-size:23px; margin-bottom:10px; }.fm-right p { margin:2px 0; font-size:22px; }.fm-right .fm-progress { margin-top:12px; }
+.fm-right { position:absolute; left:1094px; top:16px; width:332px; height:756px; font-size:27px; line-height:1.15; }.fm-right h2 { font-size:32px; font-weight:400; margin:0 0 8px; }.fm-right dl { margin:0 0 10px; }.fm-right dl>div { margin-bottom:8px; }.fm-right dt { font-size:25px; }.fm-right dd { margin:0; font-size:27px; }.fm-right button { border:0; color:white; background:none; font-size:23px; margin-bottom:10px; }.fm-right p { margin:2px 0; font-size:22px; }.fm-right .fm-progress { margin-top:12px; }
 .fm-footer { position:absolute; top:788px; left:0; width:1440px; height:112px; display:flex; gap:13px; padding:6px 11px; }.fm-footer-rule { position:absolute; top:0; left:0; width:1440px; }.fm-footer button { width:114px; height:100px; border:0; background:none; position:relative; color:white; padding:0; }.fm-footer img:not(.fm-footer-rule) { width:100px; height:100px; object-fit:contain; }.fm-footer span { position:absolute; inset:0; display:grid; place-items:center; font-size:46px; text-shadow:0 2px 4px #000; }.fm-footer button:disabled span { font-size:36px; }.fm-footer-space { flex:1; }
 .fm-start,.fm-modal-backdrop { position:absolute; inset:0; background:#0008; display:flex; align-items:center; justify-content:center; z-index:20; }.fm-start button { padding:20px 75px; font-size:32px; background:#d9d9d9; color:#111; }
 .fm-dialog { background:#dedbd4; color:#111; border:2px solid #6b6354; padding:24px; width:min(620px,90%); max-height:80%; overflow:auto; }.fm-dialog h2 { font-size:26px; }.fm-dialog p { margin:12px 0; }.fm-dialog button { background:#f0ebe0; border:1px solid #776e5e; color:#111; margin:6px; padding:10px; }.fm-dialog button:disabled { opacity:.45; }.fm-dialog select { background:white; color:#111; }.fm-dialog-close { float:right; }.fm-dialog .fm-card-wrap { color:#111; }
 .fm-bag { position:absolute; inset:18px 20px; z-index:10; padding:54px 20px 20px; border:5px solid #503b27; border-radius:12px; background:#846345; box-shadow:inset 0 0 0 5px #b09370; color:#f5ebdc; }.fm-bag-close { position:absolute; left:20px; top:10px; background:#60472e; border:1px solid #c7ae8c; color:#fff; padding:6px 15px; }.fm-bag-grid { height:100%; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); grid-template-rows:repeat(2,minmax(0,1fr)); gap:12px; }.fm-bag-grid>section { border:2px dashed #b99a77; padding:16px; overflow:auto; position:relative; background:#705339; }.fm-bag h2 { margin:0 0 12px; font-size:24px; }.fm-bag h3 { margin:12px 0 6px; font-size:18px; }.fm-equipped-row,.fm-storage { display:flex; flex-wrap:wrap; gap:8px; }.fm-bag .fm-item { width:90px; height:90px; }.fm-future { display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:42px; }.fm-furnace { border:1px dashed #c8b195; padding:10px; margin-top:15px; }.fm-furnace button { padding:8px; background:#d5b78b; color:#111; margin:4px; }.fm-compact .fm-battle { transform:scale(.49); transform-origin:top left; top:0; left:50%; margin-left:-160px; }.fm-bag .fm-card-scroll { flex-wrap:wrap; }
-.fm-debug { padding:8px 20px; font-size:13px; color:#aaa; }.fm-debug button,.fm-debug select { padding:5px; margin:5px; background:#333; color:#fff; }.fm-error { padding:12px; background:#5b2727; color:white; }
+.fm-debug { position:absolute; bottom:0; left:0; width:100%; max-height:45dvh; overflow:auto; z-index:40; background:#1e1e1e; padding:8px 20px; font-size:13px; color:#aaa; }.fm-debug button,.fm-debug select { padding:5px; margin:5px; background:#333; color:#fff; }.fm-error { padding:12px; background:#5b2727; color:white; }
+.figma-page > [role="alert"] { position:absolute; top:0; left:0; right:0; z-index:50; }
 .figma-page .decision { position:fixed; inset:8vh 4vw auto; width:auto; max-height:84vh; overflow:auto; margin:0; padding:24px; background:#dedbd4; color:#171717; z-index:30; box-shadow:0 0 0 100vmax #0008; border:2px solid #716a60; }
 .figma-page .decision h2,.figma-page .decision h3,.figma-page .decision p,.figma-page .decision header span { color:#171717; }
 .figma-page .card-options { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
@@ -53,17 +56,22 @@
 @media(max-width:700px) { .figma-page .card-options { grid-template-columns:1fr; }.figma-page .card-options button { padding:10px; }.figma-page .decision { inset:3vh 3vw auto; max-height:94vh; }.figma-page .decision h2 { font-size:24px; } }
 
 /* Rarity is visible by both color and text, including owned cards. */
-.rarity-C { --rarity:#9ca3af; }
-.rarity-U { --rarity:#39894b; }
-.rarity-R { --rarity:#287ac6; }
-.rarity-E { --rarity:#9459c8; }
-.rarity-L { --rarity:#be871f; }
-.fm-card-wrap { border:2px solid var(--rarity); border-radius:5px; padding:3px; background:#eee; }
+.rarity-C { --rarity:#9ca3af; --rarity-ink:#4b5563; --card-surface:#f0f1f3; }
+.rarity-U { --rarity:#39894b; --rarity-ink:#246b35; --card-surface:#eff8ef; }
+.rarity-R { --rarity:#287ac6; --rarity-ink:#195ea6; --card-surface:#edf4fc; }
+.rarity-E { --rarity:#9459c8; --rarity-ink:#7333a3; --card-surface:#f6effb; }
+.rarity-L { --rarity:#be871f; --rarity-ink:#805900; --card-surface:#fff6df; }
+.fm-card-wrap { border:3px solid var(--rarity); border-radius:5px; padding:3px; background:var(--card-surface); }
 .fm-card-wrap small { display:block; font-size:13px; font-weight:700; }
+.card-rarity-badge { display:inline-block; background:var(--rarity-ink,#4b5563); color:#fff; font:700 13px/1.3 Arial,sans-serif; letter-spacing:0; padding:4px 8px; border-radius:3px; }
+.fm-card-wrap .card-rarity-badge { display:block; font-size:11px; padding:4px 2px; }
+.fm-card-count { display:block; padding-top:2px; }
+.fm-loadout > .fm-card-scroll .fm-card,.fm-loadout > .fm-card-scroll .fm-card img { height:94px; }
 .fm-card-wrap .fm-card span { border-bottom:5px solid var(--rarity); }
-.figma-page .card-options button { border-top:7px solid var(--rarity); }
-.figma-page .card-options button.is-recommended { border-top:7px solid var(--rarity); }
+.figma-page .card-options button { border:2px solid var(--rarity); border-top-width:7px; background:var(--card-surface); }
+.figma-page .card-options button.is-recommended { border:2px solid var(--rarity); border-top-width:7px; outline:2px solid #50483a; outline-offset:2px; background:var(--card-surface); }
 .figma-page .card-options__rarity { font-weight:bold; }
+.figma-page .card-options__tags { font-size:11px; font-weight:400; color:#4b4b4b; }
 .fm-dialog[class*="rarity-"] { border-top:7px solid var(--rarity); }
 .fm-equipment-list { width:1120px; }
 .fm-equipment-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; }
@@ -76,5 +84,92 @@
 .fm-furnace:hover { outline:2px solid #e3aa52; }
 .fm-draft-empty { position:fixed; right:20px; bottom:20px; z-index:31; padding:16px; background:#eee; color:#111; }
 .fm-footer span { font-size:28px; }
+.fm-weapon-pouch { min-width:0; display:flex; align-items:center; gap:8px; overflow-x:auto; overflow-y:hidden; padding:2px 0; }
+.fm-footer .fm-pouch-weapon { flex:0 0 76px; width:76px; height:88px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; border:2px solid var(--rarity,#888); background:#292929; border-radius:4px; }
+.fm-footer .fm-pouch-weapon img { width:42px; height:42px; background:#e7e4de; }
+.fm-footer .fm-pouch-weapon span { position:static; display:block; max-width:100%; font-size:12px; line-height:1.2; text-shadow:none; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.fm-footer .fm-pouch-weapon small { font-size:10px; line-height:1.2; color:white; background:var(--rarity-ink,#4b5563); padding:1px 3px; border-radius:2px; }
+.fm-footer .fm-pouch-weapon:focus-visible { outline:2px solid white; outline-offset:2px; }
 .fm-status { position:absolute; top:0; left:420px; font-size:16px; color:#f4b2a4; z-index:2; }
 .fm-bag-death { position:absolute; right:20px; top:8px; margin:0; color:#ffd0ba; }
+
+/* Keep the approved left/battle/right canvas. Scale the entire 1440×900
+   composition to both viewport dimensions instead of stacking it vertically. */
+.figma-page .decision--cards {
+  inset:50% auto auto 50%; transform:translate(-50%,-50%); width:min(960px,92vw); height:auto; max-height:90dvh; padding:16px;
+  display:flex; flex-direction:column; gap:12px; overflow:auto; animation:none;
+}
+.figma-page .card-selection-actions { display:flex; flex-wrap:wrap; align-items:center; gap:6px 16px; flex-shrink:0; font-size:13px; line-height:1.3; }
+.figma-page .card-selection-actions .text-action { margin:0; padding:3px 0; }
+.figma-page .decision--cards > header { flex-shrink:0; grid-template-columns:130px 1fr; gap:4px 12px; padding-bottom:10px; border-bottom-width:3px; }
+.figma-page .decision--cards > header h2 { font-size:clamp(20px,3.5dvh,30px); }
+.figma-page .decision--cards > header span { font-size:14px; }
+.figma-page .decision--cards .card-options { min-height:0; margin:0; border:0; align-items:stretch; }
+.figma-page .decision--cards .card-options > button { min-height:0; padding:14px; display:flex; flex-direction:column; gap:8px; transition:none; }
+.figma-page .decision--cards .card-options > button:disabled { opacity:1; background:var(--card-surface); color:#111; }
+.figma-page .decision--cards .card-options > button[data-ineligible] { opacity:.45; }
+.figma-page .decision--cards .card-options > button:hover { transform:none; box-shadow:none; }
+.figma-page .decision--cards .card-options__number { font-size:clamp(24px,5dvh,44px); }
+.figma-page .decision--cards .card-options__rarity { display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:0; line-height:1.2; overflow-wrap:anywhere; }
+.figma-page .decision--cards .card-options h3 { margin:0; font-size:clamp(18px,3dvh,24px); line-height:1.15; overflow-wrap:anywhere; }
+.figma-page .decision--cards .card-options p { min-height:0; margin:0; font-size:13px; line-height:1.35; }
+.figma-page .decision--cards .card-options dl { margin:8px 0 0; }
+.figma-page .decision--cards .card-options dl div { padding:5px 0; }
+.figma-page .decision--cards .card-options__select { position:static; font-size:12px; }
+.figma-page .decision--cards > .text-action { align-self:flex-start; flex-shrink:0; margin:0; padding:4px 0; font-size:14px; }
+@media(max-width:700px) {
+  .figma-page .decision--cards { padding:12px; }
+  .figma-page .decision--cards > header { grid-template-columns:1fr; }
+  .figma-page .decision--cards > header span { grid-row:auto; }
+  .figma-page .decision--cards .card-options { grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:80%; overflow-x:auto; scroll-snap-type:x mandatory; padding-bottom:8px; }
+  .figma-page .decision--cards .card-options > button { scroll-snap-align:start; }
+}
+@media(max-width:600px) {
+  .fm-equipment-grid { grid-template-columns:minmax(0,1fr); }
+}
+
+/* Candidate cards live beside, not over, the original battle canvas. */
+.figma-page .decision--cards-edge {
+  position:static; inset:auto; transform:none; width:280px; flex:0 0 280px;
+  max-height:100%; margin-right:12px; padding:12px; box-shadow:none; gap:8px;
+}
+.figma-page .decision--cards-edge > header { grid-template-columns:1fr; gap:3px; padding-bottom:6px; }
+.figma-page .decision--cards-edge > header span { grid-row:auto; font-size:11px; }
+.figma-page .decision--cards-edge > header h2 { font-size:18px; }
+.figma-page .decision--cards-edge > header p { font-size:11px; margin:0; }
+.figma-page .decision--cards-edge .card-selection-actions { gap:4px 10px; font-size:11px; }
+.figma-page .decision--cards-edge .card-selection-actions .text-action { font-size:12px; }
+.figma-page .decision--cards-edge .card-options { grid-template-columns:1fr; gap:8px; }
+.figma-page .decision--cards-edge .card-options > button { padding:9px 10px; gap:4px; }
+.figma-page .decision--cards-edge .card-options__number { display:none; }
+.figma-page .decision--cards-edge .card-options__rarity { font-size:11px; }
+.figma-page .decision--cards-edge .card-options h3 { font-size:18px; }
+.figma-page .decision--cards-edge .card-options p { font-size:12px; }
+.figma-page .decision--cards-edge .card-options dl { display:flex; gap:12px; margin:3px 0 0; font-size:11px; }
+.figma-page .decision--cards-edge .card-options dl div { flex:1; flex-direction:column; align-items:flex-start; gap:2px; padding:2px 0; }
+.figma-page .decision--cards-edge .card-options dd { font-size:13px; }
+.figma-page .decision--cards-edge .card-options__select { font-size:11px; }
+
+.figma-page .decision--death-compact { inset:50% auto auto 50%; transform:translate(-50%,-50%); width:min(1000px,94vw); max-height:92dvh; padding:20px; animation:none; }
+.figma-page .decision--death-compact > header { grid-template-columns:150px 1fr; padding-bottom:12px; border-bottom-width:3px; }
+.figma-page .decision--death-compact > header h2 { font-size:28px; }
+.figma-page .decision--death-compact .death-columns { grid-template-columns:1fr; gap:0; margin-top:14px; }
+.figma-page .decision--death-compact .death-columns h3 { font-size:22px; margin:0 0 6px; }
+.figma-page .decision--death-compact .death-columns p { font-size:12px; margin:0 0 8px; }
+.figma-page .decision--death-compact .upgrade-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 20px; }
+.figma-page .decision--death-compact .upgrade-list button { grid-template-columns:1fr auto; gap:4px 8px; min-width:0; padding:10px 6px; }
+.figma-page .decision--death-compact .upgrade-list b { font-size:16px; }
+.figma-page .decision--death-compact .upgrade-list small { grid-column:1 / -1; text-align:left; font-size:12px; }
+.figma-page .decision--death-compact .retry-action { float:none; display:block; margin:14px 0 0 auto; padding:10px 16px; font-size:18px; }
+@media(max-width:700px) {
+  .fm-layout { flex-direction:column; gap:8px; }
+  .fm-container { width:100%; height:0; }
+  .figma-page .decision--cards-edge { width:calc(100% - 16px); flex:0 0 auto; max-height:48%; margin:0 8px; padding:8px; }
+  .figma-page .decision--cards-edge .card-options { grid-template-columns:none; grid-auto-flow:column; grid-auto-columns:80%; overflow-x:auto; }
+  .figma-page .decision--death-compact { padding:12px; }
+  .figma-page .decision--death-compact > header { grid-template-columns:1fr; gap:4px; }
+  .figma-page .decision--death-compact > header span { grid-row:auto; }
+  .figma-page .decision--death-compact > header h2 { font-size:20px; }
+  .figma-page .decision--death-compact .upgrade-list { gap:0 10px; }
+  .figma-page .decision--death-compact .upgrade-list button { grid-template-columns:1fr; }
+}

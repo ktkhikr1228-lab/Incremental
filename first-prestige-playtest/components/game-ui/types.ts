@@ -86,6 +86,14 @@ export type CardOption = {
 };
 
 export type SessionState = {
+  saveSupported?: boolean;
+  cardBatchSupported?: boolean;
+  saveAvailable?: boolean;
+  saveError?: string | null;
+  damageDetails?: { totalPower: number; rows: { label: string; power: number }[];
+    rawBase: number; effectiveWeapon: number; allDamage: number; followDamage: number;
+    multiTier: number; firstStrike: number; lastStand: number; execution: number;
+    timeCollapse: boolean; dpDelta: number; weaponDelta: number };
   nonBlocking?: boolean;
   cardDrafts?: number;
   pendingEquipmentList?: EquipmentItem[];
@@ -136,7 +144,7 @@ export type EquipmentInventory = {
   materials: Record<string, number>;
 };
 
-export type ActionHandler = (type: string, extra?: Record<string, unknown>) => void;
+export type ActionHandler = (type: string, extra?: Record<string, unknown>) => void | Promise<boolean>;
 
 export function formatNumber(value: number | undefined, digits = 2) {
   if (value === undefined) return '—';

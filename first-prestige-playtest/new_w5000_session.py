@@ -255,6 +255,21 @@ class NewW5000Session(PlaySession):
         result = super().state()
         snap = self._snapshot(self.run, self.wave)
         values = rules.values(self.run, self.permanent, self.inventory, self.wave % 10 == 0)
+        base = snap.base_attack_power
+        speed = math.log10(snap.attack_speed)
+        damage = math.log10(snap.all_damage)
+        result['damageDetails'] = dict(
+            totalPower=snap.log_dps,
+            rows=[dict(label='基礎攻撃力（武器・DP込み）', power=base),
+                  dict(label='攻撃速度', power=speed),
+                  dict(label='All Damage', power=damage),
+                  dict(label='Crit・Hit・追撃・再行動・Boss等（合算）', power=snap.log_dps-base-speed-damage)],
+            rawBase=values['raw_base'], effectiveWeapon=values['effective_weapon'],
+            allDamage=snap.all_damage, followDamage=values['follow_damage'],
+            multiTier=snap.multi_crit_tier,
+            firstStrike=snap.first_strike_mult, lastStand=snap.last_stand_mult,
+            execution=snap.execution_mult, timeCollapse=snap.time_collapse,
+            dpDelta=snap.dp_power, weaponDelta=snap.weapon_power)
         result.update(starterGuarantee=False,
             rerollsLeft=max(0, 1 + int(self.dp_state.reroll_bought) - self.run_rerolls_used)
                 if self.mode == "card" and self.card_forced_rarity is None else 0,

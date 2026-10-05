@@ -26,8 +26,9 @@ export default function Home() {
   const resolving = useRef(false);
   const liveState = useRef(state);
   const elapsedRef = useRef(0);
-  const actionQueue = useRef(Promise.resolve());
+  const actionQueue = useRef<Promise<boolean | void>>(Promise.resolve());
   const requests = useRef(0);
+  const interactionRequests = useRef(0);
   liveState.current = state;
   elapsedRef.current = battleElapsed;
 
@@ -35,7 +36,10 @@ export default function Home() {
     try {
       const response = await fetch(`${API}/state`, { cache: 'no-store' });
       if (!response.ok) throw new Error('state');
-      setState(await response.json());
+      const restored = await response.json() as SessionState;
+      setState(restored);
+      // Reloading a saved fight must not advance it before the player resumes.
+      if (restored.saveSupported && restored.status === 'combat') setPaused(true);
       setConnected(true);
     } catch {
       setConnected(false);
@@ -68,8 +72,9 @@ export default function Home() {
 
   const act = useCallback((type: string, extra: Record<string, unknown> = {}) => {
     const requestedFight = liveState.current.fight?.id;
+    const background = type === 'resolve' || type === 'save_progress';
     requests.current += 1;
-    setBusy(true);
+    if (!background) { interactionRequests.current += 1; setBusy(true); }
     const operation = async () => {
     setError('');
     try {
@@ -90,20 +95,33 @@ export default function Home() {
       elapsedRef.current = nextElapsed;
       setBattleElapsed(nextElapsed);
       setState(result);
+      return true;
     } catch (error) {
       setError(error instanceof Error ? error.message : '操作できませんでした');
       setPaused(true);
+      return false;
     } finally {
       if (type === 'resolve') resolving.current = false;
       requests.current -= 1;
-      setBusy(requests.current > 0);
+      if (!background) {
+        interactionRequests.current -= 1;
+        setBusy(interactionRequests.current > 0);
+      }
     }
     };
-    actionQueue.current = actionQueue.current.then(operation, operation);
-    return actionQueue.current;
+    const queued = actionQueue.current.then(operation, operation);
+    actionQueue.current = queued;
+    return queued;
   }, []);
 
   const fightKey = state.fight && state.run ? `${state.run.attempt}:${state.fight.wave}` : 'none';
+  useEffect(() => {
+    if (!state.saveSupported || state.status !== 'combat' || paused) return;
+    const timer = window.setInterval(() => {
+      if (!requests.current && !resolving.current) void act('save_progress');
+    }, 5000);
+    return () => window.clearInterval(timer);
+  }, [act, state.saveSupported, state.status, paused]);
   useEffect(() => {
     setBattleElapsed(state.fight?.elapsed ?? 0);
     resolving.current = false;
@@ -135,8 +153,9 @@ export default function Home() {
   if (visualMode === 'figma') return <main className="figma-page">
     {!connected && <p role="alert">計算サーバーに接続できません。npm run devで起動してください。</p>}
     {error && <p className="fm-error" role="alert">{error}</p>}
-    <FigmaMain state={state} elapsed={battleElapsed} progress={progress} busy={busy || !connected} paused={paused} onPause={() => setPaused(value => !value)} act={(type, extra) => void act(type, extra)} start={() => void start()} />
-    <details className="fm-debug"><summary>接続・テスト設定</summary><p>{state.candidateNotice ?? '開始すると装備UI用の独立セッションになります。'}</p><label>速度 <select value={speed} onChange={e => setSpeed(Number(e.target.value))}>{[1, 2, 8, 32].map(s => <option key={s} value={s}>{s}倍</option>)}</select></label><button onClick={() => void start()} disabled={busy || !connected}>初期化して開始</button><button onClick={() => setVisualMode('ascent')}>旧表示へ</button></details>
+    {state.saveError && <p className="fm-error" role="alert">{state.saveError}</p>}
+    <FigmaMain state={state} elapsed={battleElapsed} progress={progress} busy={busy || !connected} paused={paused} onPause={() => setPaused(value => !value)} act={act} start={() => void start()} />
+    <details className="fm-debug"><summary>接続・テスト設定</summary><p>{state.candidateNotice ?? '開始すると装備UI用の独立セッションになります。'}</p><label>速度 <select value={speed} onChange={e => setSpeed(Number(e.target.value))}>{[1, 2, 8, 32].map(s => <option key={s} value={s}>{s}倍</option>)}</select></label><button onClick={() => void start()} disabled={busy || !connected}>初期化して開始</button></details>
   </main>;
 
   return <main className={`archive-shell ${visualMode === 'ascent' ? 'archive-shell--ascent' : ''}`}>

@@ -594,6 +594,19 @@ class PlaySession:
 
 SESSION_LOCK = threading.Lock()
 SESSION: PlaySession | None = None
+SAVE_PATH = WORKSPACE / '.local' / 'play_session.json'
+SAVE_ERROR = None
+
+
+def persist_session():
+    global SAVE_ERROR
+    if SESSION is not None and hasattr(SESSION, 'inventory'):
+        from session_store import save
+        try:
+            save(SESSION, SAVE_PATH)
+            SAVE_ERROR = None
+        except (OSError, ValueError, TypeError) as error:
+            SAVE_ERROR = f'保存に失敗しました。ゲームはメモリ上で継続しています: {error}'
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -628,6 +641,7 @@ class Handler(BaseHTTPRequestHandler):
         if self.path == "/api/state":
             with SESSION_LOCK:
                 payload = SESSION.state() if SESSION else {"status": "idle", "targetWave": 5000}
+                payload.update(saveAvailable=SAVE_PATH.exists(), saveError=SAVE_ERROR)
             self._send(200, payload)
             return
         self._send(404, {"error": "not found"})
@@ -647,7 +661,9 @@ class Handler(BaseHTTPRequestHandler):
                     SESSION = EquipmentSession(profile, seed)
                 else:
                     SESSION = PlaySession(profile, seed)
+                persist_session()
                 payload = SESSION.state()
+                payload.update(saveAvailable=SAVE_PATH.exists(), saveError=SAVE_ERROR)
             self._send(200, payload)
             return
         if self.path == "/api/action":
@@ -657,16 +673,25 @@ class Handler(BaseHTTPRequestHandler):
                     return
                 try:
                     SESSION.action(body)
+                    persist_session()
                 except (ValueError, KeyError, IndexError) as error:
                     self._send(400, {"error": str(error)})
                     return
                 payload = SESSION.state()
+                payload.update(saveAvailable=SAVE_PATH.exists(), saveError=SAVE_ERROR)
             self._send(200, payload)
             return
         self._send(404, {"error": "not found"})
 
 
 def main() -> None:
+    global SESSION, SAVE_ERROR
+    if SAVE_PATH.exists():
+        try:
+            from session_store import load
+            SESSION = load(SAVE_PATH)
+        except Exception as error:
+            SAVE_ERROR = f'保存を復元できませんでした（元ファイルは保持）: {error}'
     server = ThreadingHTTPServer((HOST, PORT), Handler)
     print(f"First prestige playable API: http://{HOST}:{PORT}", flush=True)
     server.serve_forever()

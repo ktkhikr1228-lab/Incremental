@@ -17,13 +17,14 @@ class EquipmentPlaySessionTests(unittest.TestCase):
         self.assertNotIn('equipment', session.state())
         self.assertEqual(session.fight['enemyPower'], sim.enemy_power(1, session.config.hp_bonus_scale, session.config.midgame_relief))
 
-    def test_pending_receive_equip_and_resume(self):
+    def test_weapon_auto_stores_without_auto_equip_and_resume(self):
         session = EquipmentSession('balanced', 20260828)
         session.run.kills = 10
         session._roll_boss_weapon(10)
         session._continue_after_reward()
         self.assertEqual(session.mode, 'combat')
-        session.action({'type': 'gear_receive'})
+        self.assertEqual(session.pending_equipment, [])
+        self.assertIsNone(session.inventory.weapon_slot)
         uid = next(iter(session.inventory.items))
         before = session._snapshot(session.run, 11)
         session.action({'type': 'gear_equip', 'uid': uid})
@@ -34,6 +35,32 @@ class EquipmentPlaySessionTests(unittest.TestCase):
         self.assertEqual(session.wave, 11)
         session.action({'type': 'gear_unequip', 'uid': uid})
         self.assertIsNone(session.inventory.weapon_slot)
+
+    def test_free_space_stores_overflow_in_order_without_rng_or_item_changes(self):
+        session = EquipmentSession('balanced', 21)
+        for i in range(5):
+            session.inventory.receive(EquipmentItem(f'w{i}', 'weapon', '剣', 'C', 10, base_atk=1))
+        waiting = EquipmentItem('waiting', 'weapon', '剣', 'R', 100, base_atk=20, quality=.8, affixes={'crit_rate': .02})
+        session.pending_equipment.append(waiting)
+        before = copy.deepcopy(waiting)
+        rng = session.rng.getstate()
+        session.action({'type': 'gear_dismantle', 'uid': 'w0'})
+        self.assertEqual(session.pending_equipment, [])
+        self.assertEqual(session.inventory.items['waiting'], before)
+        self.assertEqual(session.inventory.materials['weapon'], 1)
+        self.assertIsNone(session.inventory.weapon_slot)
+        self.assertEqual(session.rng.getstate(), rng)
+
+    def test_death_recovers_stored_and_overflow_weapons_once(self):
+        session = EquipmentSession('balanced', 21)
+        for i in range(5):
+            session.inventory.receive(EquipmentItem(f'w{i}', 'weapon', '剣', 'C', 10, base_atk=1))
+        session.pending_equipment.append(EquipmentItem('overflow', 'weapon', '剣', 'R', 100, base_atk=10))
+        session.fight['timeToKill'] = None
+        session.action({'type': 'resolve'})
+        self.assertEqual(session.inventory.items, {})
+        self.assertEqual(session.pending_equipment, [])
+        self.assertEqual(session.inventory.materials['weapon'], 5 * .5 + 8 * .5)
 
     def test_relic_once_and_xp_effect(self):
         session = EquipmentSession('balanced', 21)

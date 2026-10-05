@@ -36,6 +36,23 @@ class EquipmentSession(NewW5000Session):
     def _roll_boss_weapon(self, wave):
         return super()._roll_boss_weapon(wave)
 
+    def _store_waiting_weapons(self):
+        """Move drops to the pouch without equipping or consuming RNG.
+
+        Overflow stays recoverable in the pouch UI until the player frees space.
+        """
+        for item in list(self.pending_equipment):
+            if item.kind != "weapon":
+                continue
+            if len(self.inventory.stored_ids("weapon")) >= self.inventory.storage_capacity["weapon"]:
+                break
+            self.inventory.receive(item)
+            self.pending_equipment.remove(item)
+
+    def _drop_weapon(self, wave, boss):
+        super()._drop_weapon(wave, boss)
+        self._store_waiting_weapons()
+
     def _resolve_fight(self):
         if self.mode != "combat":
             return
@@ -139,11 +156,11 @@ class EquipmentSession(NewW5000Session):
         state = super().state()
         state.update(equipmentMode=True, equipment=self.inventory.to_dict(),
                      pendingEquipment=asdict(self.pending_equipment[0]) if self.pending_equipment else None,
-                     candidateNotice="新W5000候補：新C/U/R/E/Lカード・DP v0.1 BC・個体Drop武器。Relic Apotheosis、全遺物報酬、武器固有、Core/UB/Finale、保存/拡張は未接続。旧W10000版とは別系統、12h調整は未完了。")
+                     candidateNotice="新W5000候補：新C/U/R/E/Lカード・DP v0.1 BC・個体Drop武器。ローカル進行保存対応。Relic Apotheosis、全遺物報酬、武器固有、Core/UB/Finale、拡張は未接続。旧W10000版とは別系統、12h調整は未完了。")
         state["canForgeWeapon"] = state["canForgeRelic"] = False
         state["equipmentDismantleMultiplier"] = self._salvage_multiplier()
         options = [self._card_payload(c) for c in self.card_hand]
-        state.update(nonBlocking=True, options=options,
+        state.update(nonBlocking=True, saveSupported=True, cardBatchSupported=True, options=options,
             cardDrafts=len(self.pending_cards) + int(bool(self.card_hand)),
             pendingEquipmentList=[asdict(c) for c in self.pending_equipment],
             rerollsLeft=max(0, 1 + int(self.dp_state.reroll_bought) - self.run_rerolls_used)
@@ -166,6 +183,27 @@ class EquipmentSession(NewW5000Session):
     def _action(self, body):
         action = body.get("type")
         uid = str(body.get("uid", ""))
+        if action == 'save_progress':
+            self._capture_elapsed(body)
+            self._refresh_encounter()
+            return
+        if action == 'take_common_batch':
+            if self.mode != 'combat':
+                return
+            self._capture_elapsed(body)
+            for _ in range(20):
+                if self.mode != 'combat':
+                    break
+                self._ensure_hand()
+                if not self.card_hand or self.card_forced_rarity or any(c.rarity not in ('C', 'U') for c in self.card_hand):
+                    break
+                options = [self._card_payload(c) for c in self.card_hand]
+                legal = [c for c in options if c['eligible']]
+                if not legal:
+                    break
+                self._select_card(max(legal, key=lambda c: c['score'])['key'])
+            self._refresh_encounter()
+            return
         if action in {"open_cards", "select_card", "reroll"}:
             if self.mode != "combat":
                 return
@@ -235,5 +273,6 @@ class EquipmentSession(NewW5000Session):
         elif action == "gear_replace":
             self.inventory.replace_relic(uid, str(body.get("otherUid", "")))
         self.run.effect_version += 1
+        self._store_waiting_weapons()
         self.inventory.validate()
         self._refresh_encounter()

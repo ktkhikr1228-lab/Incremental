@@ -11,7 +11,7 @@ export function equipmentEffects(item: EquipmentItem): string[] {
   return [...lines, ...Object.entries(item.affixes).map(([key, amount]) => `${affixNames[key] ?? key} +${formatNumber(amount * strength * (key === 'weapon_atk_additive' || key === 'crit_multiplier' ? 1 : 100))}${key === 'crit_rate' ? 'pt' : key.endsWith('_pct') ? '%' : ''}`)];
 }
 
-export function EquipmentList({ state, busy, act, close }: { state: SessionState; busy: boolean; act: ActionHandler; close: () => void }) {
+export function EquipmentList({ state, busy, act, close, onEquipped = close }: { state: SessionState; busy: boolean; act: ActionHandler; close: () => void; onEquipped?: () => void }) {
   const inv = state.equipment;
   const pending = state.pendingEquipmentList ?? [];
   const equipped = new Set([inv?.weapon_slot, ...(inv?.relic_slots ?? [])]);
@@ -27,7 +27,11 @@ export function EquipmentList({ state, busy, act, close }: { state: SessionState
         <h3>{item.name} +{item.enhancement}</h3><b>{rarityNames[item.rarity]}</b>
         {equipmentEffects(item).map(line => <p key={line}>{line}</p>)}
         <p>品質 {formatNumber(item.quality, 3)}</p>
-        <button disabled={busy || worn} onClick={() => act(drop ? 'gear_receive' : 'gear_equip', { uid: item.uid, equip: true })}>装備</button>
+        <button disabled={busy || worn} onClick={async () => {
+          try {
+            if (await act(drop ? 'gear_receive' : 'gear_equip', { uid: item.uid, equip: true }) === true) onEquipped();
+          } catch { /* Keep the list open when equipping fails. */ }
+        }}>装備</button>
         <button disabled={busy || (!drop && !worn)} onClick={() => act(drop ? 'gear_receive' : 'gear_unequip', { uid: item.uid })}>保管</button>
         <button disabled={busy} onClick={() => act(drop ? 'gear_discard' : 'gear_dismantle', { uid: item.uid })}>分解</button>
       </article>;
