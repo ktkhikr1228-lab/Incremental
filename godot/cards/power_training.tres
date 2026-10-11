@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="CardData" format=3 uid="uid://ds3kn4dqq0f7t"]
+
+[ext_resource type="Script" uid="uid://dydxb1mqmjua6" path="res://card_data.gd" id="1_chjrb"]
+
+[resource]
+script = ExtResource("1_chjrb")
+card_name = "Power Training"
+description = "Manual Attack ×1.25"
+effect_type = "manual_attack"
+value = 1.25
+metadata/_custom_type_script = "uid://dydxb1mqmjua6"

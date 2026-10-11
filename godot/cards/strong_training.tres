@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="CardData" format=3 uid="uid://3xvbfovml158"]
+
+[ext_resource type="Script" uid="uid://dydxb1mqmjua6" path="res://card_data.gd" id="1_d55ho"]
+
+[resource]
+script = ExtResource("1_d55ho")
+card_name = "Strong Training"
+description = "Auto_Attack ×1.35"
+effect_type = "auto_attack"
+value = 1.35
+metadata/_custom_type_script = "uid://dydxb1mqmjua6"

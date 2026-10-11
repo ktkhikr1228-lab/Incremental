@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="WeaponData" format=3 uid="uid://djjqfxsu7bexs"]
+
+[ext_resource type="Script" uid="uid://bynmkliw2no3i" path="res://weapon_data.gd" id="1_fm5b1"]
+
+[resource]
+script = ExtResource("1_fm5b1")
+weapon_name = "Fast Dagger"
+attack_interval = 0.4
+metadata/_custom_type_script = "uid://bynmkliw2no3i"

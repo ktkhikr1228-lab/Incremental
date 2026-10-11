@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="CardData" format=3 uid="uid://ddlqktoe7rj6j"]
+
+[ext_resource type="Script" uid="uid://dydxb1mqmjua6" path="res://card_data.gd" id="1_hr5y1"]
+
+[resource]
+script = ExtResource("1_hr5y1")
+card_name = "quick_hands"
+description = "Attack_Speed ×1.25"
+effect_type = "attack_speed"
+value = 1.25
+metadata/_custom_type_script = "uid://dydxb1mqmjua6"
