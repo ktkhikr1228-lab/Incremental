@@ -1,6 +1,6 @@
 # 現在の状態
 
-最終更新: 2026-10-11
+最終更新: 2026-10-12
 
 この文書は「いま何を作っていて、どこまで進んでいるか」だけを短く示すスナップショット。
 詳細な過去ログは `HANDOFF.md`、仕様は `GAME_SPEC.md`、判断理由は `DECISIONS.md` を参照する。
@@ -28,29 +28,23 @@
 
 ### GitHub origin/main に反映済み
 
-現時点でGitHubにpush済みのGodotコードは初期プロトタイプ段階。
+最新Godotプロトタイプは **2026-10-12 時点で origin/main と同期済み**。
+
+主な実装:
 
 - Manual Attack
 - Enemy HP
 - Wave進行
 - Enemy Timer
-- Death
-- Retry
-- Wave 10以降の簡易Weapon取得
-- 簡易Auto Attack
-
-### ローカルで進行中 / 会話で動作確認済み
-
-GitHubへまだ反映されていない最新Godot作業を含む。
-
+- Death / Retry
 - `WeaponData` Resource
-- 初武器2択
+- Wave 10での初武器2択
   - Old Sword
   - Fast Dagger
-- Weapon選択後にAuto Attack解禁
-- Manual AttackはWeapon取得後も使用可能
+- Weapon選択後のAuto Attack
+- Weapon取得後もManual Attackを継続可能
 - `CardData` Resource
-- Card Choice Panel / 3択
+- Card Choice Panel / 3択UI
 - テストカード3種
   - Manual Attack倍率
   - Auto Attack倍率
@@ -61,6 +55,12 @@ GitHubへまだ反映されていない最新Godot作業を含む。
 - Level Up → Card Pick
 - Card取得 → 効果反映
 - Card取得後にPanelを閉じる流れ
+
+最新のGodot更新コミット:
+
+```text
+3b2d946 feat: add card and weapon progression prototype
+```
 
 ### 現在の次タスク
 
@@ -101,6 +101,8 @@ Level Upが重なった場合のCard Pick回数を失わず蓄積する。
 
 ## 4. 未実装の主要システム
 
+- Pending Picks
+- Card候補ランダム化
 - 正式Card Pool
 - Weapon Drop / rarity / affix
 - Relic
@@ -138,19 +140,20 @@ Legacyの仕様を現行Godotへ自動的に採用しない。
 
 ---
 
-## 6. Git同期上の注意
+## 6. Git同期状態
 
-現在、会話で確認できているGodotのローカル進捗が
-GitHub origin/mainの `godot/` より先行している。
-
-PCへ戻ったら、まず以下を行う。
+2026-10-12 時点:
 
 ```text
-git status
-git diff
+main == origin/main
+working tree clean
 ```
 
-Godotの最新ローカル変更を確認し、
-意図しないファイルを含めずcommit / pushする。
+Godotの正式な開発先は次とする。
 
-push後、この文書の「GitHub origin/main に反映済み」を更新する。
+```text
+C:\Users\katao\Incremental\godot
+```
+
+旧作業フォルダ `C:\Users\katao\Dev` は参照用として扱い、
+今後の開発はGit管理下の `Incremental\godot` で行う。
