@@ -1,5 +1,11 @@
 # HANDOFF — 次回セッションの開始点（2026-09-27）
 
+## 序盤Level Up回帰テスト（2026-10-12）
+
+- レビュー指摘を確認。基点c202bc1のcheck_level_up()は既にWeapon条件外（2タブ）であり、処理変更は不要。敵撃破ごとの判定であることをコメントで明示。
+- run_reset_smokeに初期Wave1からManual Attackの実ボタンsignalで3撃破するケースを追加。各XP獲得、未装備のままWave4/Level2/XP0/Pending1/Card Panel表示を検証。その他仕様・処理は不変。
+- diff --check、Godot4.7.2 headless構文チェック、run_reset_smoke成功。Python既存170 tests成功（25.213秒）。再現コマンドは下のRun reset fixes節と同じ。画面操作は未確認、次は人間の序盤試遊。codex/run-reset-fixesのみcommit/push、mainへmergeしない。
+
 ## Godot Run reset fixes（2026-10-12）
 
 - `codex/pending-picks` ce9ee3fから`codex/run-reset-fixes`作成。main/pending-picksは書き換えない。main_2d.tscnのEnemyTimer.timeout/RetryButton.pressedを接続し、既存signalを維持。

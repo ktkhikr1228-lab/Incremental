@@ -64,6 +64,7 @@ func attack_enemy(damage: int) -> void:
 
 		if wave >= 10 and not has_weapon and not is_choosing_weapon:
 			get_first_weapon()
+		# Check every defeat, independently of the Weapon Choice condition.
 		check_level_up()
 
 	update_ui()

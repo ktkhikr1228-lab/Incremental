@@ -8,6 +8,21 @@ func next_choice_ready() -> void:
 		await process_frame
 
 func run_checks() -> void:
+	# Start at Wave 1 and earn XP through real Manual Attack button signals.
+	var early_game = load("res://main_2d.tscn").instantiate()
+	root.add_child(early_game)
+	for defeat in range(3):
+		while early_game.wave == defeat + 1:
+			early_game.get_node("Button").pressed.emit()
+		assert(early_game.wave == defeat + 2)
+		assert(not early_game.has_weapon and not early_game.is_choosing_weapon)
+		if defeat < 2:
+			assert(early_game.xp == defeat + 1 and early_game.level == 1)
+			assert(early_game.pending_card_picks == 0)
+	assert(early_game.wave == 4 and early_game.level == 2 and early_game.xp == 0)
+	assert(early_game.pending_card_picks == 1 and early_game.is_choosing_card)
+	assert(early_game.get_node("CardChoicePanel").visible)
+	early_game.free()
 	var game = load("res://main_2d.tscn").instantiate()
 	root.add_child(game)
 	assert(game.get_node("EnemyTimer").timeout.is_connected(game._on_enemy_timer_timeout))
