@@ -1,5 +1,14 @@
 # HANDOFF — 次回セッションの開始点（2026-09-27）
 
+## Godot Run reset fixes（2026-10-12）
+
+- `codex/pending-picks` ce9ee3fから`codex/run-reset-fixes`作成。main/pending-picksは書き換えない。main_2d.tscnのEnemyTimer.timeout/RetryButton.pressedを接続し、既存signalを維持。
+- 死亡で両Timer停止、両Panel閉鎖、Pending/選択状態/全候補/装備/3倍率を消去。RetryはWave1/Level1/XP0/初期HP5/未装備、EnemyTimerのみ開始。死亡中攻撃/取得、null Weaponを拒否。Weaponを優先しPendingは装備後復帰。
+- Card入力は取得開始から2回のprocess_frame待ち後の準備完了まで拒否。世代番号で死亡/Retry/Weapon割込前の待機処理を無効化。準備完了後の別入力は許可。
+- 検証: diff --check、Godot4.7.2 headless import/GDScript check成功。`godot/tests/run_reset_smoke.gd`は実Sceneの接続確認とTimer実満了、ボタンsignalで死亡/Retry、全初期値・死亡中拒否・null・Wave10競合/復帰・二重入力・旧待機無効化を確認し成功。初回スモークはテスト用0.01秒Timerを戻し忘れて再死亡し失敗、テストを10秒へ復元して成功。Python既存170 tests成功（25.044秒）。画面操作は未確認。
+- 再現: Godotで`--headless --path godot --editor --import --quit`、`--headless --path godot --check-only --script res://main_2d.gd`、`--headless --path godot --script res://tests/run_reset_smoke.gd`。Pythonは`python -m unittest discover -s scripts -p 'test_*.py' -q`。
+- 次: 人間がGodot画面で自然死亡→Retry、未装備/倍率/HP表示、両Choice競合、連打時の次Choiceの操作感を確認。Random Draft/XP余剰など新機能には進めていない。
+
 ## Godot Pending Picks（2026-10-12）
 
 - origin/main `dc4dee7` から `codex/pending-picks` を作成。`godot/main_2d.gd` に取得権と選択状態を追加し、Level Upで蓄積、1枚取得ごとに消費、残数があれば次の固定3択、0なら閉じる。死亡時は残数・選択状態をクリアしてPanelを閉じ、死亡後/権利なし/nullカードの選択を拒否する。

@@ -64,6 +64,11 @@
 
 ### 現在の次タスク
 
+`codex/run-reset-fixes` でPending Picksを基点にDeath / Retry / Choice修正を追加。
+Godot 4.7.2 headless import・構文チェック・実Scene signalスモークは成功。
+死亡時破棄、新Run初期化、Weapon優先とPending復帰、同時二重入力拒否を自動確認。
+Codex側でGodot画面の操作・表示は未確認。mainへの反映・mergeはしていない。
+
 **Pending Picks / 未処理Card Pick**
 
 Card選択中も戦闘を止めないため、

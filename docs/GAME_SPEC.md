@@ -286,6 +286,15 @@ Relic一覧・固有効果・Balanceは未確定。
 死亡後は即座に自動再挑戦せず、
 プレイヤーがRetryを選択する。
 
+Retryは新RunとしてWave 1 / Level 1 / XP 0 / 初期Enemy HPへ戻す。
+Weaponは未装備、Card効果の3倍率は1.0、未使用Pickと選択候補・状態は消去する。
+Enemy Timerのみ再開し、初Weapon取得までAuto Attackは開始しない。
+死亡中は攻撃・Card取得・Weapon装備を禁止し、両Choice Panelを閉じる。
+
+Weapon ChoiceとCard Choiceが競合する場合はWeaponを優先する。
+Card取得権は保持し、Weapon選択完了後にCard Choiceへ戻る。戦闘は継続する。
+Card選択処理から次Choiceの準備完了までは追加入力を拒否する。
+
 ### Reset Policy
 
 基本方針はほぼ確定。
