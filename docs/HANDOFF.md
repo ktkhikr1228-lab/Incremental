@@ -1,5 +1,13 @@
 # HANDOFF — 次回セッションの開始点（2026-09-27）
 
+## Godot Pending Picks（2026-10-12）
+
+- origin/main `dc4dee7` から `codex/pending-picks` を作成。`godot/main_2d.gd` に取得権と選択状態を追加し、Level Upで蓄積、1枚取得ごとに消費、残数があれば次の固定3択、0なら閉じる。死亡時は残数・選択状態をクリアしてPanelを閉じ、死亡後/権利なし/nullカードの選択を拒否する。
+- Scene、固定候補の順序・効果、XPの既存リセット処理、Enemy HP、UIは変更なし。候補不足/null時は取得権を保持して選択状態を解除する。Random Draft・XP余剰処理は今回対象外。
+- 検証: `git diff --check` 成功。Godot 4.7.2 headless importと `--check-only --script res://main_2d.gd` 成功。実 `main_2d.tscn` を使う一時スモークで2回のLevel Up蓄積、Enemy Timer/Auto Attack継続、連続取得/0時閉鎖、死亡時破棄、無効選択拒否、Retry後の再取得が成功。これはheadless検証であり、Codex側で画面の操作・表示は動作未確認。Python既存170 tests成功（26.392秒）。
+- 再現: Godot実行ファイルで `--headless --path godot --editor --import --quit`、`--headless --path godot --check-only --script res://main_2d.gd`。Pythonは `python -m unittest discover -s scripts -p 'test_*.py' -q`。一時スモークは `%TEMP%/incremental_pending_picks_smoke.gd` に保存（commit対象外）、同Godotで `--headless --path godot --script <一時スモークの絶対パス>`。
+- 次: 人間がGodotで選択を保留して複数Level Upし、戦闘継続、取得数分の連続選択、死亡時閉鎖、Retryで未使用権が復活しないことを確認。既存のWeapon/Card死亡リセット全体は今回対象外。CURRENT_STATEのmain状況は変更しない。mainへmergeしない。
+
 ## 最新変更のGitHub反映対象（2026-10-05）
 
 - ユーザー依頼で前回push後の手動試遊変更をコミット/pushする。対象は進行保存・ダメージ詳細・C/U一括取得・busy明滅修正・画面高さfit・小型カードrail/結果DP2列・予測表示削除/rarity表示・旧表示切替削除・ポーチ収納/転生横の武器表示、関連tests/preview scripts/本引継ぎ資料。formalやbalance値の新変更なし。

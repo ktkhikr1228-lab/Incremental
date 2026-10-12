@@ -22,6 +22,8 @@ var attack_speed_multiplier: float = 1.0
 var xp: int =0
 var level: int = 1
 var xp_to_level: int = 3
+var pending_card_picks: int = 0
+var is_choosing_card: bool = false
 
 
 func _ready() -> void:
@@ -89,6 +91,9 @@ func get_first_weapon() -> void:
 
 func _on_enemy_timer_timeout() -> void:
 	is_dead = true
+	pending_card_picks = 0
+	is_choosing_card = false
+	$CardChoicePanel.hide()
 
 	$AttackTimer.stop()
 	$StatusLabel.text = "Defeated"
@@ -146,8 +151,17 @@ func _on_weapon_button_2_pressed() -> void:
 	equip_weapon(weapon_choice_2)
 
 func show_card_choices() -> void:
+	if is_dead or pending_card_picks <= 0:
+		return
+
+	is_choosing_card = true
 	if card_pool.size() < 3:
+		is_choosing_card = false
 		print("Need at least 3 cards")
+		return
+	if card_pool[0] == null or card_pool[1] == null or card_pool[2] == null:
+		is_choosing_card = false
+		print("Card choices must not be null")
 		return
 
 	card_choice_1 = card_pool[0]
@@ -173,6 +187,9 @@ func show_card_choices() -> void:
 
 
 func select_card(card: CardData) -> void:
+	if is_dead or not is_choosing_card or pending_card_picks <= 0 or card == null:
+		return
+
 	print("Select card: ", card.card_name)
 
 	if card.effect_type == "manual_attack":
@@ -192,7 +209,12 @@ func select_card(card: CardData) -> void:
 				current_weapon.attack_interval / attack_speed_multiplier
 			)
 	update_ui()
-	$CardChoicePanel.hide()
+	pending_card_picks -= 1
+	if pending_card_picks > 0:
+		show_card_choices()
+	else:
+		$CardChoicePanel.hide()
+		is_choosing_card = false
 
 func _on_card_button_1_pressed() -> void:
 	select_card(card_choice_1)
@@ -209,4 +231,6 @@ func check_level_up() -> void:
 	if xp >= xp_to_level:
 		xp = 0
 		level += 1
-		show_card_choices()
+		pending_card_picks += 1
+		if not is_choosing_card:
+			show_card_choices()
