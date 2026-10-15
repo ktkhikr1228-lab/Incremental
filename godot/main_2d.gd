@@ -22,6 +22,7 @@ var attack_speed_multiplier: float = 1.0
 var xp: int =0
 var level: int = 1
 var xp_to_level: int = 3
+var pending_picks: int = 0
 
 
 func _ready() -> void:
@@ -88,14 +89,21 @@ func get_first_weapon() -> void:
 	$WeaponChoicePanel.show()
 
 func _on_enemy_timer_timeout() -> void:
+	if is_dead:
+		return
 	is_dead = true
+	pending_picks = 0
+	$CardChoicePanel.hide()
 
 	$AttackTimer.stop()
 	$StatusLabel.text = "Defeated"
 	$RetryButton.show()
+	update_ui()
 
 func _on_retry_button_pressed() -> void:
 	is_dead = false
+	pending_picks = 0
+	$CardChoicePanel.hide()
 	hp = get_enemy_hp()
 
 	$StatusLabel.text = ""
@@ -127,6 +135,9 @@ func update_ui() -> void:
 		"Attack Speed: x" + str(attack_speed_multiplier)
 	)
 
+	$PendingPicksButton.text = "カード選択: " + str(pending_picks)
+	$PendingPicksButton.visible = pending_picks > 0 and not is_dead
+
 func equip_weapon(weapon: WeaponData) -> void:
 	has_weapon = true
 	is_choosing_weapon = false
@@ -146,6 +157,8 @@ func _on_weapon_button_2_pressed() -> void:
 	equip_weapon(weapon_choice_2)
 
 func show_card_choices() -> void:
+	if is_dead or pending_picks <= 0:
+		return
 	if card_pool.size() < 3:
 		print("Need at least 3 cards")
 		return
@@ -173,6 +186,8 @@ func show_card_choices() -> void:
 
 
 func select_card(card: CardData) -> void:
+	if is_dead or pending_picks <= 0 or not $CardChoicePanel.visible or card == null:
+		return
 	print("Select card: ", card.card_name)
 
 	if card.effect_type == "manual_attack":
@@ -191,8 +206,12 @@ func select_card(card: CardData) -> void:
 			$AttackTimer.wait_time =(
 				current_weapon.attack_interval / attack_speed_multiplier
 			)
+	pending_picks -= 1
+	if pending_picks > 0:
+		show_card_choices()
+	else:
+		$CardChoicePanel.hide()
 	update_ui()
-	$CardChoicePanel.hide()
 
 func _on_card_button_1_pressed() -> void:
 	select_card(card_choice_1)
@@ -206,7 +225,20 @@ func _on_card_button_3_pressed() -> void:
 	select_card(card_choice_3)
 
 func check_level_up() -> void:
-	if xp >= xp_to_level:
-		xp = 0
+	if xp_to_level <= 0:
+		return
+	while xp >= xp_to_level:
+		xp -= xp_to_level
 		level += 1
+		pending_picks += 1
+
+func _on_pending_picks_button_pressed() -> void:
+	if is_dead or pending_picks <= 0:
+		return
+	if $CardChoicePanel.visible:
+		$CardChoicePanel.hide()
+	else:
 		show_card_choices()
+
+func _on_card_close_button_pressed() -> void:
+	$CardChoicePanel.hide()
