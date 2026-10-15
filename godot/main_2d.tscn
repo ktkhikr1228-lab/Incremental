@@ -129,6 +129,14 @@ offset_right = 180.0
 offset_bottom = 186.0
 text = "card 3"
 
+[node name="CardCloseButton" type="Button" parent="CardChoicePanel"]
+layout_mode = 0
+offset_left = 215.0
+offset_top = 6.0
+offset_right = 284.0
+offset_bottom = 35.0
+text = "あとで"
+
 [node name="ManualMultiplierLabel" type="Label" parent="." unique_id=1189502349]
 offset_left = 456.0
 offset_top = 221.0
@@ -161,6 +169,14 @@ offset_right = 308.0
 offset_bottom = 66.0
 text = "XP:"
 
+[node name="PendingPicksButton" type="Button" parent="."]
+visible = false
+offset_left = 333.0
+offset_top = 77.0
+offset_right = 474.0
+offset_bottom = 113.0
+text = "カード選択: 0"
+
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
 [connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]
 [connection signal="pressed" from="WeaponChoicePanel/WeaponButton1" to="." method="_on_weapon_button_1_pressed"]
@@ -168,3 +184,5 @@ text = "XP:"
 [connection signal="pressed" from="CardChoicePanel/CardButton1" to="." method="_on_card_button_1_pressed"]
 [connection signal="pressed" from="CardChoicePanel/CardButton2" to="." method="_on_card_button_2_pressed"]
 [connection signal="pressed" from="CardChoicePanel/CardButton3" to="." method="_on_card_button_3_pressed"]
+[connection signal="pressed" from="PendingPicksButton" to="." method="_on_pending_picks_button_pressed"]
+[connection signal="pressed" from="CardChoicePanel/CardCloseButton" to="." method="_on_card_close_button_pressed"]
