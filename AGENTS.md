@@ -25,7 +25,7 @@
 
 以下を現行仕様と混同しない。
 
-- `first_prestige_v1_spec.md` — 旧formal Wave 10000
+- `docs/archive/first_prestige_v1_spec.md` — 旧formal Wave 10000
 - formal Variant D/E — 別実験系列
 - `first-prestige-playtest/` — Webベース試作
 - 過去のW5000診断 / CardValue実験 — 検証資料

@@ -118,8 +118,10 @@ AIは企画壁打ち・実装補助・レビュー・ドキュメント整理に
 - [Decisions](docs/DECISIONS.md) — 設計判断と理由
 - [Roadmap](docs/ROADMAP.md) — 今後の実装順
 - [AI / Contributor Rules](AGENTS.md) — AI共通の開発ルール
+- [Index](docs/INDEX.md) — 全ファイルの分類（現行 / 実験 / Legacy）と対応表
 
 詳細な過去ログは `docs/HANDOFF.md` に保存しています。
+実験仕様は `docs/experiments/`、旧仕様は `docs/archive/` にあります（分類は Index 参照）。
 
 ---
 
@@ -129,8 +131,11 @@ AIは企画壁打ち・実装補助・レビュー・ドキュメント整理に
 Incremental/
 ├─ godot/                  # 現在のゲーム本体
 ├─ docs/                   # 仕様・判断・ロードマップ
+│  ├─ experiments/         # 実験仕様（CardValue / Run終了予測）
+│  └─ archive/             # 旧仕様（旧formal Wave 10000）
 ├─ first-prestige-playtest/ # 過去のWeb試作
-├─ scripts/                # 検証・補助スクリプト
+├─ scripts/                # 検証・補助スクリプト（索引は scripts/README.md）
+├─ output/                 # 実験出力の要約（md / json のみ保持）
 └─ AGENTS.md               # AI共通ルール
 ```
 

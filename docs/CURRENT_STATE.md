@@ -124,7 +124,7 @@ Level Upが重なった場合のCard Pick回数を失わず蓄積する。
 
 以下は削除せず比較・検証資料として保持する。
 
-- `first_prestige_v1_spec.md`
+- `docs/archive/first_prestige_v1_spec.md`
   - 旧formal Wave 10000
 - `first-prestige-playtest/`
   - WebベースのW5000試作

@@ -490,7 +490,7 @@ Godot実装時に再検証する。
 以下は現在仕様そのものではなく、
 履歴・実験・比較用資料として扱う。
 
-- `first_prestige_v1_spec.md`
+- `docs/archive/first_prestige_v1_spec.md`
   - 旧formal Wave 10000
 
 - `first-prestige-playtest/`
