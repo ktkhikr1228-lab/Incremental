@@ -1,6 +1,6 @@
 # 現在の状態
 
-最終更新: 2026-10-12
+最終更新: 2026-11-26
 
 この文書は「いま何を作っていて、どこまで進んでいるか」だけを短く示すスナップショット。
 詳細な過去ログは `HANDOFF.md`、仕様は `GAME_SPEC.md`、判断理由は `DECISIONS.md` を参照する。
@@ -49,6 +49,16 @@
   - Manual Attack倍率
   - Auto Attack倍率
   - Attack Speed倍率
+- カード品質（試作実装、PR #2ブランチ）
+  - 選択肢の生成時に品質を抽選し、選択前に表示する
+  - 並 70%（係数1.0） / 良 22%（係数1.2） / 特上 8%（係数1.45）
+  - 実効倍率 = 1 +（基礎倍率 − 1）× 品質係数
+  - 特上はおまけ効果として、主軸と違う軸に ×1.10 が付く
+  - 抽選結果は専用変数に保持し、共有CardDataは書き換えない
+- 試作用パラメータ調整（PR #2ブランチ、正式Balanceではない）
+  - Old Sword: Damage 3 / Interval 1.0s（明示）
+  - Fast Dagger: Damage 2（明示） / Interval 0.7s
+  - Power Training ×1.40 / Strong Training ×1.35 / Quick Hands ×1.30
 - XP
 - Level
 - Enemy撃破 → XP獲得
