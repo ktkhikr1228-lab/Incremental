@@ -59,6 +59,11 @@
   - Old Sword: Damage 3 / Interval 1.0s（明示）
   - Fast Dagger: Damage 2（明示） / Interval 0.7s
   - Power Training ×1.40 / Strong Training ×1.35 / Quick Hands ×1.30
+- 敵HP曲線（試作、本PRブランチ、正式Balanceではない）
+  - HP = roundi(10 × 1.06^(Wave-1))（W1=10 / W50≈174 / W100≈3,190）
+  - XP必要量は一律3のまま。Level Up時の余剰XPは持ち越しに変更（現状は+1/撃破のため挙動は不変、GAME_SPECの前提への整合）
+  - 実ゲーム自動プレイ測定（クリック5回/秒・剣）: W100到達 約119秒、死亡0、TTK 1.0〜1.3秒。複数シードおよびクリック2回/秒でも死亡0を確認
+- EnemyTimer / RetryButton のシグナル接続を修正（従来は未接続で、10秒制限によるDeath / Retryが実際には発生しなかった）
 - XP
 - Level
 - Enemy撃破 → XP獲得

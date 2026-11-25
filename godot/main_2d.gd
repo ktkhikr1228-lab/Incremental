@@ -65,8 +65,8 @@ func attack_enemy(damage: int) -> void:
 	update_ui()
 
 func get_enemy_hp() -> int:
-	#return (5+hp)*2
-	return 10
+	# 試作HP曲線v1（正式Balanceではない）: 基礎10、Waveごとにx1.06
+	return roundi(10.0 * pow(1.06, wave - 1))
 
 func get_first_weapon() -> void:
 	if first_weapons.size() < 2:
@@ -248,6 +248,6 @@ func _on_card_button_3_pressed() -> void:
 
 func check_level_up() -> void:
 	if xp >= xp_to_level:
-		xp = 0
+		xp -= xp_to_level
 		level += 1
 		show_card_choices()
