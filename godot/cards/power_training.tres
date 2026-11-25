@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_chjrb")
 card_name = "Power Training"
-description = "Manual Attack ×1.25"
+description = "Manual Attack ×1.40"
 effect_type = "manual_attack"
-value = 1.25
+value = 1.4
 metadata/_custom_type_script = "uid://dydxb1mqmjua6"

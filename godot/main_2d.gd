@@ -22,6 +22,10 @@ var attack_speed_multiplier: float = 1.0
 var xp: int =0
 var level: int = 1
 var xp_to_level: int = 3
+var card_qualities: Array = []
+var card_rolled_values: Array = []
+var card_bonus_types: Array = []
+const BONUS_VALUE: float = 1.10
 
 
 func _ready() -> void:
@@ -149,48 +153,85 @@ func show_card_choices() -> void:
 	if card_pool.size() < 3:
 		print("Need at least 3 cards")
 		return
-
 	card_choice_1 = card_pool[0]
 	card_choice_2 = card_pool[1]
 	card_choice_3 = card_pool[2]
-
-	$CardChoicePanel/CardButton1.text = (
-		card_choice_1.card_name
-		+ "\n"
-		+ card_choice_1.description
-	)
-	$CardChoicePanel/CardButton2.text = (
-		card_choice_2.card_name
-		+ "\n"
-		+ card_choice_2.description
-	)
-	$CardChoicePanel/CardButton3.text = (
-		card_choice_3.card_name
-		+ "\n"
-		+ card_choice_3.description
-	)
+	var cards: Array = [card_choice_1, card_choice_2, card_choice_3]
+	var buttons: Array = [$CardChoicePanel/CardButton1, $CardChoicePanel/CardButton2, $CardChoicePanel/CardButton3]
+	card_qualities.clear()
+	card_rolled_values.clear()
+	card_bonus_types.clear()
+	for n in range(3):
+		var quality: Array = roll_quality()
+		var rolled_value: float = 1.0 + (cards[n].value - 1.0) * float(quality[1])
+		card_qualities.append(str(quality[0]))
+		card_rolled_values.append(rolled_value)
+		var bonus_type: String = ""
+		if str(quality[0]) == "特上":
+			bonus_type = bonus_type_for(cards[n].effect_type)
+		card_bonus_types.append(bonus_type)
+		var text: String = cards[n].card_name
+		if str(quality[0]) != "並":
+			text += " [" + str(quality[0]) + "]"
+		text += "\n" + effect_label(cards[n].effect_type) + " x" + str(snapped(rolled_value, 0.01))
+		if bonus_type != "":
+			text += "\nBonus: " + effect_label(bonus_type) + " x" + str(BONUS_VALUE)
+		buttons[n].text = text
+		if str(quality[0]) == "特上":
+			buttons[n].add_theme_color_override("font_color", Color(1.0, 0.84, 0.0))
+		elif str(quality[0]) == "良":
+			buttons[n].add_theme_color_override("font_color", Color(0.55, 0.8, 1.0))
+		else:
+			buttons[n].remove_theme_color_override("font_color")
 	$CardChoicePanel.show()
 
+func roll_quality() -> Array:
+	var r: float = randf()
+	if r < 0.08:
+		return ["特上", 1.45]
+	elif r < 0.30:
+		return ["良", 1.2]
+	return ["並", 1.0]
+
+func bonus_type_for(effect_type: String) -> String:
+	if effect_type == "manual_attack":
+		return "attack_speed"
+	elif effect_type == "auto_attack":
+		return "manual_attack"
+	return "auto_attack"
+
+func effect_label(effect_type: String) -> String:
+	if effect_type == "manual_attack":
+		return "Manual Attack"
+	elif effect_type == "auto_attack":
+		return "Auto Attack"
+	return "Attack Speed"
+
+func apply_effect(effect_type: String, value: float) -> void:
+	if effect_type == "manual_attack":
+		manual_attack_multiplier *= value
+		print("Manual Attack: ", manual_attack_multiplier)
+	elif effect_type == "auto_attack":
+		auto_attack_multiplier *= value
+		print("Auto Attack:", auto_attack_multiplier)
+	elif effect_type == "attack_speed":
+		attack_speed_multiplier *= value
+		print("Attack Speed: ", attack_speed_multiplier)
+		if has_weapon:
+			$AttackTimer.wait_time = current_weapon.attack_interval / attack_speed_multiplier
 
 func select_card(card: CardData) -> void:
+	var index: int = [card_choice_1, card_choice_2, card_choice_3].find(card)
+	var rolled_value: float = card.value
+	var bonus_type: String = ""
+	if index >= 0 and card_rolled_values.size() == 3:
+		rolled_value = card_rolled_values[index]
+		bonus_type = card_bonus_types[index]
 	print("Select card: ", card.card_name)
-
-	if card.effect_type == "manual_attack":
-		manual_attack_multiplier *= card.value
-		print("Manual Attack: ", manual_attack_multiplier)
-
-	elif card.effect_type == "auto_attack":
-		auto_attack_multiplier *= card.value
-		print("Auto Attack:",auto_attack_multiplier)
-
-	elif card.effect_type == "attack_speed":
-		attack_speed_multiplier *= card.value
-		print("Attack Speed: " , attack_speed_multiplier)
-
-		if has_weapon:
-			$AttackTimer.wait_time =(
-				current_weapon.attack_interval / attack_speed_multiplier
-			)
+	apply_effect(card.effect_type, rolled_value)
+	if bonus_type != "":
+		print("Bonus effect: ", bonus_type)
+		apply_effect(bonus_type, BONUS_VALUE)
 	update_ui()
 	$CardChoicePanel.hide()
 

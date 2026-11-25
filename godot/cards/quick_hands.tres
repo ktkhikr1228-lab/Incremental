@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_hr5y1")
 card_name = "quick_hands"
-description = "Attack_Speed ×1.25"
+description = "Attack_Speed ×1.30"
 effect_type = "attack_speed"
-value = 1.25
+value = 1.3
 metadata/_custom_type_script = "uid://dydxb1mqmjua6"
