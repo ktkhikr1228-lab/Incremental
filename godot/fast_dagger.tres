@@ -5,5 +5,6 @@
 [resource]
 script = ExtResource("1_fm5b1")
 weapon_name = "Fast Dagger"
-attack_interval = 0.4
+damage = 2
+attack_interval = 0.7
 metadata/_custom_type_script = "uid://bynmkliw2no3i"
