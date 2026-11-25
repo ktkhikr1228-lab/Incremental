@@ -1,6 +1,6 @@
 # Shadow CardValue v0.1: Encounter-based Conditional PE 修正設計
 
-状態: **正式v1のshadow評価にExecution/Time Collapseのみ実装済み**。Take/Reroll/Refineの選択は旧scoreのまま。根拠は [`output/card_value_v01_validity_diagnostic.md`](output/card_value_v01_validity_diagnostic.md) の人工状態比較。以下の未対応候補・新W5000系のadapter案は今後の設計事項。
+状態: **正式v1のshadow評価にExecution/Time Collapseのみ実装済み**。Take/Reroll/Refineの選択は旧scoreのまま。根拠は [`output/card_value_v01_validity_diagnostic.md`](../../output/card_value_v01_validity_diagnostic.md) の人工状態比較。以下の未対応候補・新W5000系のadapter案は今後の設計事項。
 
 ## 1. 問題と適用範囲
 
@@ -93,7 +93,7 @@ Hはカード候補と無関係に固定。候補の将来成長は従来どお�
 
 ### 5.1 最初に確認する合格ゲート
 
-次の7条件は**すべて合格してから**追加の条件付きカードへ対象を広げる。時間・PEの例は [`output/card_value_v01_validity_diagnostic.csv`](output/card_value_v01_validity_diagnostic.csv) の同Wave人工状態を入力fixtureとして使う。「≈0」は `abs(PE) <= 1e-9`、正の改善は数値誤差より十分大きい `PE > 1e-6` とする。snapshot固定の比較では既存結果との差も `abs(delta) <= 1e-9` とする。許容差はテスト環境の浮動小数点再現性を測定してから変更できるが、関係の逆転を許してはならない。
+次の7条件は**すべて合格してから**追加の条件付きカードへ対象を広げる。時間・PEの例は [`output/card_value_v01_validity_diagnostic.csv`](../../output/card_value_v01_validity_diagnostic.csv) の同Wave人工状態を入力fixtureとして使う。「≈0」は `abs(PE) <= 1e-9`、正の改善は数値誤差より十分大きい `PE > 1e-6` とする。snapshot固定の比較では既存結果との差も `abs(delta) <= 1e-9` とする。許容差はテスト環境の浮動小数点再現性を測定してから変更できるが、関係の逆転を許してはならない。
 
 | # | 入力状態 → 候補 | 合格条件 |
 |---:|---|---|

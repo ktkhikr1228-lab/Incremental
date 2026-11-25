@@ -1,6 +1,6 @@
 # Balanced Standard CardValue v0.1: Take-only PE実験モード設計
 
-状態: **Take-only PEモードと対比較runnerを実装済み**。`scripts/simulate_first_prestige_v1.py`のBalanced Standardに限る。既定は`legacy`。現行の戦闘・CardValue PE算出・Game RNG・Take以外の行動価値は変更しない。10組の初回診断は [`output/card_value_take_pilot_10.md`](output/card_value_take_pilot_10.md)。
+状態: **Take-only PEモードと対比較runnerを実装済み**。`scripts/simulate_first_prestige_v1.py`のBalanced Standardに限る。既定は`legacy`。現行の戦闘・CardValue PE算出・Game RNG・Take以外の行動価値は変更しない。10組の初回診断は [`output/card_value_take_pilot_10.md`](../../output/card_value_take_pilot_10.md)。
 
 ## 1. モードと判断境界
 
@@ -80,7 +80,7 @@ python3 scripts/run_card_value_take_experiment.py --trials 10 --max-attempts 10 
 
 実装・受け入れテスト通過後、**Balanced / POあり**の`trial_index=0..9`を固定seedから`legacy`/`pe`の2モードで別々に実行する（10組・合計20 trial）。`workers=1`で全選択分岐ログを採取し、同一seed/設定とtrial IDを記録する。探索的な小規模比較なので、この10組だけで強さやバランスの優劣は判定しない。POなしやVariant D/Eへ結果を外挿しない。
 
-旧仕様の初回実施済み: seed `20260828`、`max_attempts=10`、10組。**提示された全3枚**をフォールバック判定に含めた当時の集計はPE適用54/1477（3.7%）、fallback1423/1477（96.3%、すべて`unsupported_card`）、最初の選択分岐8/10組。詳細は上記レポートと同名の`.json`・`_branches.jsonl`を参照。**新仕様の10組は別prefixの [`output/card_value_take_eligible_pilot_10.md`](output/card_value_take_eligible_pilot_10.md) に実施済み**: 180/1477（12.19%）、fallback1297/1477（87.81%）、最初の分岐9/10組。旧ログからの合法候補限定12.19%の推計と同じ数値になったが、反実仮想が分岐後のRunを正しく再現したと解釈しない。
+旧仕様の初回実施済み: seed `20260828`、`max_attempts=10`、10組。**提示された全3枚**をフォールバック判定に含めた当時の集計はPE適用54/1477（3.7%）、fallback1423/1477（96.3%、すべて`unsupported_card`）、最初の選択分岐8/10組。詳細は上記レポートと同名の`.json`・`_branches.jsonl`を参照。**新仕様の10組は別prefixの [`output/card_value_take_eligible_pilot_10.md`](../../output/card_value_take_eligible_pilot_10.md) に実施済み**: 180/1477（12.19%）、fallback1297/1477（87.81%）、最初の分岐9/10組。旧ログからの合法候補限定12.19%の推計と同じ数値になったが、反実仮想が分岐後のRunを正しく再現したと解釈しない。
 
 パイロット結果は次の**5項目を一つの対比較レポート**で確認する。
 
