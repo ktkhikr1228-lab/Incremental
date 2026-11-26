@@ -15,46 +15,43 @@ first_weapons = Array[ExtResource("2_4l5f2")]([ExtResource("4_1hbw6"), ExtResour
 card_pool = Array[ExtResource("5_13uql")]([ExtResource("8_sxeyp"), ExtResource("7_q6avo"), ExtResource("6_yhyqj")])
 
 [node name="Label" type="Label" parent="." unique_id=416906653]
-custom_minimum_size = Vector2(20, 50)
-custom_maximum_size = Vector2(40, 40)
-offset_left = 60.0
-offset_top = 30.0
-offset_right = 100.0
-offset_bottom = 70.0
-text = "HP:5"
+offset_left = 80.0
+offset_top = 40.0
+offset_right = 260.0
+offset_bottom = 66.0
+text = "HP: 19.2"
 metadata/_edit_use_anchors_ = true
 
 [node name="TimeLabel" type="Label" parent="." unique_id=87879556]
-custom_minimum_size = Vector2(20, 50)
-custom_maximum_size = Vector2(40, 40)
-offset_left = 59.0
-offset_top = 58.0
-offset_right = 99.0
+offset_left = 80.0
+offset_top = 72.0
+offset_right = 220.0
 offset_bottom = 98.0
-text = "Time:10"
+text = "Time: 10"
 metadata/_edit_use_anchors_ = true
 
 [node name="Button" type="Button" parent="." unique_id=50635079]
-custom_minimum_size = Vector2(20, 100)
-offset_right = 58.0
-offset_bottom = 100.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = 70.0
+offset_bottom = 112.0
 text = "Attack"
 metadata/_edit_use_anchors_ = true
 
 [node name="WaveLabel" type="Label" parent="." unique_id=1921534971]
-custom_minimum_size = Vector2(20, 20)
-custom_maximum_size = Vector2(100, 100)
-offset_left = 50.0
-offset_right = 106.0
-offset_bottom = 23.0
-text = "Wave:1"
+offset_left = 80.0
+offset_top = 12.0
+offset_right = 240.0
+offset_bottom = 38.0
+text = "Wave: 1"
 metadata/_edit_use_anchors_ = true
 
 [node name="WeaponLabel" type="Label" parent="." unique_id=616041221]
-offset_left = 74.0
-offset_top = 158.0
-offset_right = 114.0
-offset_bottom = 181.0
+offset_left = 80.0
+offset_top = 108.0
+offset_right = 260.0
+offset_bottom = 134.0
+text = "Weapon: None"
 metadata/_edit_use_anchors_ = true
 
 [node name="EnemyTimer" type="Timer" parent="." unique_id=255637215]
@@ -63,106 +60,110 @@ wait_time = 10.0
 [node name="AttackTimer" type="Timer" parent="." unique_id=462409325]
 
 [node name="RetryButton" type="Button" parent="." unique_id=2107728985]
-offset_left = 183.0
-offset_top = 233.0
-offset_right = 223.0
-offset_bottom = 256.0
-metadata/_edit_use_anchors_ = true
-
-[node name="StatusLabel" type="Label" parent="." unique_id=2067989]
-offset_left = 120.0
-offset_right = 162.0
-offset_bottom = 23.0
+offset_left = 80.0
+offset_top = 180.0
+offset_right = 200.0
+offset_bottom = 220.0
 text = "Retry"
 metadata/_edit_use_anchors_ = true
 
+[node name="StatusLabel" type="Label" parent="." unique_id=2067989]
+offset_left = 80.0
+offset_top = 144.0
+offset_right = 260.0
+offset_bottom = 170.0
+text = ""
+metadata/_edit_use_anchors_ = true
+
 [node name="WeaponChoicePanel" type="Panel" parent="." unique_id=1551835304]
-offset_left = 206.0
-offset_top = 99.0
-offset_right = 331.0
-offset_bottom = 212.0
+offset_left = 20.0
+offset_top = 240.0
+offset_right = 280.0
+offset_bottom = 440.0
 metadata/_edit_use_anchors_ = true
 
 [node name="WeaponButton1" type="Button" parent="WeaponChoicePanel" unique_id=2064193102]
 layout_mode = 0
-offset_left = -24.0
-offset_top = 223.0
-offset_right = 16.0
-offset_bottom = 246.0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 244.0
+offset_bottom = 92.0
 metadata/_edit_use_anchors_ = true
 
 [node name="WeaponButton2" type="Button" parent="WeaponChoicePanel" unique_id=1108767079]
 layout_mode = 0
-offset_left = -33.0
-offset_top = 347.0
-offset_right = 7.0
-offset_bottom = 370.0
+offset_left = 16.0
+offset_top = 108.0
+offset_right = 244.0
+offset_bottom = 184.0
 metadata/_edit_use_anchors_ = true
 
 [node name="CardChoicePanel" type="Panel" parent="." unique_id=204659680]
-offset_left = 313.0
-offset_top = 295.0
-offset_right = 609.0
-offset_bottom = 491.0
+offset_left = 300.0
+offset_top = 240.0
+offset_right = 620.0
+offset_bottom = 490.0
 
 [node name="CardButton1" type="Button" parent="CardChoicePanel" unique_id=1233471801]
 layout_mode = 0
-offset_left = 118.0
+offset_left = 16.0
 offset_top = 16.0
-offset_right = 176.0
-offset_bottom = 47.0
+offset_right = 304.0
+offset_bottom = 84.0
 text = "Card 1"
 
 [node name="CardButton2" type="Button" parent="CardChoicePanel" unique_id=1143731552]
 layout_mode = 0
-offset_left = 117.0
-offset_top = 85.0
-offset_right = 175.0
-offset_bottom = 116.0
+offset_left = 16.0
+offset_top = 92.0
+offset_right = 304.0
+offset_bottom = 160.0
 text = "Card 2"
 
 [node name="CardButton3" type="Button" parent="CardChoicePanel" unique_id=1550505789]
 layout_mode = 0
-offset_left = 124.0
-offset_top = 155.0
-offset_right = 180.0
-offset_bottom = 186.0
-text = "card 3"
+offset_left = 16.0
+offset_top = 168.0
+offset_right = 304.0
+offset_bottom = 236.0
+text = "Card 3"
 
 [node name="ManualMultiplierLabel" type="Label" parent="." unique_id=1189502349]
-offset_left = 456.0
-offset_top = 221.0
-offset_right = 496.0
-offset_bottom = 244.0
+offset_left = 440.0
+offset_top = 12.0
+offset_right = 640.0
+offset_bottom = 38.0
 
 [node name="AutoMultiplierLabel" type="Label" parent="." unique_id=1958666661]
-offset_left = 465.0
-offset_top = 164.0
-offset_right = 505.0
-offset_bottom = 187.0
+offset_left = 440.0
+offset_top = 42.0
+offset_right = 640.0
+offset_bottom = 68.0
 
 [node name="AttackSpeedMultiplierLabel" type="Label" parent="." unique_id=1750629439]
-offset_left = 433.0
-offset_top = 40.0
-offset_right = 473.0
-offset_bottom = 63.0
+offset_left = 440.0
+offset_top = 72.0
+offset_right = 640.0
+offset_bottom = 98.0
 
 [node name="LevelLabel" type="Label" parent="." unique_id=1138897371]
-offset_left = 263.0
-offset_top = 18.0
-offset_right = 303.0
-offset_bottom = 41.0
-text = "Level:"
+offset_left = 270.0
+offset_top = 12.0
+offset_right = 430.0
+offset_bottom = 38.0
+text = "Level: 1"
 
 [node name="XPLabel" type="Label" parent="." unique_id=912605902]
-offset_left = 268.0
-offset_top = 43.0
-offset_right = 308.0
-offset_bottom = 66.0
-text = "XP:"
+offset_left = 270.0
+offset_top = 42.0
+offset_right = 430.0
+offset_bottom = 68.0
+text = "XP: 0/3"
 
 [connection signal="pressed" from="Button" to="." method="_on_button_pressed"]
+[connection signal="timeout" from="EnemyTimer" to="." method="_on_enemy_timer_timeout"]
 [connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]
+[connection signal="pressed" from="RetryButton" to="." method="_on_retry_button_pressed"]
 [connection signal="pressed" from="WeaponChoicePanel/WeaponButton1" to="." method="_on_weapon_button_1_pressed"]
 [connection signal="pressed" from="WeaponChoicePanel/WeaponButton2" to="." method="_on_weapon_button_2_pressed"]
 [connection signal="pressed" from="CardChoicePanel/CardButton1" to="." method="_on_card_button_1_pressed"]
