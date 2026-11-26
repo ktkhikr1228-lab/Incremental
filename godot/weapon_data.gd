@@ -4,5 +4,5 @@ extends Resource
 class_name WeaponData
 
 @export var weapon_name: String = ""
-@export var damage: int = 1
+@export var damage: float = 1.0
 @export var attack_interval: float = 1.0
