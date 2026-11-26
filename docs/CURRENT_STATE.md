@@ -59,12 +59,21 @@
   - Old Sword: Damage 3 / Interval 1.0s（明示）
   - Fast Dagger: Damage 2（明示） / Interval 0.7s
   - Power Training ×1.40 / Strong Training ×1.35 / Quick Hands ×1.30
+- 敵HP曲線（試作、本PRブランチ、正式Balanceではない）
+  - HP = roundi(10 × 1.06^(Wave-1))（W1=10 / W50≈174 / W100≈3,190）
+  - XP必要量は一律3のまま。Level Up時の余剰XPは持ち越しに変更（現状は+1/撃破のため挙動は不変、GAME_SPECの前提への整合）
+  - 実ゲーム自動プレイ測定（クリック5回/秒・剣）: W100到達 約119秒、死亡0、TTK 1.0〜1.3秒。複数シードおよびクリック2回/秒でも死亡0を確認
+- EnemyTimer / RetryButton のシグナル接続を修正（従来は未接続で、10秒制限によるDeath / Retryが実際には発生しなかった）
 - XP
 - Level
 - Enemy撃破 → XP獲得
 - Level Up → Card Pick
 - Card取得 → 効果反映
 - Card取得後にPanelを閉じる流れ
+- Pending Picks（本PRブランチ）
+  - Level Upが重なってもCard Pick回数を失わず蓄積する。Panel表示中は現在の選択肢を再抽選しない（品質は生成時に固定）
+  - 戦闘は止まらない。死亡時に未処理の選択権は破棄される
+  - 残りの選択権数はLevel表示に併記する
 
 最新のGodot更新コミット:
 
@@ -74,16 +83,12 @@
 
 ### 現在の次タスク
 
-**Pending Picks / 未処理Card Pick**
-
-Card選択中も戦闘を止めないため、
-Level Upが重なった場合のCard Pick回数を失わず蓄積する。
+**Card候補ランダム3択**
 
 その次:
-1. Card候補ランダム3択
-2. XP余剰処理・必要XP curve
-3. W1〜100のEnemy HP / Boss進行
-4. Card Pool拡張
+1. 必要XP curve（余剰処理は実装済み）
+2. W1〜100のBoss進行（HP曲線v1は試作実装済み）
+3. Card Pool拡張
 
 ---
 

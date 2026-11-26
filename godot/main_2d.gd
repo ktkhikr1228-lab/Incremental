@@ -21,6 +21,7 @@ var auto_attack_multiplier: float = 1.0
 var attack_speed_multiplier: float = 1.0
 var xp: int =0
 var level: int = 1
+var pending_picks: int = 0
 var xp_to_level: int = 3
 var card_qualities: Array = []
 var card_rolled_values: Array = []
@@ -65,8 +66,8 @@ func attack_enemy(damage: int) -> void:
 	update_ui()
 
 func get_enemy_hp() -> int:
-	#return (5+hp)*2
-	return 10
+	# 試作HP曲線v1（正式Balanceではない）: 基礎10、Waveごとにx1.06
+	return roundi(10.0 * pow(1.06, wave - 1))
 
 func get_first_weapon() -> void:
 	if first_weapons.size() < 2:
@@ -93,6 +94,8 @@ func get_first_weapon() -> void:
 
 func _on_enemy_timer_timeout() -> void:
 	is_dead = true
+	pending_picks = 0
+	$CardChoicePanel.hide()
 
 	$AttackTimer.stop()
 	$StatusLabel.text = "Defeated"
@@ -117,6 +120,8 @@ func update_ui() -> void:
 	$WaveLabel.text = "Wave: " + str(wave)
 
 	$LevelLabel.text = "Level:" + str(level)
+	if pending_picks > 0:
+		$LevelLabel.text += " Picks:" + str(pending_picks)
 	$XPLabel.text = "XP:" + str(xp) + "/" + str(xp_to_level)
 
 	$ManualMultiplierLabel.text = (
@@ -232,8 +237,12 @@ func select_card(card: CardData) -> void:
 	if bonus_type != "":
 		print("Bonus effect: ", bonus_type)
 		apply_effect(bonus_type, BONUS_VALUE)
+	pending_picks -= 1
+	if pending_picks > 0:
+		show_card_choices()
+	else:
+		$CardChoicePanel.hide()
 	update_ui()
-	$CardChoicePanel.hide()
 
 func _on_card_button_1_pressed() -> void:
 	select_card(card_choice_1)
@@ -248,6 +257,9 @@ func _on_card_button_3_pressed() -> void:
 
 func check_level_up() -> void:
 	if xp >= xp_to_level:
-		xp = 0
+		xp -= xp_to_level
 		level += 1
-		show_card_choices()
+		pending_picks += 1
+		if not $CardChoicePanel.visible:
+			show_card_choices()
+		update_ui()
