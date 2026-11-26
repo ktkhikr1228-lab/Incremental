@@ -4,6 +4,7 @@
 
 [resource]
 script = ExtResource("1_b7jmx")
-weapon_name = "old sword"
-damage = 2
+weapon_name = "Old Sword"
+damage = 14.0
+attack_interval = 1.0
 metadata/_custom_type_script = "uid://bynmkliw2no3i"
