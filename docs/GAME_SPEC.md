@@ -467,36 +467,249 @@ DPの役割は、
 
 ## 12. Backpack / Equipment UI
 
-Backpackは装備・成長システムへアクセスするHubとして扱う。
+Backpackは単なるInventoryではなく、
+**Run中の装備・成長・経済システムへアクセスするHub**として扱う。
 
-現在の6分割ラフ方向:
+Main画面はBattleの状況判断を優先し、
+Backpackは「Buildを組み替える場所」と役割を分ける。
+
+### 12.1 基本構成
+
+現在の6分割ラフ:
 
 ```text
-┌──────────┬──────────┬──────────┐
-│ Relic    │ Shop     │ Future   │
-│          │          │ LOCKED   │
-├──────────┼──────────┼──────────┤
-│ Weapon   │ Furnace  │ Card     │
-│          │ Materials│          │
-└──────────┴──────────┴──────────┘
+┌────────────┬────────────┬────────────┐
+│ Relic      │ Shop       │ Future     │
+│            │            │ LOCKED     │
+├────────────┼────────────┼────────────┤
+│ Weapon     │ Furnace /  │ Card       │
+│            │ Materials  │            │
+└────────────┴────────────┴────────────┘
 ```
 
-以前の中央上Battle枠は、Main画面にBattleが存在するため **Shopへ変更する方向**。
+配置の役割:
 
-ただし、ユーザー操作・カードUI・Backpack画面は現在もラフ検討中であり、
-上記レイアウトを完成UIとして固定しない。
+- **左上: Relic**
+  - 装備中Relic 3枠
+  - 保管Relic
+  - 詳細確認 / 装備交換
+- **中央上: Shop**
+  - Card強化
+  - Relic等の購入
+  - Shop更新
+  - Coin消費先の中心
+- **右上: Future / LOCKED**
+  - 将来システム用の予約枠
+  - 現時点では無理に機能を埋めない
+- **左下: Weapon**
+  - 現在装備中のWeapon 1枠
+  - 保管Weapon
+  - 詳細確認 / 装備交換
+- **中央下: Furnace / Materials**
+  - Weapon / Relic分解候補
+  - Material確認
+  - Upgrade素材の管理
+- **右下: Card**
+  - 現在のRun Card / Build確認
+  - Card詳細
+  - Card強化やShopとの接続先
+  - Card Pickそのものをここへ完全固定するかは未決定
 
-### Furnace / Materials
+以前の中央上 `Battle` 枠は、
+Main画面自体がBattleを常時表示するため **Shopへ置き換える方向**。
 
-候補用途:
+**Status: 6分割構成とShop置換はDIRECTION**
 
-- Weapon / Relic分解
+### 12.2 Main画面との役割分担
+
+Main画面では戦闘に必要な情報だけを優先する。
+
+Mainに置く候補:
+
+- Enemy / HP
+- Wave
+- Remaining Time
+- Manual / Active操作
+- XP / Level
+- Pending Picks通知
+- 現在装備中Weapon / Relicの簡易表示
+- Backpackを開く入口
+
+Backpack側へ寄せる:
+
+- Weapon一覧
+- Relic一覧
+- Card詳細一覧
+- Shop
+- Material
+- Furnace
+- 装備比較
+- Build整理
+
+Main画面に大量のInventory情報を常時並べない。
+
+### 12.3 Backpackを開いてもCombatは止めない
+
+Backpackは **non-blocking** を基本とする。
+
+```text
+Battle continues
+↓
+Backpack open
+↓
+Weapon / Relic / Card / Shopを確認
+↓
+必要な操作だけ行う
+↓
+Battle continues
+```
+
+ただし、明示的なPause操作を別に用意することは可能。
+
+Backpackを開いたこと自体をPause理由にしない。
+
+**Status: CONFIRMED DIRECTION**
+
+### 12.4 Weapon UI
+
+Weapon枠では最低限、
+
+- Equipped Weapon
+- 保管Weapon
+- Damage
+- Attack Interval
+- 固有効果
+- Rarity / Quality等（導入後）
+
+を確認できるようにする。
+
+武器取得時にMain画面全体を奪う大きなPopupを毎回出すのではなく、
+保管・新規入手をBackpack側で処理できる形を優先する。
+
+装備中WeaponはMainでも簡易表示する。
+
+### 12.5 Relic UI
+
+Relicは装備3枠を明確に見せる。
+
+必要な情報:
+
+- 装備中3枠
+- Empty slot
+- 保管Relic
+- 固有効果
+- 重複 / 強化情報（導入後）
+
+Weaponと同様、詳細管理はBackpack側へ寄せる。
+
+### 12.6 Card UIとの関係
+
+Cardの課題は「所持枚数」より、
+**選択が頻繁に発生してCombatへの注意を奪うこと**。
+
+そのためBackpackのCard枠は、
+主にBuild確認・詳細・強化に使う。
+
+Card Pickは、
+
+- Main端のCompactな3択
+- `PICK ×N` 通知から開く
+- Backpack Card枠から開く
+
+などを候補とし、
+大量の選択UIを常時展開しない。
+
+Pending Picksを採用する場合も、
+同時に複数セットを画面へ並べず1セットずつ処理する。
+
+### 12.7 Shop UI
+
+ShopはBackpackの中央上に置く方向。
+
+理由:
+
+- Run中の成長導線の中心になり得る
+- Weapon / Relic / Card / Materialへ近い
+- Battle画面から分離して整理できる
+
+候補機能:
+
+- Card強化
+- Relic購入
+- Shop更新
+- 将来的なWeapon / Material購入
+
+Shop更新条件は未決定。
+
+候補:
+
+- Coinによる手動更新
+- 一定Waveで更新
+- Boss撃破で更新
+- 複数方式の併用
+
+Boss戦中やBoss連戦で更新が溜まりすぎる問題は未解決のため、
+正式仕様にしない。
+
+### 12.8 Furnace / Materials UI
+
+Furnace / Materialsは中央下にまとめる方向。
+
+候補:
+
+- Weapon分解
+- Relic分解
 - Material獲得
-- Upgrade素材管理
+- Upgrade素材確認
+- 強化素材への変換
 
-詳細は未確定。
+分解確認の有無、自動分解、満杯時処理などは未決定。
 
-**Status: DIRECTION / UIはUNDECIDED**
+### 12.9 Future / LOCKED
+
+右上は将来拡張のために空ける。
+
+初期段階で無理に新システムを追加して埋めない。
+
+将来候補:
+
+- Prestige関連
+- Automation
+- Special system
+- Codex / Collection
+
+内容は未決定。
+
+### 12.10 UI設計上の評価基準
+
+Backpack案を比較するときは見た目だけでなく、
+以下を基準にする。
+
+- Battle状況を見失わないか
+- 1回の操作に時間がかかりすぎないか
+- Weapon / Relic交換が分かりやすいか
+- Card Pickが溜まっても破綻しないか
+- Shop更新が頻繁でも操作を強制しないか
+- 画面を開きっぱなしでもCombatできるか
+- 将来Automationを足しやすいか
+- 情報密度が高すぎないか
+
+### 12.11 現時点で未固定のもの
+
+まだ確定しない:
+
+- 各枠の正確なサイズ
+- PC / Mobileでのレイアウト
+- Backpackを全面表示するか部分Overlayにするか
+- Card PickをBackpack内へ入れるか
+- Shopの正式な商品構成
+- Furnaceの操作フロー
+- Future枠の中身
+- 最終Art Direction
+
+手描きラフやFigmaで複数案を比較してから固定する。
+
+**Status: 構造はDIRECTION、詳細UIはUNDECIDED**
 
 ---
 
