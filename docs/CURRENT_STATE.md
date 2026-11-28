@@ -1,159 +1,169 @@
 # 現在の状態
 
-最終更新: 2026-10-12
+最終更新: 2026-11-29
 
-この文書は「いま何を作っていて、どこまで進んでいるか」だけを短く示すスナップショット。
-詳細な過去ログは `HANDOFF.md`、仕様は `GAME_SPEC.md`、判断理由は `DECISIONS.md` を参照する。
+この文書は「いま何を作っていて、実装がどこまで動いているか」を示す。
+仕様正本は `GAME_SPEC.md`、判断履歴は `DECISIONS.md`、次作業は `ROADMAP.md`。
 
 ---
 
 ## 1. 現在の開発対象
 
-- Engine: **Godot 4**
-- Current target: **First Prestige at Wave 5000**
+- Engine: **Godot 4 / GDScript**
+- Current game target: **First Prestige at Wave 5000**
 - Wave 5000 Boss HP: **1e308**
 - 第一転生までの標準的な実プレイ時間: **中央値12時間以下**
-- 旧formal Wave 10000やWeb試作はLegacy / Referenceとして保持する
+- Godot版を現在のゲーム本体として扱う
+- 旧formal Wave 10000 / Web試作 / simulationはLegacy / Reference
 
-現在の正本:
-1. `GAME_SPEC.md` — 現行ゲーム仕様
-2. `CURRENT_STATE.md` — 現在の実装状況
-3. `DECISIONS.md` — 設計判断と理由
-4. `ROADMAP.md` — 次の実装順
-5. `HANDOFF.md` — 詳細な作業履歴・引き継ぎ倉庫
+現行仕様:
+- `docs/GAME_SPEC.md`
+
+正式なGodot開発先:
+- `C:\Users\katao\Incremental\godot`
 
 ---
 
-## 2. Godot版の現在地
+## 2. origin/main のGodot Prototype
 
-### GitHub origin/main に反映済み
+2026-11-29確認時の `main` HEAD:
 
-最新Godotプロトタイプは **2026-10-12 時点で origin/main と同期済み**。
+```text
+29e4a54
+```
 
-主な実装:
+mainの `godot/main_2d.gd` に存在する主な機能:
 
 - Manual Attack
 - Enemy HP
 - Wave進行
 - Enemy Timer
-- Death / Retry
-- `WeaponData` Resource
-- Wave 10での初武器2択
-  - Old Sword
-  - Fast Dagger
-- Weapon選択後のAuto Attack
-- Weapon取得後もManual Attackを継続可能
-- `CardData` Resource
-- Card Choice Panel / 3択UI
-- テストカード3種
-  - Manual Attack倍率
-  - Auto Attack倍率
-  - Attack Speed倍率
+- WeaponData
+- Wave 10での初Weapon 2択
+- Weapon取得後のAuto Attack
+- CardData
+- Card 3択Panel
+- Manual / Auto / Attack Speed系Card Effect
 - XP
 - Level
-- Enemy撃破 → XP獲得
-- Level Up → Card Pick
-- Card取得 → 効果反映
-- Card取得後にPanelを閉じる流れ
+- Level Up → Card Choice
 
-最新のGodot更新コミット:
+---
+
+## 3. 現在確認できている問題
+
+### Enemy Timer / Retry
+
+mainの `main_2d.tscn` には現時点で、
+
+- `EnemyTimer.timeout -> _on_enemy_timer_timeout`
+- `RetryButton.pressed -> _on_retry_button_pressed`
+
+のSignal接続が存在しない。
+
+そのため実機確認では、
+Enemy Timerが0になってもDeath処理へ入らず **10秒へ戻って再カウント** する状態を確認した。
+
+またScene上では、
+
+- `RetryButton` 自体のTextが空
+- `StatusLabel` 初期Textが `Retry`
+
+となっており、見えている「Retry」と押せるButtonが一致していない。
+
+### Pending Picks
+
+`origin/main` にはPending Picks本体がまだ入っていない。
+
+未処理数を `PICK ×N` として見せるUIもmainには存在しない。
+
+---
+
+## 4. codex/run-reset-fixes Branch
+
+過去に以下を実装したBranchがある。
 
 ```text
-3b2d946 feat: add card and weapon progression prototype
+codex/run-reset-fixes
 ```
 
-### 現在の次タスク
-
-**Pending Picks / 未処理Card Pick**
-
-Card選択中も戦闘を止めないため、
-Level Upが重なった場合のCard Pick回数を失わず蓄積する。
-
-その次:
-1. Card候補ランダム3択
-2. XP余剰処理・必要XP curve
-3. W1〜100のEnemy HP / Boss進行
-4. Card Pool拡張
-
----
-
-## 3. 現在の確定ルール
-
-- Run開始時はManual Attackのみ
-- 最初のWeapon取得でAuto Attack解禁
-- Auto Attack解禁後もManual Attackを使用可能
-- Weapon装備は1枠
-- Relic装備は3枠
-- Card Pick中も戦闘を停止しない
-- 未使用Card PickはPending PicksとしてRun内に蓄積
-- Player-facing UIにDPS / TTK / 勝敗予測を表示しない
-- Enemy HPとRemaining Timeは表示する
-- First Prestige = Wave 5000
-- Wave 5000 Boss HP = 1e308
-- 第一転生まで12時間を明確に超える方向への調整は行わない
-
-死亡時Resetはほぼ確定:
-- 失う: Run内Card / Weapon / 未使用Card Pick
-- 保持: DP / Relic / 一部素材
-- 細部は今後調整
-
----
-
-## 4. 未実装の主要システム
+含まれる主な内容:
 
 - Pending Picks
-- Card候補ランダム化
-- 正式Card Pool
-- Weapon Drop / rarity / affix
-- Relic
-- DP / Permanent Progression
-- Inventory / Storage
-- Weapon / Relic強化
-- Boss / Big Bossの正式進行
-- 正式Enemy HP curve
-- 正式XP curve
-- Save / Load
-- First Prestige処理
-- Prestige後システム
-- Active Skill
-- Automation
+- Death / Retry reset改善
+- Timer / Retry Signal接続
+- Weapon / Card choice衝突対策
+- null guard
+- Smoke test
+- W10以前のLevel Up regression修正
+
+ただし2026-11-29時点では、
+
+```text
+main に対して ahead 3 / behind 12
+```
+
+でdivergeしている。
+
+そのままmainへmergeせず、
+最新main上で必要変更を再適用またはrebaseし、Godotで人間が確認してから統合する。
 
 ---
 
-## 5. Legacy / Reference
+## 5. Design側の現在地
 
-以下は削除せず比較・検証資料として保持する。
+実装より先に決まっている内容:
 
-- `docs/archive/first_prestige_v1_spec.md`
-  - 旧formal Wave 10000
-- `first-prestige-playtest/`
-  - WebベースのW5000試作
-- `NEW_W5000_PLAY_CANDIDATE.md`
-  - 新W5000候補の重要な参照資料
-- `W5000_EQUIPMENT_V01.md`
-  - Equipment初版候補
-- `HANDOFF.md`
-  - 過去の詳細作業ログ
+- First Prestige = W5000
+- W5000 Boss HP = 1e308
+- Manual → First Weapon → Auto
+- ManualはAuto後も残す
+- Weapon装備1枠
+- Relic装備3枠
+- Card Pick中も原則Combat継続
+- DPS / TTK / 勝敗予測をPlayer UIへ出さない
+- DeathでCard / Weapon / Pendingを失う方向
+- DP / Relic / 一部素材を保持する方向
+- Coin / Shopを成長軸として追加する方向
+- ShopでCard強化 / Relic購入等を扱う方向
 
-Legacyの仕様を現行Godotへ自動的に採用しない。
-必要な項目は `GAME_SPEC.md` へ明示的に昇格してから実装する。
+まだ未決定:
+
+- Level UpとCard / Shopの役割分担
+- Coin獲得量
+- Shop更新条件
+- Card強化方式
+- Backpack最終UI
+- Enemy / XP正式curve
+- DP / Weapon / Relic正式Balance
 
 ---
 
-## 6. Git同期状態
+## 6. 次にやること
 
-2026-10-12 時点:
+新機能を積み増す前に、最新main上でCore Loopを安定させる。
 
-```text
-main == origin/main
-working tree clean
-```
+優先順:
 
-Godotの正式な開発先は次とする。
+1. EnemyTimer timeoutをDeathへ接続
+2. RetryButton pressedをRetry処理へ接続
+3. RetryButton / StatusLabelの表示整理
+4. Retry時のRun resetを仕様どおりにする
+5. Pending Picksを最新mainへ統合
+6. `PICK ×N` を画面で確認できるようにする
+7. W10前Level Up / W10 Weapon競合 / Death / Retryを人間がGodotで確認
+8. その後Card Draft / Shop設計へ進む
 
-```text
-C:\Users\katao\Incremental\godot
-```
+---
 
-旧作業フォルダ `C:\Users\katao\Dev` は参照用として扱い、
-今後の開発はGit管理下の `Incremental\godot` で行う。
+## 7. ドキュメント運用
+
+1. `GAME_SPEC.md` — 現行仕様の正本
+2. `CURRENT_STATE.md` — 実装状態・既知問題
+3. `DECISIONS.md` — 判断理由・履歴
+4. `ROADMAP.md` — 次の作業順
+5. `HANDOFF.md` — 詳細な過去ログ
+6. `docs/archive/` — 旧仕様
+7. `docs/experiments/` — 実験
+
+Legacyの内容は明示的に `GAME_SPEC.md` へ昇格させない限り現行仕様として扱わない。
