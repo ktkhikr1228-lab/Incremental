@@ -1,99 +1,114 @@
 # Incremental Roguelite
 
-> **「その選択で、強さの桁が跳ね上がる。」**
+> **「完成したビルドの、その先を遊ぶ。」**
+>
+> **「壊れたビルドを、壊せるところまで壊す。」**
 
-超インフレする数値と、Runごとのビルド形成を組み合わせた
+超インフレする数値とRunごとのBuild形成を組み合わせた
 **Incremental × Roguelite** の個人制作ゲームです。
 
-現在は **Godot / GDScript** でプロトタイプを開発しています。
+現在は **Godot 4 / GDScript** でPrototypeを開発しています。
 
 ---
 
-## Game Concept
+## Concept
 
-敵を倒してXPを獲得し、Level UpでCardを選び、
-Weapon・Relic・恒久強化を組み合わせながら
-Damageを指数的に伸ばしていきます。
+ローグライクでは、強いBuildが完成した頃にRunが終わってしまうことがあります。
 
-第一段階の目標は:
+このゲームではBuild完成を終点ではなく、
+その先の指数的な成長へ入る起点として扱います。
+
+第一段階の目標:
 
 - **First Prestige: Wave 5000**
 - **Wave 5000 Boss HP: 1e308**
 - 第一転生までの標準的な実プレイ時間: **中央値12時間以下**
 
+---
+
+## Core Direction
+
 ```text
 Manual Attack
-    ↓
+↓
 Enemy Defeat / XP
-    ↓
-Level Up
-    ↓
-Card Pick
-    ↓
-Weapon / Build Growth
-    ↓
-Death / Permanent Progression
-    ↓
+↓
+Card / Weapon / Shop
+↓
+Build Growth
+↓
+Death
+↓
+DP / Relic等のPermanent Growth
+↓
 Retry
-    ↓
+↓
 Wave 5000 / First Prestige
 ```
 
+設計上の重要ルール:
+
+- Run開始時はManual Attack
+- First WeaponでAuto Attack解禁
+- Auto後もManual Attack可能
+- Weapon装備1枠
+- Relic装備3枠
+- Card / Backpack操作でCombatをなるべく止めない
+- Player-facing UIにDPS / TTK / 勝敗予測を表示しない
+- Enemy HP / Remaining Timeは表示する
+- Coin / ShopをCard強化・Relic購入等の成長軸として検討中
+
 ---
 
-## Current Godot Prototype
+## Current Development Status
 
-現在GitHubに反映済みの主な機能:
+現在のGodot mainには、
 
 - Manual Attack
-- Enemy HP / Wave / Time Limit
-- Death / Retry
-- WeaponData Resource
-- Wave 10での初Weapon 2択
-- Weapon取得後のAuto Attack
-- CardData Resource
-- Card 3択UI
-- Manual Attack / Auto Attack / Attack Speed系Card
+- Enemy HP / Wave / Timer
+- Weapon Resource / First Weapon Choice
+- Auto Attack
+- Card Resource / 3-choice UI
 - XP / Level
-- Level Up → Card Pick
-- Card効果の反映
+- Card Effect
 
-現在の次タスクは **Pending Picks** です。
+が存在します。
 
-Level Upが連続してもCard Pick権を失わず、
-戦闘を止めずに後から処理できる形を目指しています。
+一方で、Death / RetryのSignal接続とPending Picksは最新mainで未完成です。
 
----
-
-## Design Principles
-
-このゲームでは、単純に情報量を増やすのではなく
-「成長を見て、必要な瞬間だけ介入する」感覚を重視しています。
-
-特に現在は次の方針で設計しています。
-
-- Run開始時はManual Attackのみ
-- 最初のWeapon取得でAuto Attack解禁
-- Auto Attack解禁後もManual Attack可能
-- Card Pick中も戦闘を停止しない
-- 未処理Card PickはPending Picksとして蓄積
-- Weapon装備は1枠
-- Relic装備は3枠
-- Player-facing UIに **DPS / TTK / 勝敗予測を表示しない**
-- Enemy HPとRemaining Timeを見て判断できるようにする
+過去の `codex/run-reset-fixes` Branchには修正案がありますが、
+現在のmainとはdivergeしているため、そのままmergeせず再統合・人間確認を行います。
 
 ---
 
-## Development Approach
+## Current Design Topics
 
-企画 → 試作 → 問題発見 → 再設計 → 実装確認、
-という小さなサイクルで進めています。
+現在特に整理中:
 
-過去にはWebベースのシミュレーター / プレイテストも作成しましたが、
-現在は **Godot版をゲーム本体として再構築**しています。
+- Level UpとCard Pickの関係
+- Pending Picks
+- Coin / Shop
+- Card Upgrade
+- Backpack UI
+- DP / Permanent Progression
+- Weapon / Relic
+- W1–100 Vertical Slice
 
-旧Wave 10000仕様や過去の実験結果は削除せず、
-現行仕様と混同しない形でLegacy / Referenceとして保存しています。
+詳細は現行仕様を参照してください。
+
+---
+
+## Documentation
+
+- [Current Game Specification](docs/GAME_SPEC.md) — **現行仕様の正本**
+- [Current State](docs/CURRENT_STATE.md) — 現在の実装状態・既知問題
+- [Roadmap](docs/ROADMAP.md) — 次の作業順
+- [Decisions](docs/DECISIONS.md) — 設計判断と履歴
+- [Index](docs/INDEX.md) — 現行 / 実験 / Legacyの分類
+- [AI / Contributor Rules](AGENTS.md) — AI共通ルール
+
+詳細な過去ログは `docs/HANDOFF.md`。
+実験は `docs/experiments/`、旧仕様は `docs/archive/` に保存しています。
 
 ---
 
@@ -104,24 +119,8 @@ Level Upが連続してもCard Pick権を失わず、
 - Python
 - Git / GitHub
 
-AIは企画壁打ち・実装補助・レビュー・ドキュメント整理に利用していますが、
-ゲーム仕様の採否、実装確認、プレイテスト上の判断は自分で行う方針です。
-
----
-
-## Documentation
-
-現行の開発情報は以下を基準に管理しています。
-
-- [Game Specification](docs/GAME_SPEC.md) — 現在採用しているゲーム仕様
-- [Current State](docs/CURRENT_STATE.md) — 現在の実装状況
-- [Decisions](docs/DECISIONS.md) — 設計判断と理由
-- [Roadmap](docs/ROADMAP.md) — 今後の実装順
-- [AI / Contributor Rules](AGENTS.md) — AI共通の開発ルール
-- [Index](docs/INDEX.md) — 全ファイルの分類（現行 / 実験 / Legacy）と対応表
-
-詳細な過去ログは `docs/HANDOFF.md` に保存しています。
-実験仕様は `docs/experiments/`、旧仕様は `docs/archive/` にあります（分類は Index 参照）。
+AIは企画壁打ち、実装補助、レビュー、テスト、ドキュメント整理に利用しています。
+仕様の採否、Godot上の動作確認、プレイテスト上の判断は人間が行う方針です。
 
 ---
 
@@ -129,14 +128,14 @@ AIは企画壁打ち・実装補助・レビュー・ドキュメント整理に
 
 ```text
 Incremental/
-├─ godot/                  # 現在のゲーム本体
-├─ docs/                   # 仕様・判断・ロードマップ
-│  ├─ experiments/         # 実験仕様（CardValue / Run終了予測）
-│  └─ archive/             # 旧仕様（旧formal Wave 10000）
+├─ godot/                   # 現在のゲーム本体
+├─ docs/                    # 現行仕様・判断・Roadmap
+│  ├─ experiments/          # Balance / CardValue等の実験
+│  └─ archive/              # 旧formal仕様
 ├─ first-prestige-playtest/ # 過去のWeb試作
-├─ scripts/                # 検証・補助スクリプト（索引は scripts/README.md）
-├─ output/                 # 実験出力の要約（md / json のみ保持）
-└─ AGENTS.md               # AI共通ルール
+├─ scripts/                 # 検証・補助Script
+├─ output/                  # 実験結果
+└─ AGENTS.md                # AI共通ルール
 ```
 
 ---
@@ -145,14 +144,14 @@ Incremental/
 
 **Work in progress / 開発中**
 
-現在はコアループをGodot上で成立させる段階です。
-
-次の短期目標:
+現在の最優先:
 
 ```text
-Pending Picks
-→ Random 3-card Draft
-→ XP / Enemy Growth
+Core Loop Repair
+→ Death / Retry
+→ Pending Picks
+→ Card / Shop仕様確定
+→ Random Draft / XP
 → W1–100 Vertical Slice
 → DP / Equipment
 → W5000 / First Prestige
